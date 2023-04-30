@@ -40,7 +40,7 @@ const gender2zh: any = {
   Unknown: '不明',
   Ririi: '莉莉'
 }
-const type2zh: any = {
+export const type2zh: any = {
   0: '剑士',
   1: '格斗',
   2: '射击',
@@ -79,7 +79,7 @@ function format_race(race: string) {
 }
 
 export class Unit {
-  private readonly _data: any
+  public readonly _data: any
   constructor(data: Object) {
     this._data = data
   }
@@ -199,7 +199,8 @@ export class Unit {
 }
 
 export class Armament {
-  private readonly _data: any
+  public readonly _data: any
+
   constructor(data: Object) {
     this._data = data
   }

@@ -5,13 +5,6 @@ import { reactive } from 'vue'
 
 function splitByBrackets(str: string) {
   str = str.replaceAll('\n', '</span><span style="padding-bottom: 5px;">')
-  // str = str.replaceAll('[novice]', '</span><span class="novice" style="padding-bottom: 5px;">')
-  // str = str.replaceAll(
-  //   '[highlight]',
-  //   '</span><span class="highlight" style="padding-bottom: 5px;">'
-  // )
-  // str = str.replaceAll('[b]', '<b>')
-  // str = str.replaceAll('[end]', '</span>')
   str = str.replaceAll(
     '[biliicon]',
     '<img style="width: 24px; vertical-align: text-bottom; margin: 0 4px;" src="https://www.bilibili.com/favicon.ico" alt=""/>'

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import PlayerCard from '@/components/card/PlayerCard.vue'
 import axios from 'axios'
 

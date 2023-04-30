@@ -9,10 +9,12 @@ const props = defineProps({
     default: '------'
   },
   background_url: {
-    type: String
+    type: String,
+    default: ''
   },
   image_url: {
-    type: String
+    type: String,
+    default: ''
   }
 })
 </script>
@@ -31,7 +33,6 @@ const props = defineProps({
         image-rendering: pixelated;
         overflow: hidden;
         padding: 12px;
-        margin: 16px;
         box-shadow: 0 8px 0 rgba(0, 0, 0, 0.15);
         /*box-shadow: 0 8px 0 rgb(90, 57, 95);*/
         /*filter: drop-shadow(0 0 8px rgb(90, 57, 95));*/
