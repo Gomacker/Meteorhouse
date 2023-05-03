@@ -21,7 +21,7 @@ export default {
     <el-container>
       <el-header
         style="
-          background: linear-gradient(to right, #fa8afa, yellow);
+          background: linear-gradient(to right, #fa8afa, rgba(0,255,128,0.7));
           display: flex;
           z-index: 20;
           box-shadow: 0 0 10px rgba(0, 0, 0, 50%);

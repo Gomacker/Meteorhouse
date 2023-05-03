@@ -15,7 +15,7 @@
         <p style="font-size: 28px; font-weight: 600">盘子</p>
         <p>0 个盘子</p>
       </el-card>
-      <el-card class="editor-select">
+      <el-card class="editor-select" @click="$router.push('/editor/table')">
         <p style="font-size: 28px; font-weight: 600">一图流</p>
         <p>0 个一图流</p>
       </el-card>

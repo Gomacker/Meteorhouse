@@ -58,6 +58,11 @@ const router = createRouter({
       component: () => import('@/views/editor/EquipmentEditorView.vue')
     },
     {
+      path: '/editor/table',
+      name: 'table_editor',
+      component: () => import('@/views/editor/TableEditorView.vue')
+    },
+    {
       path: '/test/room',
       name: 'test_room',
       component: () => import('@/views/TestRoomView.vue')

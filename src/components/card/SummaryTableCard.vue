@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { Table } from '@/stores/table'
 import PartyCardEliya from '@/components/party/PartyCardEliya.vue'
-import {manager, PartyRelease} from '@/stores/manager'
+import { manager, PartyRelease } from '@/stores/manager'
 import TableComponentTextContent from '@/views/table/TableComponentTextContent.vue'
-import UnitLiteCard from "@/components/card/UnitLiteCard.vue";
-import UnitWikiCard from "@/components/card/UnitWikiCard.vue";
-import ArmamentWikiCard from "@/components/card/ArmamentWikiCard.vue";
+import UnitLiteCard from '@/components/card/UnitLiteCard.vue'
+import UnitWikiCard from '@/components/card/UnitWikiCard.vue'
+import ArmamentWikiCard from '@/components/card/ArmamentWikiCard.vue'
 
 const props = defineProps({
   table: {
@@ -20,7 +20,7 @@ const props = defineProps({
   <div
     v-if="props.table instanceof Table"
     class="table"
-    style="width: 1036px; overflow: hidden;"
+    style="width: 1036px; overflow: hidden"
     :style="{
       '--main-color': props.table.property.get_color_main(1),
       '--sub-color': props.table.property.get_color_sub(1),
@@ -31,7 +31,12 @@ const props = defineProps({
     <div class="head" style="background-color: white">
       <div
         class="title"
-        style="background: linear-gradient(to bottom, var(--sub-color), var(--sub-background-color)); width: 100%; display: flex; justify-content: center"
+        style="
+          background: linear-gradient(to bottom, var(--sub-color), var(--sub-background-color));
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        "
       >
         <div
           style="
@@ -49,21 +54,22 @@ const props = defineProps({
       </div>
     </div>
     <div :style="'' + props.table.property.background.replace('/assets', '/static')">
-      <div style="image-rendering: auto; background: var(--sub-background-color);">
+      <div style="image-rendering: auto; background: var(--sub-background-color)">
         <div class="content-container" style="display: flex; flex-direction: row; flex-wrap: wrap">
           <template v-for="(c, key) in props.table.content" :key="key">
             <div
               v-if="c.type === 'Row'"
-              style="width: 100%; display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-evenly"
+              style="
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: flex-start;
+                justify-content: space-evenly;
+              "
             >
               <template v-for="(element, key) in c.data.elements" :key="key">
                 <template v-if="element.type === 'Party'">
-                  <div
-                    style="
-                        padding: 0;
-                        margin: 4px;
-                    "
-                  >
+                  <div style="padding: 0; margin: 4px">
                     <PartyCardEliya
                       :party="PartyRelease.loads(element.data.party)"
                       style="
@@ -91,7 +97,7 @@ const props = defineProps({
                         width: 100%;
                         padding: 12px;
                         border-radius: inherit;
-                        background: url(/static/worldflipper/dialog_deco2.png) no-repeat;
+                        background: url('/static/worldflipper/dialog_deco2.png') no-repeat;
                         background-position-x: 100%;
                         background-position-y: 100%;
                         /*filter: drop-shadow(0 0 4px black);*/
@@ -153,18 +159,34 @@ const props = defineProps({
                     :style="{
                       width: element.data['full'] ? '992px' : '480px',
                       'font-size': element.data['little_title'] ? '26px' : '21px',
-                      'margin-top': element.data['little_title'] ? '16px' : '',
+                      'margin-top': element.data['little_title'] ? '16px' : ''
                     }"
                     :content="element.data.content"
                   />
                 </template>
                 <template v-else-if="element.type === 'LiteCard'">
-                    <UnitLiteCard style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);" v-if="element.data['unit']" :unit="manager.unit_data.get(element.data['unit'])"/>
-                    <ArmamentWikiCard style="margin: 10px; width: 480px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);" v-else-if="element.data['armament']" :armament="manager.armament_data.get(element.data['armament'])"/>
+                  <UnitLiteCard
+                    style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
+                    v-if="element.data['unit']"
+                    :unit="manager.unit_data.get(element.data['unit'])"
+                  />
+                  <ArmamentWikiCard
+                    style="margin: 10px; width: 480px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
+                    v-else-if="element.data['armament']"
+                    :armament="manager.armament_data.get(element.data['armament'])"
+                  />
                 </template>
                 <template v-else-if="element.type === 'WikiCard'">
-                    <UnitWikiCard style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);" v-if="element.data['unit']" :unit="manager.unit_data.get(element.data['unit'])"/>
-                    <ArmamentWikiCard style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);" v-else-if="element.data['armament']" :armament="manager.armament_data.get(element.data['armament'])"/>
+                  <UnitWikiCard
+                    style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
+                    v-if="element.data['unit']"
+                    :unit="manager.unit_data.get(element.data['unit'])"
+                  />
+                  <ArmamentWikiCard
+                    style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
+                    v-else-if="element.data['armament']"
+                    :armament="manager.armament_data.get(element.data['armament'])"
+                  />
                 </template>
                 <div v-else>未解析的组件: {{ element }}</div>
               </template>
