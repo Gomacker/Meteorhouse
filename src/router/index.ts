@@ -88,6 +88,11 @@ const router = createRouter({
       component: () => import('@/views/card/UnitCardView.vue')
     },
     {
+      path: '/card/armament',
+      name: 'card_armament',
+      component: () => import('@/views/card/ArmamentCardView.vue')
+    },
+    {
       path: '/card/room',
       name: 'room_card',
       component: () => import('@/views/card/RoomCardView.vue')

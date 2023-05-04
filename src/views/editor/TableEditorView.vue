@@ -22,7 +22,7 @@ import TableComponentEditor from '@/components/editor/TableComponentEditor.vue'
       <el-button style="margin-left: 8px" type="warning" size="small">读取</el-button>
       <div style="margin-left: 8px">this is header bar</div>
     </div>
-    <el-scrollbar view-style="height: 100%;">
+    <el-scrollbar view-style="height: 100%; display: flex; justify-content: center;">
       <div
         style="
           display: flex;
@@ -33,6 +33,7 @@ import TableComponentEditor from '@/components/editor/TableComponentEditor.vue'
           justify-content: center;
           padding: 8px;
           height: 100%;
+          max-width: 1036px;
         "
       >
         <el-card style="width: 99.5%; margin: 0.25%" body-style="padding: 8px;">
@@ -52,15 +53,45 @@ import TableComponentEditor from '@/components/editor/TableComponentEditor.vue'
                 </div>
               </div>
             </el-form-item>
-            <el-form-item style="margin-bottom: 4px" label=""> </el-form-item>
+            <el-form-item style="margin-bottom: 4px" label="时间">
+              <el-date-picker></el-date-picker>
+            </el-form-item>
+            <el-form-item style="margin-bottom: 4px" label="小标题">
+              <el-input type="textarea" :autosize="{ minRows: 2 }"></el-input>
+            </el-form-item>
+            <el-form-item style="margin-bottom: 4px" label="横幅">
+              <el-input type="textarea" :autosize="{ minRows: 2 }" placeholder="(CSS)"></el-input>
+            </el-form-item>
+            <el-form-item style="margin-bottom: 4px" label="背景">
+              <el-input type="textarea" :autosize="{ minRows: 2 }" placeholder="(CSS)"></el-input>
+            </el-form-item>
           </el-form>
         </el-card>
-        <TableComponentEditor type="TextArea" />
-        <TableComponentEditor type="PartyRelease" />
-        <TableComponentEditor type="Html" />
-        <TableComponentEditor type="PartyCombine" />
-        <TableComponentEditor type="EventCard" />
-        <TableComponentEditor type="WikiCard" />
+        <el-divider />
+        <el-card
+          style="width: 99.5%; margin: 0.25%; background-color: rgba(0 127 255 / 0.1)"
+          body-style="padding: 0;"
+        >
+          <div>aa</div>
+          <el-divider style="margin: 4px" />
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap">
+            <TableComponentEditor type="TextArea" />
+            <TableComponentEditor type="PartyRelease" />
+            <TableComponentEditor type="Html" />
+            <TableComponentEditor type="PartyCombine" />
+            <TableComponentEditor type="EventCard" />
+            <TableComponentEditor type="WikiCard" />
+            <TableComponentEditor type="ObjectMap" />
+          </div>
+        </el-card>
+        <el-divider />
+        <el-card style="width: 99.5%; margin: 0.25%" body-style="padding: 8px;">
+          <el-form label-width="50px" size="small" label-position="left">
+            <el-form-item style="margin-bottom: 4px" label="脚注">
+              <el-input type="textarea" :autosize="{ minRows: 4 }"></el-input>
+            </el-form-item>
+          </el-form>
+        </el-card>
       </div>
     </el-scrollbar>
   </div>
