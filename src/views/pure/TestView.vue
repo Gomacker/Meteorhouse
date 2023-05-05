@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ScheduleCalender from "@/components/schedule/ScheduleCalendar.vue";
+import ScheduleCalender from "@/components/schedule/ScheduleCalendarLegacy.vue";
 </script>
 
 <template>

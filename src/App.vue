@@ -94,6 +94,10 @@ export default {
               <el-icon><Aim /></el-icon>
               <template #title><span style="color: #fa8afa">测试项 [玩家资料卡]</span></template>
             </el-menu-item>
+            <el-menu-item index="test_schedule" @click="$router.push('/test/schedule')">
+              <el-icon><Aim /></el-icon>
+              <template #title><span style="color: #fa8afa">测试项 [日程]</span></template>
+            </el-menu-item>
             <el-menu-item index="editor" @click="$router.push('/editor')">
               <el-icon><Edit /></el-icon>
               <template #title>编辑面板</template>

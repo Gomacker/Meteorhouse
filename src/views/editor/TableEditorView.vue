@@ -1,5 +1,21 @@
 <script setup lang="ts">
 import TableComponentEditor from '@/components/editor/TableComponentEditor.vue'
+import { ref } from 'vue'
+import axios from 'axios'
+
+const table_list = ref({})
+
+axios.post('/api/v1/table_list/').then((r) => {
+  table_list.value = r.data['tables']
+})
+
+const table_select = ref({})
+const table_selected = ref({})
+class Table {}
+const table = ref<Table>()
+function load_table(table_id: string) {
+  table_selected.value = table_select.value
+}
 </script>
 
 <template>
@@ -16,8 +32,10 @@ import TableComponentEditor from '@/components/editor/TableComponentEditor.vue'
       "
     >
       <el-button type="primary" size="small">保存</el-button>
-      <el-select style="margin-left: 8px" size="small">
-        <el-option value="aa"> </el-option>
+      <el-select v-model="table_select" style="margin-left: 8px" size="small">
+        <el-option v-for="(t, table_name) in table_list" :key="t" :value="t" :label="table_name">
+          {{ table_name }}: <span style="color: lightgray">{{ t }}</span>
+        </el-option>
       </el-select>
       <el-button style="margin-left: 8px" type="warning" size="small">读取</el-button>
       <div style="margin-left: 8px">this is header bar</div>
