@@ -2,6 +2,7 @@
 import TableComponentEditor from '@/components/editor/TableComponentEditor.vue'
 import { ref } from 'vue'
 import axios from 'axios'
+import {TableElementTextArea} from "@/stores/table";
 
 const table_list = ref({})
 
@@ -93,13 +94,10 @@ function load_table(table_id: string) {
           <div>aa</div>
           <el-divider style="margin: 4px" />
           <div style="display: flex; flex-direction: row; flex-wrap: wrap">
-            <TableComponentEditor type="TextArea" />
-            <TableComponentEditor type="PartyRelease" />
-            <TableComponentEditor type="Html" />
-            <TableComponentEditor type="PartyCombine" />
-            <TableComponentEditor type="EventCard" />
-            <TableComponentEditor type="WikiCard" />
-            <TableComponentEditor type="ObjectMap" />
+            <TableComponentEditor :table_element="new TableElementTextArea({'content': ''})"/>
+            <TableComponentEditor :table_element="new TableElementTextArea({'content': ''})"/>
+            <TableComponentEditor :table_element="new TableElementTextArea({'content': ''})"/>
+            <TableComponentEditor :table_element="new TableElementTextArea({'content': ''})"/>
           </div>
         </el-card>
         <el-divider />

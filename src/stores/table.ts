@@ -148,8 +148,8 @@ class TableProperty {
   }
 }
 
-abstract class TableElement {
-  public readonly type: string
+export abstract class TableElement {
+  public type: string
   protected _data: any
   protected constructor(data: { type: string; data: any }) {
     this.type = data['type']
@@ -166,7 +166,7 @@ abstract class TableElement {
   }
 }
 
-class TableElementTextArea extends TableElement {
+export class TableElementTextArea extends TableElement {
   constructor(data: any) {
     super({ type: 'TextArea', data: data })
   }
