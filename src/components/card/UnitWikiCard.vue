@@ -35,7 +35,8 @@ const props = defineProps({
       background-position-x: -10px;
       background-position-y: -10px;
       image-rendering: pixelated;
-      border-radius: 16px;
+      border-radius: 12px;
+      overflow: hidden;
     "
   >
     <div
@@ -43,7 +44,7 @@ const props = defineProps({
         background: `url(/static/worldflipper/unit/full_resized/awakened/${props.unit.extraction_id}.png) no-repeat`
       }"
       style="
-        border-radius: inherit;
+        /*border-radius: inherit;*/
         background-position: calc(100% + 100px) 80% /*calc(20% + 100px)*/;
         background-size: 720px;
         image-rendering: initial;
@@ -59,13 +60,13 @@ const props = defineProps({
           /*flex-direction: column;*/
           flex-wrap: wrap;
           padding: 16px;
-          border-radius: inherit;
+          /*border-radius: inherit;*/
           color: rgb(50, 50, 50);
           height: 100%;
           /*min-height: 100%;*/
         "
         :style="{
-          background: `linear-gradient(135deg, ${ele2color[props.unit.element_id]} 130px, rgba(248,248,248, 0.825) 130px, rgba(248,248,248, 0.825) calc(100% - 32px), rgba(40,0,115, 0.85) calc(100% - 32px), rgba(0,0,0, 0.85))`
+          background: `linear-gradient(135deg, ${ele2color[props.unit.element_id]} 130px, rgba(248,248,248, 0.825) 130px, rgba(248,248,248, 0.825) calc(100% - 32px), rgb(54, 255, 162, 0.85) calc(100% - 32px), rgba(200,240,200, 0.85))`
         }"
       >
         <div style="display: flex; width: 100%; margin: 16px 16px 0">

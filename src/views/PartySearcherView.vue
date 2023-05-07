@@ -75,10 +75,15 @@ onMounted(() => {
         搜索
       </el-button>
     </div>
-    <el-scrollbar ref="scrollbar_ref" v-loading="loading" style="margin: 0 16px;">
+    <el-scrollbar ref="scrollbar_ref" v-loading="loading" style="margin: 0 16px">
       <div style="display: flex; flex-direction: row; justify-content: center; flex-wrap: wrap">
-        <template v-for="party in page_party_list" :key="party[0]">
-          <PartyReleaseCard style="zoom: 1" :party_release="PartyRelease.loads(party[1])" />
+        <template v-if="page_party_list.size">
+          <template v-for="party in page_party_list" :key="party[0]">
+            <PartyReleaseCard style="zoom: 1" :party_release="PartyRelease.loads(party[1])" />
+          </template>
+        </template>
+        <template v-else>
+            <el-empty/>
         </template>
       </div>
     </el-scrollbar>

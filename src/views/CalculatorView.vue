@@ -26,7 +26,24 @@ const selected_position = ref<{
   position: undefined
 })
 
-const showed_list = ref<Array<Unit | Armament | undefined>>([])
+const showed_list = ref<Array<Unit | Armament | undefined>>(
+  new Array<Unit | Armament | undefined>()
+)
+const tag_list: Array<string> = [
+  '浑身',
+  '挨打',
+  '背水',
+  '棺材',
+  '破敌',
+  '点灯',
+  '弱体',
+  'Fever',
+  '连击',
+  '面包',
+  '纯色'
+]
+
+const tag_selected = ref<Array<string>>(['点灯', '弱体'])
 
 const filter_default = {
   text: '',
@@ -90,10 +107,11 @@ const list_filter = (obj: Unit | Armament | undefined) => {
   return false
 }
 
-const selected_module = ref('Editor')
-const selected_type = ref('Unit')
-const hidden_menu = ref(false)
-const hidden_filters = ref(false)
+const selected_module = ref<string>('Editor')
+const selected_type = ref<'Unit' | 'Armament'>('Unit')
+const hidden_menu = ref<boolean>(false)
+const hidden_filters = ref<boolean>(false)
+const source_input = ref<string>('')
 
 async function update_show_list() {
   if (selected_type.value === 'Unit') {
@@ -105,7 +123,6 @@ async function update_show_list() {
       .map((item) => item[1])
       .filter((u) => list_filter(u))
   } else showed_list.value = []
-  // console.log(showed_list.value)
   manager.need_update.value = false
 }
 
@@ -118,6 +135,7 @@ watch(
   },
   { deep: true }
 )
+const quest_cascader = ref('')
 
 if (!showed_list.value.length) {
   update_show_list()
@@ -133,11 +151,7 @@ function get_pic_url(obj: Unit | Armament, awakened_or_soul = false) {
 }
 
 function select_party(union: string, position: number) {
-  // console.log(union, position)
   if (selected_obj.value) {
-    // console.log(selected_obj.value instanceof Unit)
-    // console.log(union)
-    // console.log(position)
     if (union != undefined && position != undefined) {
       if (party.value.party.set_by_position(selected_obj.value, union, position)) {
         selected_obj.value = undefined
@@ -237,7 +251,8 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
       view-style="height: 100%;"
       :wrap-style="
         (() => {
-          if (selected_module === 'WikiCard' && selected_obj) return 'width: 100%;'
+          // return ((selected_module === 'WikiCard' || selected_module === 'Resources') && selected_obj) ? 'width: 100%;' : ''
+          return 'width: 100%;'
         })()
       "
     >
@@ -385,8 +400,8 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
         </div>
       </div>
       <div
-        style="display: flex; align-items: center; flex-direction: column; padding: 16px"
         v-else-if="selected_module === 'Upload'"
+        style="display: flex; align-items: center; flex-direction: column; padding: 16px"
       >
         <div
           style="
@@ -400,39 +415,76 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
           "
         >
           <span>上传预览</span>
-          <PartyReleaseCard
-            v-if="party instanceof PartyRelease"
-            :party_release="party"
-          ></PartyReleaseCard>
-          <div style="margin: 16px; display: flex; flex-direction: column">
-            <div style="display: flex; align-items: center">
-              <span style="margin: 8px; min-width: 54px">自动Tag</span>
+          <PartyReleaseCard v-if="party instanceof PartyRelease" :party_release="party" />
+          <el-form label-width="70px" label-position="left" style="width: 100%; padding: 16px">
+            <el-form-item label="自动Tag">
               <div style="display: flex; flex-wrap: wrap">
                 <GameTag content="暗" />
               </div>
-            </div>
-            <div style="display: flex; align-items: center">
-              <span style="margin: 8px; min-width: 54px">附加Tag</span>
+            </el-form-item>
+            <el-form-item label="已选Tag">
               <div style="display: flex; flex-wrap: wrap">
-                <GameTag content="净化" />
-                <GameTag content="技伤" />
+                <GameTag v-for="(tag, index) in tag_selected" :key="index" :content="tag" />
               </div>
-            </div>
-            <div style="display: flex; align-items: center">
-              <span style="margin: 8px; min-width: 54px">副本Tag</span>
+            </el-form-item>
+            <el-form-item label="选择tag">
               <div style="display: flex; flex-wrap: wrap">
-                <GameTag content="不死王瑞西塔尔 超级" />
-                <GameTag content="不死王瑞西塔尔 超级+" />
-                <GameTag content="不死王瑞西塔尔 地狱级" />
-                <GameTag content="不死王瑞西塔尔 地狱级" />
-                <GameTag content="不死王瑞西塔尔 地狱级" />
+                <GameTag @click="" v-for="(tag, index) in tag_list" :key="index" :content="tag" />
               </div>
-            </div>
-            <div style="display: flex; align-items: center">
-              <span style="margin: 8px; min-width: 54px">来源</span>
-                <el-input placeholder="可选"></el-input>
-            </div>
-          </div>
+            </el-form-item>
+            {{ quest_cascader }}
+            <el-form-item label="副本Tag">
+              <el-cascader
+                v-model="quest_cascader"
+                :options="[
+                  {
+                    value: 'normal',
+                    label: '常驻',
+                    children: [
+                      {
+                        value: 101,
+                        label: '猫头鹰',
+                        children: [
+                          {
+                            value: 1,
+                            label: '初级'
+                          }
+                        ]
+                      },
+                      {
+                        value: 102,
+                        label: '废墟魔像',
+                        children: [
+                          {
+                            value: 1,
+                            label: '中级'
+                          },
+                          {
+                            value: 2,
+                            label: '高级'
+                          },
+                          {
+                            value: 3,
+                            label: '高级+'
+                          },
+                          {
+                            value: 4,
+                            label: '超级'
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]"
+                filterable
+              >
+              </el-cascader>
+              <el-button style="margin-left: 8px" type="primary">添加</el-button>
+            </el-form-item>
+            <el-form-item label="来源">
+              <el-input v-model="source_input" placeholder="可选"></el-input>
+            </el-form-item>
+          </el-form>
           <div style="display: flex">
             <el-button type="primary">投稿</el-button>
             <el-popover placement="top">
@@ -446,18 +498,32 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
           </div>
         </div>
       </div>
-      <div v-else-if="selected_module === 'Resources'">
-        <div style="padding: 16px">
-          <template v-if="selected_obj instanceof Unit">
-            <a target="_blank" :href="`/card/unit?wf_id=${selected_obj.id}`">
-              <el-button> 独立Card页 </el-button>
-            </a>
-          </template>
-          <template v-else-if="selected_obj instanceof Armament">
-            <a target="_blank" :href="`/card/armament?wf_id=${selected_obj.id}`">独立Card页</a>
-          </template>
-          <template v-else> Select a Object </template>
-        </div>
+      <div
+        v-else-if="selected_module === 'Resources'"
+        style="display: flex; align-items: center; flex-direction: column; padding: 16px"
+      >
+        <template v-if="selected_obj instanceof Unit">
+          <a target="_blank" :href="`/card/unit?wf_id=${selected_obj.id}`">
+            <el-button> 独立Card页 </el-button>
+          </a>
+          <div style="width: 100%; display: flex; align-items: flex-start;">
+              <div style="margin: 16px; width: 50%; border-radius: 8px; background-color: #fff; border: 4px rgba(55,255,202,0.6) solid">
+                  <el-image :src="`/static/worldflipper/unit/full_resized/awakened/${selected_obj.extraction_id}.png`"></el-image>
+              </div>
+              <div style="margin: 16px; width: 50%; border-radius: 8px; background-color: #fff; border: 4px rgba(55,255,202,0.6) solid">
+                  <el-image :src="`/static/worldflipper/unit/pixelart/special/${selected_obj.extraction_id}.gif`"></el-image>
+              </div>
+<!--              <div style="background-color: green; margin: 16px; width: 50%;">-->
+<!--                  <el-image :src="`/static/worldflipper/unit/full/awakened/${selected_obj.extraction_id}.png`"></el-image>-->
+<!--              </div>-->
+          </div>
+        </template>
+        <template v-else-if="selected_obj instanceof Armament">
+          <a target="_blank" :href="`/card/armament?wf_id=${selected_obj.id}`">
+            <el-button> 独立Card页 </el-button>
+          </a>
+        </template>
+        <template v-else> Select a Object </template>
       </div>
     </el-scrollbar>
     <div
@@ -775,7 +841,12 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
                     'background-color': selected_obj === element ? 'rgba(52,255,201,0.8)' : ''
                   }"
                 >
-                  <UnitPicOrigin @click="select_object(element)" :unit="element" :size="90" />
+                  <UnitPicOrigin
+                    v-if="element instanceof Unit"
+                    @click="select_object(element)"
+                    :unit="element"
+                    :size="90"
+                  />
                 </div>
               </template>
             </template>
@@ -925,6 +996,7 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
                   }"
                 >
                   <ArmamentPicOrigin
+                    v-if="element instanceof Armament"
                     @click="select_object(element)"
                     :armament="element"
                     :size="90"
@@ -969,11 +1041,7 @@ export default {
 }
 
 .wfo:hover {
-  /*filter: drop-shadow(0 0 16px var(--element-color));*/
   box-shadow: 0 0 16px var(--element-color);
-  /*border: 2px red solid;*/
-  /*filter: drop-shadow(0 0 4px red);*/
-  /*box-shadow: 0 0 4px red;*/
 }
 </style>
 
@@ -1136,5 +1204,8 @@ export default {
   .wiki-card {
     zoom: 75%;
   }
+}
+.el-form-item {
+  margin-bottom: 4px;
 }
 </style>

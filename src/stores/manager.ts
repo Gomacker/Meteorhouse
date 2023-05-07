@@ -89,7 +89,13 @@ export class Unit {
   }
 
   get status(): Object {
-    return this._data['status']
+    const status = {
+      mhp: 0,
+      mmhp: 0,
+      atk: 0,
+      matk: 0
+    }
+    return Object.assign(status, this._data['status'])
   }
 
   get id(): number {

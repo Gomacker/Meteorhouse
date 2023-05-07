@@ -17,11 +17,11 @@ export default {
 }
 </script>
 <template>
-  <div style="width: 100%; height: 100%">
+  <div style="width: 100%; height: 100%; background: var(--color-background)">
     <el-container>
       <el-header
         style="
-          background: linear-gradient(to right, #fa8afa, rgba(0,255,128,0.7));
+          background: linear-gradient(to right, #fa8afa, rgba(0, 255, 128, 0.7));
           display: flex;
           z-index: 20;
           box-shadow: 0 0 10px rgba(0, 0, 0, 50%);
@@ -86,18 +86,18 @@ export default {
               <el-icon><List /></el-icon>
               <template #title>一图流(维护中)</template>
             </el-menu-item>
-            <el-menu-item index="test_room" @click="$router.push('/test/room')">
-              <el-icon><Aim /></el-icon>
-              <template #title><span style="color: #fa8afa">测试项 [房间搜索]</span></template>
-            </el-menu-item>
-            <el-menu-item index="test_player" @click="$router.push('/test/player')">
-              <el-icon><Aim /></el-icon>
-              <template #title><span style="color: #fa8afa">测试项 [玩家资料卡]</span></template>
-            </el-menu-item>
-            <el-menu-item index="test_schedule" @click="$router.push('/test/schedule')">
-              <el-icon><Aim /></el-icon>
-              <template #title><span style="color: #fa8afa">测试项 [日程]</span></template>
-            </el-menu-item>
+            <!--            <el-menu-item index="test_room" @click="$router.push('/test/room')">-->
+            <!--              <el-icon><Aim /></el-icon>-->
+            <!--              <template #title><span style="color: #fa8afa">测试项 [房间搜索]</span></template>-->
+            <!--            </el-menu-item>-->
+            <!--            <el-menu-item index="test_player" @click="$router.push('/test/player')">-->
+            <!--              <el-icon><Aim /></el-icon>-->
+            <!--              <template #title><span style="color: #fa8afa">测试项 [玩家资料卡]</span></template>-->
+            <!--            </el-menu-item>-->
+            <!--            <el-menu-item index="test_schedule" @click="$router.push('/test/schedule')">-->
+            <!--              <el-icon><Aim /></el-icon>-->
+            <!--              <template #title><span style="color: #fa8afa">测试项 [日程]</span></template>-->
+            <!--            </el-menu-item>-->
             <el-menu-item index="editor" @click="$router.push('/editor')">
               <el-icon><Edit /></el-icon>
               <template #title>编辑面板</template>
@@ -121,7 +121,7 @@ export default {
             alt=""
             oncontextmenu="return false;"
             draggable="false"
-            style="z-index: -1"
+            style="z-index: 0"
           />
 
           <el-scrollbar
@@ -137,8 +137,6 @@ export default {
     </el-container>
   </div>
 </template>
-
-<style></style>
 
 <style scoped>
 .bg-magic-circle {
@@ -173,6 +171,7 @@ export default {
 }
 main {
   height: calc(100vh - 60px);
+    //margin-top: 60px;
   width: 100%;
 }
 </style>
