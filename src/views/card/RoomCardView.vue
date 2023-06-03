@@ -24,10 +24,10 @@ room_data.value = {
 <template>
   <div>
     <RoomCard
-      :quest_name="room_data.name"
-      :room_number="room_data.room_number"
-      :background_url="room_data.background_url"
-      :image_url="room_data.image_url"
+      :quest_name="room_data['name']"
+      :room_number="room_data['room_number']"
+      :background_url="room_data['background_url']"
+      :image_url="room_data['image_url']"
     />
   </div>
 </template>

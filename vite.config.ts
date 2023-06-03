@@ -20,9 +20,10 @@ export default defineConfig({
     port: 5174,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:10317/api/',
+        // target: 'http://127.0.0.1:10317/api/',
         // target: 'http://test.meteorhouse.wiki:10317/api/',
         // target: 'http://test.meteorhouse.wiki/api/',
+        target: 'http://meteorhouse.wiki/api/',
         // target: 'http://test.meteorhouse.wiki/api/v1/',
         // target: 'https://alpha0317.meteorhouse.wiki/api/',
         changeOrigin: true,
@@ -40,7 +41,7 @@ export default defineConfig({
         // target: 'http://127.0.0.1:10317/static/',
         // target: 'http://test.meteorhouse.wiki:10317/static/',
         // target: 'http://test.meteorhouse.wiki/assets/',
-        target: 'http://meteorhouse.wiki/assets/',
+        target: 'http://meteorhouse.wiki/static/',
         // target: 'https://alpha0317.meteorhouse.wiki/assets/',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/static/, '')

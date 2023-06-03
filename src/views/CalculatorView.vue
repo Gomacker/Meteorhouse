@@ -1,22 +1,27 @@
 <script setup lang="ts">
 import { reactive, Ref, ref, watch } from 'vue'
 import UnitPicOrigin from '@/components/objects/unit/UnitPicOrigin.vue'
-import { Armament, manager, PartyRelease, Unit } from '@/stores/manager'
-import UnitWikiCard from '@/components/card/UnitWikiCard.vue'
+import {
+  Armament,
+  ele2color,
+  manager,
+  PartyParam,
+  PartyParamManaboard2,
+  PartyRelease,
+  Union,
+  Unit
+} from '@/stores/manager'
 import ArmamentPicOrigin from '@/components/objects/armament/ArmamentPicOrigin.vue'
-import GameTag from '@/components/party/GameTag.vue'
-import ArmamentWikiCard from '@/components/card/ArmamentWikiCard.vue'
 import PartyReleaseCard from '@/components/card/PartyReleaseCard.vue'
+import CalculatorResourcesView from '@/views/calculator/CalculatorResourcesView.vue'
+import CalculatorWikiCardView from '@/views/calculator/CalculatorWikiCardView.vue'
+import { useUserStore } from '@/stores/user'
+import axios from 'axios'
+import { ElMessage } from 'element-plus'
+import { sum } from 'lodash-es'
 
-const ele2color = {
-  [-1]: 'rgb(68,68,68)',
-  0: 'rgb(234,53,75)',
-  1: 'rgb(68,137,255)',
-  2: 'rgb(244,204,36)',
-  3: 'rgb(119,217,47)',
-  4: 'rgb(244,255,186)',
-  5: 'rgb(90,57,95)'
-}
+const user = useUserStore()
+
 const selected_obj: Ref<Unit | Armament | undefined> = ref(undefined)
 const selected_position = ref<{
   union: string | undefined
@@ -29,22 +34,6 @@ const selected_position = ref<{
 const showed_list = ref<Array<Unit | Armament | undefined>>(
   new Array<Unit | Armament | undefined>()
 )
-const tag_list: Array<string> = [
-  '浑身',
-  '挨打',
-  '背水',
-  '棺材',
-  '破敌',
-  '点灯',
-  '弱体',
-  'Fever',
-  '连击',
-  '面包',
-  '纯色'
-]
-
-const tag_selected = ref<Array<string>>(['点灯', '弱体'])
-
 const filter_default = {
   text: '',
   element: [-1, 0, 1, 2, 3, 4, 5],
@@ -72,6 +61,10 @@ const filter = reactive<{
   race: Array<string>
 }>(JSON.parse(JSON.stringify(filter_default)))
 
+function check_tag(text: string, obj: Unit | Armament) {
+  return false
+}
+
 const list_filter = (obj: Unit | Armament | undefined) => {
   if (obj instanceof Unit) {
     let access_text = !filter.text
@@ -80,7 +73,6 @@ const list_filter = (obj: Unit | Armament | undefined) => {
       obj.name_zh.toLowerCase().includes(ft) ||
       obj.name_sub.toLowerCase().includes(ft) ||
       obj.name_jp.toLowerCase().includes(ft) ||
-      // obj.skill_name.toLowerCase().includes(ft) ||
       obj.skill_description.toLowerCase().includes(ft) ||
       obj.leader_ability_name.toLowerCase().includes(ft) ||
       obj.leader_ability.toLowerCase().includes(ft) ||
@@ -90,7 +82,9 @@ const list_filter = (obj: Unit | Armament | undefined) => {
       obj.ability4.toLowerCase().includes(ft) ||
       obj.ability5.toLowerCase().includes(ft) ||
       obj.ability6.toLowerCase().includes(ft) ||
-      obj.cv.toLowerCase() === ft
+      obj.cv.toLowerCase() === ft ||
+      obj.obtain.toLowerCase().includes(ft) ||
+      check_tag(ft, obj)
     )
       access_text = true
     const access_element = filter.element.indexOf(obj.element_id) > -1
@@ -102,7 +96,23 @@ const list_filter = (obj: Unit | Armament | undefined) => {
   } else if (obj instanceof Armament) {
     const access_element = filter.element.indexOf(obj.element) > -1
     const access_rarity = filter.rarity.indexOf(obj.rarity) > -1
-    return access_element && access_rarity
+    let access_text = !filter.text
+    const ft = filter.text.toLowerCase()
+    if (
+      obj.name_zh.toLowerCase().includes(ft) ||
+      obj.name_jp.toLowerCase().includes(ft) ||
+      obj.ability.toLowerCase().includes(ft) ||
+      obj.ability_soul.toLowerCase().includes(ft) ||
+      obj.ability_awaken3.toLowerCase().includes(ft) ||
+      obj.ability_awaken5.toLowerCase().includes(ft) ||
+      obj.ability_augment1.toLowerCase().includes(ft) ||
+      obj.ability_augment70.toLowerCase().includes(ft) ||
+      obj.ability_augment100.toLowerCase().includes(ft) ||
+      obj.obtain.toLowerCase().includes(ft) ||
+      check_tag(ft, obj)
+    )
+      access_text = true
+    return access_text && access_element && access_rarity
   }
   return false
 }
@@ -111,9 +121,25 @@ const selected_module = ref<string>('Editor')
 const selected_type = ref<'Unit' | 'Armament'>('Unit')
 const hidden_menu = ref<boolean>(false)
 const hidden_filters = ref<boolean>(false)
-const source_input = ref<string>('')
 
-async function update_show_list() {
+const source_input = ref<string>('')
+const url_formats = [
+  /(https:\/\/)?ecrire-bot\.herokuapp\.com\/\S+(?=\/\?)?/,
+  /(https:\/\/)?twitter\.com\/\S+\/status\/\S+(?=\/\?)?/,
+  /(https:\/\/)?wasuku\.gamewiki\.jp\/\S+\/\S+(?=\/\?)?/,
+
+  /(https:\/\/)?t\.bilibili\.com\/\S+(?=\/\?)?/,
+  /(https:\/\/)?www\.bilibili\.com\/opus\/\S+(?=\/\?)?/,
+  /(https:\/\/)?www\.bilibili\.com\/video\/BV\S{10}\/?/,
+  /(https:\/\/)?www\.bilibili\.com\/read\/cv\S+(?=\/\?)?/,
+  /(https:\/\/)?wiki\.biligame\.com\/worldflipper\/\S+(?=\/\?)?/,
+  /(https:\/\/)?nga\.178\.com\/read\.php\?tid=\S+(?=\/\?)?/,
+  /(https:\/\/)?bbs\.nga\.cn\/read\.php\?tid=\S+(?=\/\?)?/,
+  /(https:\/\/)?tieba\.baidu\.com\/p\/\S+(?=\/\?)?/,
+  /(https:\/\/)?www\.gamer\.cn\/sjtswy\/article\/\S+(?=\/\?)?/
+]
+
+function update_show_list() {
   if (selected_type.value === 'Unit') {
     showed_list.value = Array.from(manager.unit_data)
       .map((item) => item[1])
@@ -194,7 +220,6 @@ function select_party(union: string, position: number) {
 }
 
 function select_object(obj: Unit | Armament) {
-  // console.log(obj)
   if (selected_position.value.union != undefined && selected_position.value.position != undefined) {
     if (
       party.value.party.set_by_position(
@@ -221,6 +246,44 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
     if (unit instanceof Unit) return unit.name_zh
   }
   return main_slot ? (union === 'union1' ? '队长' : '主要角色') : '辅助角色'
+}
+
+function upload_party() {
+  axios
+    .post('/api/v1/party/upload/', party.value.data_for_upload())
+    .then((r) => {
+      console.log(r.data)
+      if (r.data['result'] === 'success') {
+        ElMessage.success('上传成功')
+        // if (loaded_party_id.value) {
+        //   loaded_party_id.value = ''
+        //   clear_party();
+        // }
+      } else {
+        ElMessage.error('上传失败')
+      }
+    })
+    .catch(() => {
+      ElMessage.error('上传失败(连接失败)')
+    })
+}
+
+function input_mb2(party: PartyRelease, value: number, i: number, j: number, unison: boolean) {
+  let ppm = party._params.get('manaboard2')
+  if (!(ppm instanceof PartyParamManaboard2)) {
+    ppm = new PartyParamManaboard2()
+    party._params.set('manaboard2', ppm)
+  }
+  if (value === -1) ppm[`union${i}${unison ? 'unison' : 'main'}`][`manaboard${j + 3}`] = undefined
+  else ppm[`union${i}${unison ? 'unison' : 'main'}`][`manaboard${j + 3}`] = value
+}
+
+function get_skill_weight(union: Union) {
+  const mlength = union.main ? union.main.skill_weight : 0
+  const ulength = union.unison ? union.unison.skill_weight : 0
+  const vailds = [mlength, ulength].filter((x) => x)
+
+  return vailds.length ? Math.round(sum(vailds) / vailds.length) : 0
 }
 </script>
 
@@ -249,32 +312,16 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
         width: 100%;
       "
       view-style="height: 100%;"
-      :wrap-style="
-        (() => {
-          // return ((selected_module === 'WikiCard' || selected_module === 'Resources') && selected_obj) ? 'width: 100%;' : ''
-          return 'width: 100%;'
-        })()
-      "
+      wrap-style="width: 100%;"
     >
-      <div style="height: 100%" v-if="selected_module === 'WikiCard'">
-        <div style="display: flex; min-height: 100%; width: 100%" v-if="selected_obj">
-          <UnitWikiCard
-            style="width: 100%; border-radius: 0"
-            class="wiki-card"
-            v-if="selected_obj instanceof Unit"
-            :unit="selected_obj"
-          />
-          <ArmamentWikiCard
-            style="width: 100%; border-radius: 0"
-            class="wiki-card"
-            v-else
-            :armament="selected_obj"
-          />
-        </div>
-        <template v-else> Select a object</template>
-      </div>
+      <CalculatorWikiCardView
+        :obj="selected_obj"
+        style="height: 100%; min-height: 100%"
+        v-if="selected_module === 'WikiCard'"
+      >
+      </CalculatorWikiCardView>
       <div
-        v-else-if="selected_module === 'Editor'"
+        v-if="selected_module === 'Editor'"
         style="display: flex; flex-direction: column; align-items: center"
       >
         <div style="margin-top: 16px">
@@ -282,7 +329,7 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
           <el-color-picker
             show-alpha
             v-model="border_color"
-            :predefine="Object.values(ele2color)"
+            :predefine="Object['values'](ele2color)"
           />
           显示名称
           <el-switch v-model="show_name" />
@@ -311,6 +358,32 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
                   alt=""
                   @dragstart.prevent
                 />
+                <div
+                  style="
+                    position: absolute;
+                    display: flex;
+                    background-color: rgba(0, 0, 0, 0.55);
+                    color: white;
+                    left: 0;
+                    bottom: 16px;
+                    border-top-right-radius: 6px;
+                  "
+                  v-if="(() => {
+                  const ppm: PartyParam = party._params.get('manaboard2')
+                  return ppm instanceof PartyParamManaboard2 ? !ppm[`${union}main`].is_empty() : false
+                })()"
+                >
+                  <div v-for="i in 3" :key="i" style="width: 16px; text-align: center">
+                    {{
+                      (() => {
+                        // if (true) {
+                        const m =
+                          party._params.get('manaboard2')[`${union}main`][`manaboard${i + 3}`]
+                        return typeof m === 'number' ? m : '-'
+                      })()
+                    }}
+                  </div>
+                </div>
                 <div>
                   <div style="text-align: center">
                     {{ get_show_text(party.party[union].main, union, true) }}
@@ -347,6 +420,32 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
                   alt=""
                   @dragstart.prevent
                 />
+                <div
+                  style="
+                    position: absolute;
+                    display: flex;
+                    background-color: rgba(0, 0, 0, 0.55);
+                    color: white;
+                    left: 0;
+                    bottom: 16px;
+                    border-top-right-radius: 6px;
+                  "
+                  v-if="(() => {
+                  const ppm: PartyParam = party._params.get('manaboard2')
+                  return ppm instanceof PartyParamManaboard2 ? !ppm[`${union}unison`].is_empty() : false
+                })()"
+                >
+                  <div v-for="i in 3" :key="i" style="width: 16px; text-align: center">
+                    {{
+                      (() => {
+                        // if (true) {
+                        const m =
+                          party._params.get('manaboard2')[`${union}unison`][`manaboard${i + 3}`]
+                        return typeof m === 'number' ? m : '-'
+                      })()
+                    }}
+                  </div>
+                </div>
                 <div>
                   <div style="text-align: center">
                     {{ get_show_text(party.party[union].unison, union, false) }}
@@ -371,6 +470,37 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
             </div>
           </div>
         </template>
+        <div
+          style="
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 480px;
+            margin: 16px;
+            /*padding: 16px 0;*/
+            box-sizing: content-box;
+            user-select: none;
+            /*border: red 6px solid;*/
+            /*background-color: #0f0;*/
+          "
+        >
+          <div v-for="i in 3" :key="i" style="display: flex; width: 20%; flex-direction: column">
+            <div>
+              {{ '技能条长' }}
+            </div>
+            <div>
+              <el-progress
+                :percentage="(get_skill_weight(party.party.union(i)) * 100) / 800"
+                text-inside
+                :stroke-width="20"
+                :show-text="false"
+                style="background: gray; border-radius: 100px; padding: 2px"
+              >
+                <span style="color: black">{{ get_skill_weight(party.party.union(i)) }}</span>
+              </el-progress>
+            </div>
+          </div>
+        </div>
         <div>
           <el-button
             type="warning"
@@ -398,6 +528,77 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
           </el-button>
           <el-button type="danger" @click="party = PartyRelease.empty()"> Clear </el-button>
         </div>
+        <div
+          style="
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 480px;
+            margin: 16px;
+            /*padding: 16px 0;*/
+            box-sizing: content-box;
+            user-select: none;
+          "
+        >
+          <div v-for="i in 3" :key="i" style="display: flex; width: 20%; flex-direction: column">
+            <div>
+              <div>{{ i === 1 ? '队长' : '主要角色' }}</div>
+              <el-slider
+                v-for="j in 3"
+                :key="j"
+                placement="left"
+                :model-value="
+                  (() => {
+                    const ppm = party._params.get('manaboard2')
+                    if (ppm instanceof PartyParamManaboard2) {
+                      const v = ppm[`union${i}main`][`manaboard${j + 3}`]
+                      return v === undefined ? -1 : v
+                    }
+                    return -1
+                  })()
+                "
+                @input="(value) => input_mb2(party, value, i, j, false)"
+                :format-tooltip="
+                  (value) => {
+                    if (value === -1) return '无'
+                    else return value
+                  }
+                "
+                :min="-1"
+                :max="5"
+                size="small"
+              ></el-slider>
+            </div>
+            <div style="margin-top: 16px">
+              <div>辅助角色</div>
+              <el-slider
+                v-for="j in 3"
+                :key="j"
+                placement="left"
+                :model-value="
+                  (() => {
+                    const ppm = party._params.get('manaboard2')
+                    if (ppm instanceof PartyParamManaboard2) {
+                      const v = ppm[`union${i}unison`][`manaboard${j + 3}`]
+                      return v === undefined ? -1 : v
+                    }
+                    return -1
+                  })()
+                "
+                @input="(value) => input_mb2(party, value, i, j, true)"
+                :format-tooltip="
+                  (value) => {
+                    if (value === -1) return '无'
+                    else return value
+                  }
+                "
+                :min="-1"
+                :max="5"
+                size="small"
+              ></el-slider>
+            </div>
+          </div>
+        </div>
       </div>
       <div
         v-else-if="selected_module === 'Upload'"
@@ -408,8 +609,6 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
             display: flex;
             align-items: center;
             flex-direction: column;
-            background-color: white;
-            box-shadow: 0 0 4px black;
             padding: 16px;
             border-radius: 16px;
           "
@@ -417,77 +616,83 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
           <span>上传预览</span>
           <PartyReleaseCard v-if="party instanceof PartyRelease" :party_release="party" />
           <el-form label-width="70px" label-position="left" style="width: 100%; padding: 16px">
-            <el-form-item label="自动Tag">
-              <div style="display: flex; flex-wrap: wrap">
-                <GameTag content="暗" />
-              </div>
-            </el-form-item>
-            <el-form-item label="已选Tag">
-              <div style="display: flex; flex-wrap: wrap">
-                <GameTag v-for="(tag, index) in tag_selected" :key="index" :content="tag" />
-              </div>
-            </el-form-item>
-            <el-form-item label="选择tag">
-              <div style="display: flex; flex-wrap: wrap">
-                <GameTag @click="" v-for="(tag, index) in tag_list" :key="index" :content="tag" />
-              </div>
-            </el-form-item>
-            {{ quest_cascader }}
-            <el-form-item label="副本Tag">
-              <el-cascader
-                v-model="quest_cascader"
-                :options="[
-                  {
-                    value: 'normal',
-                    label: '常驻',
-                    children: [
-                      {
-                        value: 101,
-                        label: '猫头鹰',
-                        children: [
-                          {
-                            value: 1,
-                            label: '初级'
-                          }
-                        ]
-                      },
-                      {
-                        value: 102,
-                        label: '废墟魔像',
-                        children: [
-                          {
-                            value: 1,
-                            label: '中级'
-                          },
-                          {
-                            value: 2,
-                            label: '高级'
-                          },
-                          {
-                            value: 3,
-                            label: '高级+'
-                          },
-                          {
-                            value: 4,
-                            label: '超级'
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]"
-                filterable
-              >
-              </el-cascader>
-              <el-button style="margin-left: 8px" type="primary">添加</el-button>
+            <!--            <el-form-item v-if="false" label="自动Tag">-->
+            <!--              <div style="display: flex; flex-wrap: wrap">-->
+            <!--                <GameTag content="暗" />-->
+            <!--              </div>-->
+            <!--            </el-form-item>-->
+            <!--            <el-form-item v-if="false" label="已选Tag">-->
+            <!--              <div style="display: flex; flex-wrap: wrap">-->
+            <!--                <GameTag v-for="(tag, index) in tag_selected" :key="index" :content="tag" />-->
+            <!--              </div>-->
+            <!--            </el-form-item>-->
+            <!--            <el-form-item v-if="false" label="选择tag">-->
+            <!--              <div style="display: flex; flex-wrap: wrap">-->
+            <!--                <GameTag v-for="(tag, index) in tag_list" :key="index" :content="tag" />-->
+            <!--              </div>-->
+            <!--            </el-form-item>-->
+            <!--            {{ quest_cascader }}-->
+            <!--            <el-form-item v-if="false" label="副本Tag">-->
+            <!--              <el-cascader-->
+            <!--                v-model="quest_cascader"-->
+            <!--                :options="[-->
+            <!--                  {-->
+            <!--                    value: 'normal',-->
+            <!--                    label: '常驻',-->
+            <!--                    children: [-->
+            <!--                      {-->
+            <!--                        value: 101,-->
+            <!--                        label: '猫头鹰',-->
+            <!--                        children: [-->
+            <!--                          {-->
+            <!--                            value: 1,-->
+            <!--                            label: '初级'-->
+            <!--                          }-->
+            <!--                        ]-->
+            <!--                      },-->
+            <!--                      {-->
+            <!--                        value: 102,-->
+            <!--                        label: '废墟魔像',-->
+            <!--                        children: [-->
+            <!--                          {-->
+            <!--                            value: 1,-->
+            <!--                            label: '中级'-->
+            <!--                          },-->
+            <!--                          {-->
+            <!--                            value: 2,-->
+            <!--                            label: '高级'-->
+            <!--                          },-->
+            <!--                          {-->
+            <!--                            value: 3,-->
+            <!--                            label: '高级+'-->
+            <!--                          },-->
+            <!--                          {-->
+            <!--                            value: 4,-->
+            <!--                            label: '超级'-->
+            <!--                          }-->
+            <!--                        ]-->
+            <!--                      }-->
+            <!--                    ]-->
+            <!--                  }-->
+            <!--                ]"-->
+            <!--                filterable-->
+            <!--              >-->
+            <!--              </el-cascader>-->
+            <!--              <el-button style="margin-left: 8px" type="primary">添加</el-button>-->
+            <!--            </el-form-item>-->
+            <el-form-item label="标题">
+              <el-input
+                v-model="party.title"
+                placeholder="注意：投稿标题与上传标题可能不同，未来将会弃用"
+              ></el-input>
             </el-form-item>
             <el-form-item label="来源">
-              <el-input v-model="source_input" placeholder="可选"></el-input>
+              <el-input v-model="source_input" placeholder="可选，上传后添加"></el-input>
             </el-form-item>
           </el-form>
           <div style="display: flex">
-            <el-button type="primary">投稿</el-button>
-            <el-popover placement="top">
+            <!--            <el-button type="primary">投稿</el-button>-->
+            <el-popover v-if="!user.is_login()" placement="top">
               <span style="text-align: center">没有上传权限</span>
               <template #reference>
                 <div style="margin-left: 16px">
@@ -495,36 +700,18 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
                 </div>
               </template>
             </el-popover>
+            <div v-else style="margin-left: 16px">
+              <el-button @click="upload_party" type="warning">上传</el-button>
+            </div>
           </div>
         </div>
       </div>
-      <div
+
+      <CalculatorResourcesView
+        :selected_obj="selected_obj"
         v-else-if="selected_module === 'Resources'"
-        style="display: flex; align-items: center; flex-direction: column; padding: 16px"
       >
-        <template v-if="selected_obj instanceof Unit">
-          <a target="_blank" :href="`/card/unit?wf_id=${selected_obj.id}`">
-            <el-button> 独立Card页 </el-button>
-          </a>
-          <div style="width: 100%; display: flex; align-items: flex-start;">
-              <div style="margin: 16px; width: 50%; border-radius: 8px; background-color: #fff; border: 4px rgba(55,255,202,0.6) solid">
-                  <el-image :src="`/static/worldflipper/unit/full_resized/awakened/${selected_obj.extraction_id}.png`"></el-image>
-              </div>
-              <div style="margin: 16px; width: 50%; border-radius: 8px; background-color: #fff; border: 4px rgba(55,255,202,0.6) solid">
-                  <el-image :src="`/static/worldflipper/unit/pixelart/special/${selected_obj.extraction_id}.gif`"></el-image>
-              </div>
-<!--              <div style="background-color: green; margin: 16px; width: 50%;">-->
-<!--                  <el-image :src="`/static/worldflipper/unit/full/awakened/${selected_obj.extraction_id}.png`"></el-image>-->
-<!--              </div>-->
-          </div>
-        </template>
-        <template v-else-if="selected_obj instanceof Armament">
-          <a target="_blank" :href="`/card/armament?wf_id=${selected_obj.id}`">
-            <el-button> 独立Card页 </el-button>
-          </a>
-        </template>
-        <template v-else> Select a Object </template>
-      </div>
+      </CalculatorResourcesView>
     </el-scrollbar>
     <div
       style="
@@ -540,7 +727,7 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
         transition: bottom 0.3s ease;
       "
       :style="{
-        bottom: hidden_menu ? '0' : '50vh'
+        bottom: hidden_menu ? '0' : '45vh'
       }"
     >
       <div style="flex: 1; text-align: left">
@@ -612,408 +799,264 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
         transition: height 0.3s ease;
       "
       :style="{
-        height: hidden_menu ? '0' : '50vh'
+        height: hidden_menu ? '0' : '45vh'
       }"
     >
-      <template v-if="selected_type === 'Unit'">
-        <div
-          style="padding: 8px; color: rgba(255, 255, 255, 0.9); display: initial"
-          :style="{ display: hidden_menu || hidden_filters ? 'none' : '' }"
-        >
-          <div style="margin: 4px; display: flex">
-            <span style="margin: 4px; display: inline-block; width: 50px">搜索</span>
-            <el-input v-model="filter.text" clearable></el-input>
-          </div>
-          <div
-            style="display: flex; flex-wrap: wrap; --button-active-color: rgba(189, 255, 235, 0.8)"
-          >
-            <div style="margin: 4px">
-              <span style="margin: 4px; display: inline-block; width: 50px">属性</span>
-              <el-button
-                size="small"
-                type="primary"
-                plain
-                style="margin: 0 8px 0 0"
-                @click="
-                  () => {
-                    if (filter_default.element.length === filter.element.length) filter.element = []
-                    else filter.element = JSON.parse(JSON.stringify(filter_default.element))
-                  }
-                "
+      <el-scrollbar
+        style="
+          background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.4),
+            rgba(140, 140, 140, 0.25) 50%,
+            transparent
+          );
+          border-radius: 12px 12px 0 0;
+          margin: 8px;
+          /*height: auto;*/
+        "
+      >
+        <div style="padding-top: 16px; display: flex; flex-wrap: wrap; justify-content: center">
+          <template v-if="showed_list">
+            <template v-for="element in showed_list" :key="element">
+              <div
+                class="wfo"
+                v-if="element instanceof Unit || element instanceof Armament"
+                :style="{
+                  '--element-color':
+                    ele2color[
+                      element instanceof Unit
+                        ? element.element_id
+                        : element instanceof Armament
+                        ? element.element
+                        : -1
+                    ],
+                  filter:
+                    selected_obj === element ? `drop-shadow(0 0 8px var(--element-color))` : '',
+                  'background-color': selected_obj === element ? 'rgba(52,255,201,0.8)' : ''
+                }"
               >
-                {{ filter_default.element.length !== filter.element.length ? '全部' : '清空' }}
-              </el-button>
-              <el-checkbox-group
-                fill="var(--button-active-color)"
-                v-model="filter.element"
-                style="display: inline; vertical-align: middle"
-                size="small"
-              >
-                <el-checkbox-button
-                  v-for="(ele, id_) in {
-                    [-1]: 'none',
-                    0: 'fire',
-                    1: 'water',
-                    2: 'thunder',
-                    3: 'wind',
-                    4: 'light',
-                    5: 'dark'
-                  }"
-                  :key="id_"
-                  :label="parseInt(id_)"
-                  @change="
-                    () => {
-                      if (filter.element.length === filter_default.element.length) {
-                        filter.element.splice(0, filter.element.length)
-                        filter.element.push(parseInt(id_))
-                      }
-                    }
-                  "
-                >
-                  <img
-                    style="width: 14px; height: 14px"
-                    :src="`/static/worldflipper/icon/${ele}.png`"
-                    alt=""
-                  />
-                </el-checkbox-button>
-              </el-checkbox-group>
-            </div>
-            <div style="margin: 4px">
-              <span style="margin: 4px; display: inline-block; width: 50px">稀有度</span>
-              <el-button
-                size="small"
-                type="primary"
-                plain
-                style="margin: 0 8px 0 0"
-                @click="
-                  () => {
-                    if (filter_default.rarity.length === filter.rarity.length) filter.rarity = []
-                    else filter.rarity = JSON.parse(JSON.stringify(filter_default.rarity))
-                  }
-                "
-              >
-                {{ filter_default.rarity.length !== filter.rarity.length ? '全部' : '清空' }}
-              </el-button>
-              <el-checkbox-group
-                fill="var(--button-active-color)"
-                v-model="filter.rarity"
-                style="display: inline; vertical-align: middle"
-                size="small"
-              >
-                <el-checkbox-button
-                  v-for="(rarity, id_) in { 1: '1', 2: '2', 3: '3', 4: '4', 5: '5' }"
-                  :key="id_"
-                  :label="parseInt(id_)"
-                  @change="
-                    () => {
-                      if (filter.rarity.length === filter_default.rarity.length) {
-                        filter.rarity.splice(0, filter.rarity.length)
-                        filter.rarity.push(parseInt(id_))
-                      }
-                    }
-                  "
-                >
-                  <img
-                    style="height: 14px"
-                    :src="`/static/worldflipper/icon/star${rarity}.png`"
-                    alt=""
-                  />
-                </el-checkbox-button>
-              </el-checkbox-group>
-            </div>
-            <div style="margin: 4px">
-              <span style="margin: 4px; display: inline-block; width: 50px">类型</span>
-              <el-button
-                size="small"
-                type="primary"
-                plain
-                style="margin: 0 8px 0 0"
-                @click="
-                  () => {
-                    if (filter_default.type.length === filter.type.length) filter.type = []
-                    else filter.type = JSON.parse(JSON.stringify(filter_default.type))
-                  }
-                "
-              >
-                {{ filter_default.type.length !== filter.type.length ? '全部' : '清空' }}
-              </el-button>
-              <el-checkbox-group
-                text-color="rgba(0, 0, 0, 0.85)"
-                fill="var(--button-active-color)"
-                v-model="filter.type"
-                style="display: inline; vertical-align: middle"
-                size="small"
-              >
-                <el-checkbox-button
-                  v-for="(name, id_) in { 0: '剑士', 1: '格斗', 2: '射击', 3: '辅助', 4: '特殊' }"
-                  :key="id_"
-                  :label="parseInt(id_)"
-                  @change="
-                    () => {
-                      if (filter.type.length === filter_default.type.length) {
-                        filter.type.splice(0, filter.type.length)
-                        filter.type.push(parseInt(id_))
-                      }
-                    }
-                  "
-                >
-                  {{ name }}
-                </el-checkbox-button>
-              </el-checkbox-group>
-            </div>
-            <div style="margin: 4px">
-              <span style="margin: 4px; display: inline-block; width: 50px">种族</span>
-              <el-button
-                size="small"
-                type="primary"
-                plain
-                style="margin: 0 8px 0 0"
-                @click="
-                  () => {
-                    if (filter_default.race.length === filter.race.length) filter.race = []
-                    else filter.race = JSON.parse(JSON.stringify(filter_default.race))
-                  }
-                "
-              >
-                {{ filter_default.race.length !== filter.race.length ? '全部' : '清空' }}
-              </el-button>
-              <el-checkbox-group
-                text-color="rgba(0, 0, 0, 0.85)"
-                fill="var(--button-active-color)"
-                v-model="filter.race"
-                style="display: inline; vertical-align: middle"
-                size="small"
-              >
-                <el-checkbox-button
-                  v-for="(name, id_) in {
-                    Human: '人',
-                    Beast: '兽',
-                    Mystery: '妖',
-                    Element: '精灵',
-                    Dragon: '龙',
-                    Machine: '机械',
-                    Devil: '魔',
-                    Plants: '植物',
-                    Aquatic: '水栖',
-                    Undead: '不死'
-                  }"
-                  :key="id_"
-                  :label="id_"
-                  @change="
-                    () => {
-                      if (filter.race.length === filter_default.race.length) {
-                        filter.race.splice(0, filter.race.length)
-                        filter.race.push(id_)
-                      }
-                    }
-                  "
-                >
-                  {{ name }}
-                </el-checkbox-button>
-              </el-checkbox-group>
-            </div>
-          </div>
-        </div>
-        <el-scrollbar
-          style="
-            background: linear-gradient(
-              to bottom,
-              rgba(0, 0, 0, 0.4),
-              rgba(140, 140, 140, 0.25) 50%,
-              transparent
-            );
-            border-radius: 12px 12px 0 0;
-            margin: 8px;
-            /*height: auto;*/
-          "
-          v-if="manager.unit_data.size"
-        >
-          <div style="padding-top: 16px; display: flex; flex-wrap: wrap; justify-content: center">
-            <template v-if="showed_list.length">
-              <template v-for="element in showed_list" :key="element">
-                <div
-                  class="wfo"
+                <UnitPicOrigin
                   v-if="element instanceof Unit"
-                  :style="{
-                    '--element-color': ele2color[element.element_id],
-                    filter:
-                      selected_obj === element ? `drop-shadow(0 0 8px var(--element-color))` : '',
-                    'background-color': selected_obj === element ? 'rgba(52,255,201,0.8)' : ''
-                  }"
-                >
-                  <UnitPicOrigin
-                    v-if="element instanceof Unit"
-                    @click="select_object(element)"
-                    :unit="element"
-                    :size="90"
-                  />
-                </div>
+                  @click="select_object(element)"
+                  :unit="element"
+                  :size="90"
+                />
+                <ArmamentPicOrigin
+                  v-if="element instanceof Armament"
+                  @click="select_object(element)"
+                  :armament="element"
+                  :size="90"
+                />
+              </div>
+            </template>
+          </template>
+          <template v-else>
+            <el-empty>
+              <template #description>
+                <span style="color: rgba(255, 255, 255, 0.9)"> Oops...该筛选下无匹配内容 </span>
               </template>
-            </template>
-            <template v-else>
-              <el-empty>
-                <template #description>
-                  <span style="color: rgba(255, 255, 255, 0.9)"> Oops...该筛选下无匹配内容 </span>
-                </template>
-              </el-empty>
-            </template>
-          </div>
-        </el-scrollbar>
-      </template>
-      <template v-else-if="selected_type === 'Armament'">
+            </el-empty>
+          </template>
+        </div>
+      </el-scrollbar>
+      <div
+        style="padding: 8px; color: rgba(255, 255, 255, 0.9); display: initial"
+        :style="{ display: hidden_menu || hidden_filters ? 'none' : '' }"
+      >
+        <div style="margin: 4px; display: flex">
+          <span style="margin: 4px; display: inline-block; width: 50px">搜索</span>
+          <el-input v-model="filter.text" clearable></el-input>
+        </div>
         <div
-          style="padding: 8px; color: rgba(255, 255, 255, 0.9); display: initial"
-          :style="{ display: hidden_menu || hidden_filters ? 'none' : '' }"
+          style="display: flex; flex-wrap: wrap; --button-active-color: rgba(189, 255, 235, 0.8)"
         >
-          <div style="margin: 4px; display: flex">
-            <span style="margin: 4px; display: inline-block; width: 50px">搜索</span>
-            <el-input v-model="filter.text" clearable></el-input>
+          <div style="margin: 4px">
+            <span style="margin: 4px; display: inline-block; width: 50px">属性</span>
+            <el-button
+              size="small"
+              type="primary"
+              plain
+              style="margin: 0 8px 0 0"
+              @click="
+                () => {
+                  if (filter_default.element.length === filter.element.length) filter.element = []
+                  else filter.element = JSON.parse(JSON.stringify(filter_default.element))
+                }
+              "
+            >
+              {{ filter_default.element.length !== filter.element.length ? '全部' : '清空' }}
+            </el-button>
+            <el-checkbox-group
+              fill="var(--button-active-color)"
+              v-model="filter.element"
+              style="display: inline; vertical-align: middle"
+              size="small"
+            >
+              <el-checkbox-button
+                v-for="(ele, id_) in {
+                  [-1]: 'none',
+                  0: 'fire',
+                  1: 'water',
+                  2: 'thunder',
+                  3: 'wind',
+                  4: 'light',
+                  5: 'dark'
+                }"
+                :key="id_"
+                :label="parseInt(id_)"
+                @change="
+                  () => {
+                    if (filter.element.length === filter_default.element.length) {
+                      filter.element.splice(0, filter.element.length)
+                      filter.element.push(parseInt(id_))
+                    }
+                  }
+                "
+              >
+                <img
+                  style="width: 14px; height: 14px"
+                  :src="`/static/worldflipper/icon/${ele}.png`"
+                  alt=""
+                />
+              </el-checkbox-button>
+            </el-checkbox-group>
           </div>
-          <div
-            style="display: flex; flex-wrap: wrap; --button-active-color: rgba(189, 255, 235, 0.8)"
-          >
-            <div style="margin: 4px">
-              <span style="margin: 4px; display: inline-block; width: 50px">属性</span>
-              <el-button
-                size="small"
-                type="primary"
-                plain
-                style="margin: 0 8px 0 0"
-                @click="
+          <div style="margin: 4px">
+            <span style="margin: 4px; display: inline-block; width: 50px">稀有度</span>
+            <el-button
+              size="small"
+              type="primary"
+              plain
+              style="margin: 0 8px 0 0"
+              @click="
+                () => {
+                  if (filter_default.rarity.length === filter.rarity.length) filter.rarity = []
+                  else filter.rarity = JSON.parse(JSON.stringify(filter_default.rarity))
+                }
+              "
+            >
+              {{ filter_default.rarity.length !== filter.rarity.length ? '全部' : '清空' }}
+            </el-button>
+            <el-checkbox-group
+              fill="var(--button-active-color)"
+              v-model="filter.rarity"
+              style="display: inline; vertical-align: middle"
+              size="small"
+            >
+              <el-checkbox-button
+                v-for="(rarity, id_) in { 1: '1', 2: '2', 3: '3', 4: '4', 5: '5' }"
+                :key="id_"
+                :label="parseInt(id_)"
+                @change="
                   () => {
-                    if (filter_default.element.length === filter.element.length) filter.element = []
-                    else filter.element = JSON.parse(JSON.stringify(filter_default.element))
+                    if (filter.rarity.length === filter_default.rarity.length) {
+                      filter.rarity.splice(0, filter.rarity.length)
+                      filter.rarity.push(parseInt(id_))
+                    }
                   }
                 "
               >
-                {{ filter_default.element.length !== filter.element.length ? '全部' : '清空' }}
-              </el-button>
-              <el-checkbox-group
-                fill="var(--button-active-color)"
-                v-model="filter.element"
-                style="display: inline; vertical-align: middle"
-                size="small"
-              >
-                <el-checkbox-button
-                  v-for="(ele, id_) in {
-                    [-1]: 'none',
-                    0: 'fire',
-                    1: 'water',
-                    2: 'thunder',
-                    3: 'wind',
-                    4: 'light',
-                    5: 'dark'
-                  }"
-                  :key="id_"
-                  :label="parseInt(id_)"
-                  @change="
-                    () => {
-                      if (filter.element.length === filter_default.element.length) {
-                        filter.element.splice(0, filter.element.length)
-                        filter.element.push(parseInt(id_))
-                      }
-                    }
-                  "
-                >
-                  <img
-                    style="width: 14px; height: 14px"
-                    :src="`/static/worldflipper/icon/${ele}.png`"
-                    alt=""
-                  />
-                </el-checkbox-button>
-              </el-checkbox-group>
-            </div>
-            <div style="margin: 4px">
-              <span style="margin: 4px; display: inline-block; width: 50px">稀有度</span>
-              <el-button
-                size="small"
-                type="primary"
-                plain
-                style="margin: 0 8px 0 0"
-                @click="
+                <img
+                  style="height: 14px"
+                  :src="`/static/worldflipper/icon/star${rarity}.png`"
+                  alt=""
+                />
+              </el-checkbox-button>
+            </el-checkbox-group>
+          </div>
+          <div v-if="selected_type === 'Unit'" style="margin: 4px">
+            <span style="margin: 4px; display: inline-block; width: 50px">类型</span>
+            <el-button
+              size="small"
+              type="primary"
+              plain
+              style="margin: 0 8px 0 0"
+              @click="
+                () => {
+                  if (filter_default.type.length === filter.type.length) filter.type = []
+                  else filter.type = JSON.parse(JSON.stringify(filter_default.type))
+                }
+              "
+            >
+              {{ filter_default.type.length !== filter.type.length ? '全部' : '清空' }}
+            </el-button>
+            <el-checkbox-group
+              text-color="rgba(0, 0, 0, 0.85)"
+              fill="var(--button-active-color)"
+              v-model="filter.type"
+              style="display: inline; vertical-align: middle"
+              size="small"
+            >
+              <el-checkbox-button
+                v-for="(name, id_) in { 0: '剑士', 1: '格斗', 2: '射击', 3: '辅助', 4: '特殊' }"
+                :key="id_"
+                :label="parseInt(id_)"
+                @change="
                   () => {
-                    if (filter_default.rarity.length === filter.rarity.length) filter.rarity = []
-                    else filter.rarity = JSON.parse(JSON.stringify(filter_default.rarity))
+                    if (filter.type.length === filter_default.type.length) {
+                      filter.type.splice(0, filter.type.length)
+                      filter.type.push(parseInt(id_))
+                    }
                   }
                 "
               >
-                {{ filter_default.rarity.length !== filter.rarity.length ? '全部' : '清空' }}
-              </el-button>
-              <el-checkbox-group
-                fill="var(--button-active-color)"
-                v-model="filter.rarity"
-                style="display: inline; vertical-align: middle"
-                size="small"
-              >
-                <el-checkbox-button
-                  v-for="(rarity, id_) in { 1: '1', 2: '2', 3: '3', 4: '4', 5: '5' }"
-                  :key="id_"
-                  :label="parseInt(id_)"
-                  @change="
-                    () => {
-                      if (filter.rarity.length === filter_default.rarity.length) {
-                        filter.rarity.splice(0, filter.rarity.length)
-                        filter.rarity.push(parseInt(id_))
-                      }
+                {{ name }}
+              </el-checkbox-button>
+            </el-checkbox-group>
+          </div>
+          <div v-if="selected_type === 'Unit'" style="margin: 4px">
+            <span style="margin: 4px; display: inline-block; width: 50px">种族</span>
+            <el-button
+              size="small"
+              type="primary"
+              plain
+              style="margin: 0 8px 0 0"
+              @click="
+                () => {
+                  if (filter_default.race.length === filter.race.length) filter.race = []
+                  else filter.race = JSON.parse(JSON.stringify(filter_default.race))
+                }
+              "
+            >
+              {{ filter_default.race.length !== filter.race.length ? '全部' : '清空' }}
+            </el-button>
+            <el-checkbox-group
+              text-color="rgba(0, 0, 0, 0.85)"
+              fill="var(--button-active-color)"
+              v-model="filter.race"
+              style="display: inline; vertical-align: middle"
+              size="small"
+            >
+              <el-checkbox-button
+                v-for="(name, id_) in {
+                  Human: '人',
+                  Beast: '兽',
+                  Mystery: '妖',
+                  Element: '精灵',
+                  Dragon: '龙',
+                  Machine: '机械',
+                  Devil: '魔',
+                  Plants: '植物',
+                  Aquatic: '水栖',
+                  Undead: '不死'
+                }"
+                :key="id_"
+                :label="id_"
+                @change="
+                  () => {
+                    if (filter.race.length === filter_default.race.length) {
+                      filter.race.splice(0, filter.race.length)
+                      filter.race.push(id_)
                     }
-                  "
-                >
-                  <img
-                    style="height: 14px"
-                    :src="`/static/worldflipper/icon/star${rarity}.png`"
-                    alt=""
-                  />
-                </el-checkbox-button>
-              </el-checkbox-group>
-            </div>
+                  }
+                "
+              >
+                {{ name }}
+              </el-checkbox-button>
+            </el-checkbox-group>
           </div>
         </div>
-        <el-scrollbar
-          style="
-            background: linear-gradient(
-              to bottom,
-              rgba(0, 0, 0, 0.4),
-              rgba(140, 140, 140, 0.25) 50%,
-              transparent
-            );
-            border-radius: 12px 12px 0 0;
-            margin: 8px;
-            /*height: auto;*/
-          "
-          v-if="manager.armament_data.size"
-        >
-          <div style="padding-top: 16px; display: flex; flex-wrap: wrap; justify-content: center">
-            <template v-if="showed_list.length">
-              <template v-for="element in showed_list" :key="element">
-                <div
-                  class="wfo"
-                  v-if="element instanceof Armament"
-                  :style="{
-                    '--element-color': ele2color[element.element],
-                    // filter:
-                    //   selected_obj === element ? `drop-shadow(0 0 8px var(--element-color))` : '',
-                    'background-color': selected_obj === element ? 'rgba(52,255,201,0.8)' : ''
-                  }"
-                >
-                  <ArmamentPicOrigin
-                    v-if="element instanceof Armament"
-                    @click="select_object(element)"
-                    :armament="element"
-                    :size="90"
-                  />
-                </div>
-              </template>
-            </template>
-            <template v-else>
-              <el-empty>
-                <template #description>
-                  <span style="color: rgba(255, 255, 255, 0.9)"> Oops...该筛选下无匹配内容 </span>
-                </template>
-              </el-empty>
-            </template>
-          </div>
-        </el-scrollbar>
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -1026,7 +1069,6 @@ export default {
   }
 }
 </script>
-
 <style scoped>
 .wfo {
   /*margin: 4px;*/
@@ -1037,15 +1079,15 @@ export default {
   cursor: pointer;
   filter: none;
   box-shadow: none;
-  transition: box-shadow 0.3s ease, background-color 0.2s ease;
+  transition: background-color 0.2s ease, scale 0.4s ease;
 }
 
 .wfo:hover {
-  box-shadow: 0 0 16px var(--element-color);
+  z-index: 1;
+  filter: drop-shadow(0 0 16px var(--element-color));
+  scale: 1.025;
 }
-</style>
 
-<style scoped>
 .party-body {
   user-select: none;
   width: 480px;

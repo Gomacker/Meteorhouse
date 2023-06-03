@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ArmamentWikiCard from '@/components/card/ArmamentWikiCard.vue'
-import { Armament, ele_id2ele, manager } from '@/stores/manager'
-import { ref } from 'vue'
+import { Armament, ele_id2ele, manager, Unit } from "@/stores/manager";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import ArmamentPicOrigin from '@/components/objects/armament/ArmamentPicOrigin.vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
@@ -14,11 +14,31 @@ const selected_source = ref<string>()
 const ra = () =>
   Array.from(armament_list.value.keys())[Math.round(Math.random() * armament_list.value.size)]
 
+function save_quick(event: any) {
+  if (event.keyCode === 83 && event.ctrlKey) {
+    console.log('ctrl + s')
+    event.preventDefault()
+    event.returnValue = false
+    if (selected_armament.value instanceof Armament && selected_source.value) {
+      save_armament(selected_source.value, selected_armament.value.id, selected_armament.value)
+    }
+    if (event.ctrlKey && event.code === 'KeyS') return false
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', save_quick)
+})
+onBeforeUnmount(() => {
+  window.addEventListener('keydown', save_quick)
+})
+
 function save_armament(source_id: string, id: number, armament: Armament) {
   axios
     .post(`/api/v1/origin/${source_id}/armament/update/`, { id: id, data: armament._data })
     .then(() => {
       ElMessage.success(`已保存 ${armament.id}`)
+      armament_list.value.set(id, armament)
     })
     .catch((e) => {
       console.log(e)
@@ -74,11 +94,9 @@ function load_source(source_id: string) {
         <div style="flex: 33%; display: flex; justify-content: center">
           <el-button
             @click="
-              () => {
-                selected_armament = new Armament(
-                  JSON.parse(JSON.stringify(manager.armament_data.get(ra())._data))
-                )
-              }
+              selected_armament = Armament.load(
+                JSON.parse(JSON.stringify(manager.armament_data.get(ra())._data))
+              )
             "
           >
             debug random
@@ -96,7 +114,7 @@ function load_source(source_id: string) {
           style="width: 100%; border-radius: 0; zoom: 75%"
           :armament="selected_armament"
         />
-        <div v-else>Select a Object</div>
+        <div v-else>Select an Object</div>
       </el-scrollbar>
       <el-drawer direction="rtl" size="50%" v-model="drawer">
         <div style="display: flex; flex-direction: column">
@@ -130,7 +148,7 @@ function load_source(source_id: string) {
                   "
                   :size="90"
                   :armament="a[1]"
-                  @click="selected_armament = new Armament(JSON.parse(JSON.stringify(a[1]._data)))"
+                  @click="selected_armament = Armament.load(JSON.parse(JSON.stringify(a[1]._data)))"
                 />
               </template>
             </div>
@@ -144,8 +162,8 @@ function load_source(source_id: string) {
         <template v-if="selected_armament instanceof Armament">
           <el-form label-width="40px">
             <el-form-item label="ID">
-              {{ selected_armament.id }} {{ selected_armament.extraction_id }}</el-form-item
-            >
+              {{ selected_armament.id }} {{ selected_armament.extraction_id }}
+            </el-form-item>
             <el-form-item label="属性">
               <el-select v-model="selected_armament._data['element']">
                 <el-option
@@ -173,6 +191,9 @@ function load_source(source_id: string) {
             </el-form-item>
             <el-form-item label="白值">
               <el-input v-model="selected_armament._data['status_data']"></el-input>
+            </el-form-item>
+            <el-form-item label="Tags">
+              <el-input v-model="selected_armament._data['tags']"></el-input>
             </el-form-item>
             <el-divider style="margin: 8px 0" />
             <el-form-item label="能力">

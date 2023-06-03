@@ -1,99 +1,12 @@
 import chroma from 'chroma-js'
-
-// class TableProperty {
-//     private readonly _data: any;
-//     // public title: string;
-//     // public main_color: chroma;
-//     // public sub_color: chroma;
-//     // public little_about: string;
-//     // public banner: string;
-//     // public background: string;
-//     // public footer: string;
-//     constructor(data: any) {
-//         this._data = data
-//         // this.title = data['title']
-//         // this.main_color = chroma(data['main_color'])
-//         // this.sub_color = chroma(data['sub_color'])
-//         // this.little_about = data['little_about']
-//         // this.banner = data['banner']
-//         // this.background = data['background']
-//         // this.footer = data['footer']
-//     }
-//
-//     get title(): string {
-//         return 'title' in this._data ? this._data['title'] : ''
-//     }
-//
-//     set title(title: string) {
-//         this._data['title'] = title
-//     }
-//
-//     get main_color(): chroma.Color {
-//         return 'main_color' in this._data ? chroma(this._data['main_color']) : chroma('white')
-//     }
-//
-//     set main_color(color: chroma.Color) {
-//         this._data['main_color'] = color.hex()
-//     }
-//
-//     get sub_color(): chroma.Color {
-//         return 'sub_color' in this._data ? chroma(this._data['sub_color']) : chroma('white')
-//     }
-//
-//     set sub_color(color: chroma.Color) {
-//         this._data['sub_color'] = color.hex()
-//     }
-//
-//     get little_about(): string {
-//         return 'little_about' in this._data ? this._data['little_about'] : ''
-//     }
-//
-//     set little_about(title: string) {
-//         this._data['little_about'] = title
-//     }
-//
-//     get banner(): string {
-//         return 'banner' in this._data ? this._data['banner'] : ''
-//     }
-//
-//     set banner(banner: string) {
-//         this._data['banner'] = banner
-//     }
-//
-//     get background(): string {
-//         return 'background' in this._data ? this._data['background'] : ''
-//     }
-//
-//     set background(background: string) {
-//         this._data['background'] = background
-//     }
-//
-//     get footer(): string {
-//         return 'footer' in this._data ? this._data['footer'] : ''
-//     }
-//
-//     set footer(footer: string) {
-//         this._data['footer'] = footer
-//     }
-//
-//     data() {
-//         return {
-//             title: this.title,
-//             main_color: this.main_color.hex(),
-//             sub_color: this.sub_color.hex(),
-//             little_about: this.little_about,
-//             banner: this.banner,
-//             background: this.background,
-//             footer: this.footer,
-//         }
-//     }
-// }
+import { Armament, manager, PartyRelease, Unit } from '@/stores/manager'
 
 class TableProperty {
   // private readonly _data: any;
   public title: string
   private _main_color: chroma.Color
   private _sub_color: chroma.Color
+  update_time: string
   public little_about: string
   public banner: string
   public background: string
@@ -105,6 +18,7 @@ class TableProperty {
     this.title = 'title' in data ? data['title'] : ''
     this._main_color = 'main_color' in data ? chroma(data['main_color']) : chroma('white')
     this._sub_color = 'sub_color' in data ? chroma(data['sub_color']) : chroma('white')
+    this.update_time = 'update_time' in data ? data['update_time'] : ''
     this.little_about = 'little_about' in data ? data['little_about'] : ''
     this.banner = 'banner' in data ? data['banner'] : ''
     this.background = 'background' in data ? data['background'] : ''
@@ -140,6 +54,7 @@ class TableProperty {
       title: this.title,
       main_color: this.main_color,
       sub_color: this.sub_color,
+      update_time: this.update_time,
       little_about: this.little_about,
       banner: this.banner,
       background: this.background,
@@ -150,42 +65,252 @@ class TableProperty {
 
 export abstract class TableElement {
   public type: string
-  protected _data: any
-  protected constructor(data: { type: string; data: any }) {
-    this.type = data['type']
-    this._data = data['data']
+  protected constructor(type: string) {
+    this.type = type
   }
   data(): object {
     return {
       type: this.type,
-      data: this._data
+      data: {}
     }
   }
-  static load(): TableElement {
-    return new TableElementTextArea({})
+  get full_row(): boolean {
+    return false
+  }
+
+  static load(data: any): TableElement {
+    // console.log(data)
+    if (data.type === 'Row') {
+      return new TableElementRow(data.data)
+    }
+    if (data.type === 'SubTitle') {
+      return new TableElementSubTitle(data.data)
+    }
+    if (data['type'] === 'Html' || data['type'] === 'Origin') {
+      return new TableElementHtml(data.data)
+    }
+    if (data['type'] === 'TextArea' || data['type'] === 'TextRegion') {
+      return new TableElementTextArea(data.data)
+    }
+    if (data['type'] === 'Party') {
+      // return new TableElementTextArea('')
+      // return new TableElementAny(data.type, data.data)
+      return new TableElementParty(data.data)
+    }
+    if (data['type'] === 'PartyUnion') {
+      // return new TableElementTextArea('')
+      // return new TableElementAny(data.type, data.data)
+      return new TableElementPartyUnion(data.data)
+    }
+    if (data['type'] === 'WikiCard') {
+      return new TableElementWikiCard(data.data)
+    }
+    return new TableElementAny(data.type, data.data)
   }
 }
 
-export class TableElementTextArea extends TableElement {
+export class TableElementAny extends TableElement {
+  private readonly d: any
+  constructor(type: string, data: any) {
+    super(type)
+    this.d = data
+  }
+  data(): object {
+    return {
+      type: this.type,
+      data: this.d
+    }
+  }
+}
+
+export class TableElementRow extends TableElement {
+  public readonly elements: TableElement[]
   constructor(data: any) {
-    super({ type: 'TextArea', data: data })
+    super('Row')
+    this.elements = Object.hasOwn(data, 'elements')
+      ? Array.from(data['elements']).map((value) => TableElement.load(value))
+      : new Array<TableElement>()
+    // console.log(data)
+  }
+  data(): object {
+    return {
+      type: this.type,
+      data: {
+        elements: this.elements.map((value) => value.data())
+      }
+    }
   }
 
-  get content(): string {
-    return Object.hasOwn(this._data, 'content') ? this._data['content'] : ''
+  move_pre(index: number) {
+    if (this.elements[index - 1])
+      this.elements[index - 1] = this.elements.splice(index, 1, this.elements[index - 1])[0]
+  }
+  move_next(index: number) {
+    if (this.elements[index + 1])
+      this.elements[index + 1] = this.elements.splice(index, 1, this.elements[index + 1])[0]
+  }
+  insert_textarea(index: number) {
+    this.elements.splice(index, 0, new TableElementTextArea({}))
+  }
+  delete(index: number) {
+    this.elements.splice(index, 1)
+  }
+}
+export class TableElementSubTitle extends TableElement {
+  public readonly content: string
+  public readonly element: string
+  constructor(data: any) {
+    super('SubTitle')
+    this.content = typeof data['content'] === 'string' ? data['content'] : ''
+    this.element = typeof data['element'] === 'string' ? data['element'] : ''
+    // console.log(data)
+  }
+  data(): object {
+    return {
+      type: this.type,
+      data: {
+        content: this.content,
+        element: this.element
+      }
+    }
+  }
+}
+
+export class TableElementHtml extends TableElement {
+  public readonly content: string
+  constructor(data: any) {
+    super('Html')
+    this.content = typeof data['content'] === 'string' ? data['content'] : ''
+  }
+  data(): object {
+    return {
+      type: this.type,
+      data: {
+        content: this.content
+      }
+    }
+  }
+}
+
+export class TableElementParty extends TableElement {
+  public readonly party_data: string
+  public show_name: boolean
+  public show_awaken: boolean
+
+  constructor(data: any) {
+    super('Party')
+    this.party_data = data['party'] ? JSON.stringify(data['party'], null, 2) : JSON.stringify(PartyRelease.empty().data(), null, 2)
+    this.show_name = data['show_name']
+    this.show_awaken = data['show_awaken']
   }
 
-  get full_row(): boolean {
-    return Object.hasOwn(this._data, 'full_row') ? this._data['full_row'] : false
+  get party() {
+    try {
+      // console.log(this.party_data);
+      return PartyRelease.loads(JSON.parse(this.party_data))
+    } catch (e) {
+      // console.log('party_data_read_error');
+      return PartyRelease.empty()
+    }
   }
 
   data(): object {
     return {
       type: this.type,
       data: {
-          content: this.content,
-          full_row: this.full_row,
+        party: this.party.data(),
+        show_name: this.show_name,
+        show_awaken: this.show_awaken
+      }
+    }
+  }
+}
 
+export class TableElementPartyUnion extends TableElementParty {
+  public label: string
+  public title: string
+  public content: string
+  constructor(data: any) {
+    super(data)
+    this.type = 'PartyUnion'
+    this.label = data['label']
+    this.title = data['title']
+    this.content = data['content']
+  }
+
+  get full_row(): boolean {
+    return true
+  }
+
+  data(): object {
+    return Object.fromEntries(
+      new Map(
+        Object.entries(super.data()).concat(
+          Object.entries({
+            label: this.label,
+            title: this.title,
+            content: this.content
+          })
+        )
+      )
+    )
+  }
+}
+
+export class TableElementWikiCard extends TableElement {
+  public object_type: 'Unit' | 'Armament'
+  public object_id: number
+  public lite: boolean
+  constructor(data: any) {
+    super('WikiCard')
+    this.object_type = ['Unit', 'Armament'].includes(data['type']) ? data['type'] : 'Unit'
+    this.object_id = typeof data['id'] === 'number' ? data['id'] : 0
+    this.lite = typeof data['lite'] === 'boolean' ? data['lite'] : false
+  }
+
+  get object(): Unit | Armament | undefined {
+    if (this.object_type === 'Unit') return manager.unit_data.get(this.object_id)
+    if (this.object_type === 'Armament') return manager.armament_data.get(this.object_id)
+    return undefined
+  }
+
+  data(): object {
+    return {
+      type: this.type,
+      data: {
+        type: this.object_type,
+        id: this.object_id,
+        lite: this.lite
+      }
+    }
+  }
+}
+
+export class TableElementTextArea extends TableElement {
+  public content: string
+  public little_title: boolean
+  public full: boolean
+
+  constructor(data: any) {
+    // super('TextArea')
+    super('TextRegion')
+    this.content = typeof data['content'] === 'string' ? data['content'] : ''
+    this.little_title = typeof data['little_title'] === 'boolean' ? data['little_title'] : false
+    this.full = typeof data['full'] === 'boolean' ? data['full'] : false
+  }
+
+  get full_row(): any {
+    return this.full
+  }
+
+  data(): object {
+    return {
+      type: this.type, // for legacy
+      // type: this.type,
+      data: {
+        content: this.content,
+        full: this.full,
+        little_title: this.little_title
       }
     }
   }
@@ -193,18 +318,34 @@ export class TableElementTextArea extends TableElement {
 
 export class Table {
   public property: TableProperty
-  public content: any
+  public content: Array<TableElement>
 
   constructor(data: any) {
     this.property = new TableProperty(data['property'])
     this.content = data['content']
+      ? Array.from(data['content']).map((value) => TableElement.load(value))
+      : []
   }
-  data() {
+  public data() {
     return {
       property: this.property.data(),
-      content: this.content
-      // content: this.content
+      content: this.content.map((value) => value.data())
     }
+  }
+
+  move_pre(index: number) {
+    if (this.content[index - 1])
+      this.content[index - 1] = this.content.splice(index, 1, this.content[index - 1])[0]
+  }
+  move_next(index: number) {
+    if (this.content[index + 1])
+      this.content[index + 1] = this.content.splice(index, 1, this.content[index + 1])[0]
+  }
+  insert_row(index: number) {
+    this.content.splice(index, 0, new TableElementRow({}))
+  }
+  delete(index: number) {
+    this.content.splice(index, 1)
   }
 }
 

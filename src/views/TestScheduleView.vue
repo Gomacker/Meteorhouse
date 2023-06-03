@@ -4,10 +4,10 @@ import ScheduleCalender from "@/components/schedule/ScheduleCalendar.vue";
 </script>
 
 <template>
-  <div>
-    <ScheduleCalender style="zoom: 1;"></ScheduleCalender>
+  <el-scrollbar>
+    <ScheduleCalender></ScheduleCalender>
 <!--    <ScheduleCalendarLegacy style="zoom: 1;"></ScheduleCalendarLegacy>-->
-  </div>
+  </el-scrollbar>
 </template>
 
 <style scoped></style>

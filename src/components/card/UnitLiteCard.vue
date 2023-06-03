@@ -1,20 +1,32 @@
 <script lang="ts" setup>
-import { Unit } from '@/stores/manager'
+import { ele2color, Unit } from '@/stores/manager'
 import { ref } from 'vue'
 import UnitPicOrigin from '@/components/objects/unit/UnitPicOrigin.vue'
+import GameTag from '@/components/party/GameTag.vue'
+import chroma from 'chroma-js'
 
 const alpha = 0.85
-const ele2color = {
-  [-1]: 'rgb(105,105,105,' + alpha + ')',
-  0: 'rgba(234,53,75,' + alpha + ')',
-  1: 'rgba(68,137,255,' + alpha + ')',
-  2: 'rgba(244,204,36,' + alpha + ')',
-  3: 'rgba(119,217,47,' + alpha + ')',
-  4: 'rgba(245,255,186,' + alpha + ')',
-  5: 'rgba(90,57,95,' + alpha + ')'
-}
+// const ele2color = {
+//   [-1]: 'rgb(105,105,105,' + alpha + ')',
+//   0: 'rgba(234,53,75,' + alpha + ')',
+//   1: 'rgba(68,137,255,' + alpha + ')',
+//   2: 'rgba(244,204,36,' + alpha + ')',
+//   3: 'rgba(119,217,47,' + alpha + ')',
+//   4: 'rgba(245,255,186,' + alpha + ')',
+//   5: 'rgba(90,57,95,' + alpha + ')'
+// }
 
 const show_awakened = ref(false)
+
+function get_tags(unit: Unit) {
+  let tags: string[]
+  try {
+    tags = JSON.parse(unit.tags)
+  }catch (e) {
+    tags = []
+  }
+  return tags
+}
 
 const props = defineProps({
   unit: Unit
@@ -48,9 +60,9 @@ const props = defineProps({
         color: rgb(50, 50, 50);
       "
       :style="{
-        background: `linear-gradient(135deg, ${
-          ele2color[props.unit.element_id]
-        } 101px, rgba(248,248,248, 0.77) 101px, rgba(248,248,248, 0.85) calc(100% - 32px), rgba(0,40,115, 0.85) calc(100% - 32px), rgba(0,0,0, 0.85))`
+        background: `linear-gradient(135deg, ${chroma(ele2color[props.unit.element_id]).alpha(
+          alpha
+        )} 101px, rgba(248,248,248, 0.77) 101px, rgba(248,248,248, 0.85) calc(100% - 32px), rgba(0,40,115, 0.85) calc(100% - 32px), rgba(0,0,0, 0.85))`
       }"
     >
       <div style="display: flex; width: 100%; margin: 16px 16px 0">
@@ -60,7 +72,7 @@ const props = defineProps({
             <p style="font-size: 18px; font-family: '华文细黑', serif; font-weight: 600">
               {{ props.unit.name_sub }}
             </p>
-            <p style="font-size: 32px; font-family: '华文细黑', serif; font-weight: 600">
+            <p style="font-size: 30px; font-family: '华文细黑', serif; font-weight: 600">
               {{ props.unit.name_zh }}
             </p>
           </div>
@@ -89,9 +101,13 @@ const props = defineProps({
       </div>
       <hr style="width: 100%; margin: 12px 12px 8px" />
       <div>
-        <el-tag effect="dark" style="border: none; margin: 2px">面包</el-tag>
-        <el-tag effect="dark" style="border: none; margin: 2px">破敌</el-tag>
-        <el-tag effect="dark" color="orange" style="border: none; margin: 2px">PF刃</el-tag>
+        <template v-if="props.unit.tags">
+          <GameTag
+            v-for="(tag_content, index) in get_tags(props.unit)"
+            :key="index"
+            :content="tag_content"
+          />
+        </template>
       </div>
     </div>
   </div>

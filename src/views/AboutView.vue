@@ -12,7 +12,7 @@
       <p>
         <el-button type="warning" @click="$router.push('/login')">后台登录</el-button>
       </p>
-      <p>Meteorhouse Version：v1.0-pre1</p>
+      <p>Meteorhouse Version：<span style="color: coral">v1.0-pre3</span></p>
       <p>
         Author：@Kranca / Gomacker
         <a href="https://space.bilibili.com/11466987" target="_blank">
@@ -88,7 +88,12 @@
         width="320"
         scrolling="no"
         height="200"
-        style="border: none; border-radius: 16px; margin: 4px; box-shadow: 0 0 16px rgba(0, 0, 0, 0.4)"
+        style="
+          border: none;
+          border-radius: 16px;
+          margin: 4px;
+          box-shadow: 0 0 16px rgba(0, 0, 0, 0.4);
+        "
       />
     </div>
     <div style="display: flex; justify-content: space-evenly">

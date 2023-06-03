@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Unit, ele_id2ele, type2zh } from '@/stores/manager'
-import { ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import UnitWikiCard from '@/components/card/UnitWikiCard.vue'
@@ -14,11 +14,31 @@ const selected_source = ref<string>()
 const ra = () =>
   Array.from(unit_list.value.keys())[Math.round(Math.random() * unit_list.value.size)]
 
+function save_quick(event: any) {
+  if (event.keyCode === 83 && event.ctrlKey) {
+    console.log('ctrl + s')
+    event.preventDefault()
+    event.returnValue = false
+    if (selected_unit.value instanceof Unit && selected_source.value) {
+      save_unit(selected_source.value, selected_unit.value.id, selected_unit.value)
+    }
+    if (event.ctrlKey && event.code === 'KeyS') return false
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', save_quick)
+})
+onBeforeUnmount(() => {
+  window.addEventListener('keydown', save_quick)
+})
+
 function save_unit(source_id: string, id: number, unit: Unit) {
   axios
     .post(`/api/v1/origin/${source_id}/unit/update/`, { id: id, data: unit._data })
     .then(() => {
       ElMessage.success(`已保存 ${unit.id}`)
+      unit_list.value.set(id, unit)
     })
     .catch((e) => {
       console.log(e)
@@ -31,14 +51,14 @@ function load_source(source_id: string) {
     console.log(r)
     for (const unit in r.data) {
       unit_list.value.set(parseInt(unit), new Unit(r.data[unit]))
-      unit_list.value = new Map<number, Unit>(
-        Array.from(unit_list.value).sort(
-          (a, b) => parseInt(b[1].anise_id) - parseInt(a[1].anise_id)
-        )
-      )
-      selected_source.value = source_id
       // console.log(data['unit'][unit])
     }
+    // unit_list.value = new Map<number, Unit>(
+    //   Array.from(unit_list.value).sort(
+    //     (a, b) => parseInt(b[1].anise_id) - parseInt(a[1].anise_id)
+    //   )
+    // )
+    selected_source.value = source_id
   })
 }
 </script>
@@ -74,9 +94,7 @@ function load_source(source_id: string) {
         <div style="flex: 33%; display: flex; justify-content: center">
           <el-button
             @click="
-              () => {
-                selected_unit = new Unit(JSON.parse(JSON.stringify(unit_list.get(ra())._data)))
-              }
+              selected_unit = Unit.load(JSON.parse(JSON.stringify(unit_list.get(ra())._data)))
             "
             :disabled="unit_list.size <= 0"
           >
@@ -95,7 +113,7 @@ function load_source(source_id: string) {
           style="width: 100%; border-radius: 0; zoom: 75%"
           :unit="selected_unit"
         />
-        <div v-else>Select a Object</div>
+        <div v-else>Select an Object</div>
       </el-scrollbar>
       <el-drawer size="50%" direction="rtl" style="" v-model="drawer">
         <div style="display: flex; flex-direction: column">
@@ -129,7 +147,7 @@ function load_source(source_id: string) {
                   "
                   :size="90"
                   :unit="u[1]"
-                  @click="selected_unit = new Unit(JSON.parse(JSON.stringify(u[1]._data)))"
+                  @click="selected_unit = Unit.load(JSON.parse(JSON.stringify(u[1]._data)))"
                 />
               </template>
             </div>
@@ -140,7 +158,6 @@ function load_source(source_id: string) {
         always
         style="background-color: rgba(255 127 255 / 0.5); width: 100%; padding: 16px; height: 70%"
       >
-        <!--          {{ unit_list }}-->
         <template v-if="selected_unit instanceof Unit">
           <el-form inline label-width="40px">
             <el-form-item label="ID">
@@ -199,6 +216,9 @@ function load_source(source_id: string) {
             </el-form-item>
             <el-form-item label="白值">
               <el-input v-model="selected_unit._data['status_data']"></el-input>
+            </el-form-item>
+            <el-form-item label="Tags">
+              <el-input v-model="selected_unit._data['tags']"></el-input>
             </el-form-item>
             <el-divider style="margin: 8px 0" />
             <el-form-item label="队长">

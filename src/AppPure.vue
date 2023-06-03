@@ -1,69 +1,50 @@
 <script lang="ts" setup>
-import {Aim, Edit, Expand, Grid, InfoFilled, List, Search} from "@element-plus/icons-vue";
-import {ref} from "vue";
+import { ref } from 'vue'
 
 const sidebar_hidden = ref(false)
 </script>
-<script lang="ts">
-
-export default {
-  data() {
-    return {
-      is_login: true,
-      user_name: 'user_name',
-      user_avatar: 'user_avatar',
-      permissions: 'permissions'
-    }
-  }
-}
-</script>
 <template>
-  <div style="height: 100%;">
-    <el-container>
-      <el-header
-          style="
-            background: linear-gradient(to right, #95fa8a, yellow);
-            display: flex;
-            z-index: 20;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 50%);
-            border-radius: 0 0 8px 8px;
-        "
+  <div style="width: 100%; background: var(--color-background)">
+    <el-header
+      style="
+        background: linear-gradient(to right, #fa8afa, rgba(0, 255, 128, 0.7));
+        display: flex;
+        z-index: 20;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 50%);
+        border-radius: 0 0 8px 8px;
+      "
+    >
+      <el-page-header
+        title=" "
+        @back="sidebar_hidden = !sidebar_hidden"
+        style="display: flex; justify-content: center"
       >
-        <el-page-header
-            icon="" title=" "
-            @back="sidebar_hidden = !sidebar_hidden"
-            style="display: flex; justify-content: center;"
-        >
-          <template #content>
-            <router-link style="color: #770080; font-weight: 500;" to="/">流星屋图书馆（Alpha）</router-link>
-          </template>
-        </el-page-header>
-        <div style="flex: 1;"/>
-        <div style="display: flex; align-items: center; user-select: none; cursor:pointer;">
-          © Copyright __________ ?
-        </div>
-      </el-header>
-      <el-container style="height: 100%;">
-        <div style="width: fit-content; overflow: hidden;">
-          <img
-              class="bg-magic-circle"
-              src="@/assets/bg_magic_circle.png"
-              alt=""
-              @dragstart.prevent
-              style="z-index: -1;"
-          />
-          <router-view></router-view>
-        </div>
-      </el-container>
-    </el-container>
+        <template #icon>
+          <div></div>
+        </template>
+        <template #content>
+          <router-link
+            style="color: #9a00a4; filter: drop-shadow(1px 1px 1px white); font-weight: 600"
+            to="/"
+          >
+            流星屋图书馆
+          </router-link>
+        </template>
+      </el-page-header>
+      <div style="flex: 1" />
+      <div style="display: flex; align-items: center; user-select: none; cursor: pointer">
+        © Copyright 2022~2023 Meteorhouse Library
+      </div>
+    </el-header>
+    <div style="position: relative; width: 100%">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
-<style>
-</style>
+<style></style>
 
 <style scoped>
-
 .bg-magic-circle {
   position: absolute;
 

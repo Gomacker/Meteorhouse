@@ -1,20 +1,26 @@
 <script lang="ts" setup>
-import { Aim, Edit, Expand, Grid, InfoFilled, List, Search } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { Edit, Expand, Grid, InfoFilled, List, Search } from '@element-plus/icons-vue'
+import { onMounted, ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+import axios from 'axios'
 
 const sidebar_hidden = ref(false)
-</script>
-<script lang="ts">
-export default {
-  data() {
-    return {
-      is_login: true,
-      user_name: '菲比',
-      user_avatar: 'user_avatar',
-      permissions: 'permissions'
-    }
-  }
-}
+const user = useUserStore()
+
+onMounted(() => {
+  if (!user.token) axios.post('/api/v1/token_get/').then((r) => (user.token = r.data['token']))
+  axios
+    .post('/api/v1/token_login/', null, {
+      headers: {
+        token: user.token
+      }
+    })
+    .then((r) => {
+      if (r.data['username'] && user.token) {
+        user.login('username', user.token)
+      }
+    })
+})
 </script>
 <template>
   <div style="width: 100%; height: 100%; background: var(--color-background)">
@@ -42,15 +48,17 @@ export default {
             </div>
           </template>
           <template #content>
-            <router-link style="color: #770080; font-weight: 500" to="/"
-              >Meteorhouse Library</router-link
+            <router-link
+              style="color: #9a00a4; filter: drop-shadow(1px 1px 1px white); font-weight: 600"
+              to="/"
             >
+              流星屋图书馆
+            </router-link>
           </template>
         </el-page-header>
         <div style="flex: 1" />
         <div style="display: flex; align-items: center; user-select: none; cursor: pointer">
-          <span v-if="is_login">欢迎回来，{{ user_name }}</span>
-          <!--          <el-button v-if="is_login" text @click="logout">登出</el-button>-->
+          <span v-if="user.is_login()">欢迎回来，{{ user.username }}</span>
         </div>
       </el-header>
       <el-container style="height: 100%">
@@ -64,7 +72,6 @@ export default {
           "
           :style="{ 'margin-left': sidebar_hidden ? -64 + 'px' : 0 }"
         >
-          <!--          <el-menu router></el-menu>-->
           <el-menu
             style="height: 100%; background-color: transparent"
             default-active="main-page"
@@ -84,7 +91,7 @@ export default {
             </el-menu-item>
             <el-menu-item index="table" @click="$router.push('/table')">
               <el-icon><List /></el-icon>
-              <template #title>一图流(维护中)</template>
+              <template #title>一图流</template>
             </el-menu-item>
             <!--            <el-menu-item index="test_room" @click="$router.push('/test/room')">-->
             <!--              <el-icon><Aim /></el-icon>-->
@@ -98,7 +105,7 @@ export default {
             <!--              <el-icon><Aim /></el-icon>-->
             <!--              <template #title><span style="color: #fa8afa">测试项 [日程]</span></template>-->
             <!--            </el-menu-item>-->
-            <el-menu-item index="editor" @click="$router.push('/editor')">
+            <el-menu-item v-if="user.is_login()" index="editor" @click="$router.push('/editor')">
               <el-icon><Edit /></el-icon>
               <template #title>编辑面板</template>
             </el-menu-item>
@@ -110,10 +117,6 @@ export default {
         </el-aside>
         <el-main
           style="padding: 0; transition: padding-left 0.4s ease"
-          :style="{
-            // 'padding-left': (sidebar_hidden ? 0 : 64 + 'px !important'),
-            // 'background': (sidebar_hidden ? 'red' : 'black')
-          }"
         >
           <img
             class="bg-magic-circle"
@@ -123,15 +126,9 @@ export default {
             draggable="false"
             style="z-index: 0"
           />
-
-          <el-scrollbar
-            style="position: relative; width: 100%"
-            view-style="
-                height: 100%;
-              "
-          >
+          <div style="position: relative; width: 100%; height: 100%; overflow: hidden">
             <router-view style="height: 100%"></router-view>
-          </el-scrollbar>
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -171,7 +168,7 @@ export default {
 }
 main {
   height: calc(100vh - 60px);
-    //margin-top: 60px;
+  //margin-top: 60px;
   width: 100%;
 }
 </style>

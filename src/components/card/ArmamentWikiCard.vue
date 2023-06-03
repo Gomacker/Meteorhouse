@@ -2,6 +2,7 @@
 import { Armament } from '@/stores/manager'
 import ArmamentPicOrigin from '@/components/objects/armament/ArmamentPicOrigin.vue'
 import { format_content } from '@/stores/table'
+import GameTag from '@/components/party/GameTag.vue'
 
 const alpha = 0.85
 const ele2color = {
@@ -58,7 +59,7 @@ const props = defineProps({
       :style="{
         background: `linear-gradient(135deg, ${
           ele2color[props.armament.element]
-        } 130px, rgba(248,248,248, 0.85) 130px, rgba(248,248,248, 0.85) calc(100% - 32px), rgba(40,0,115, 0.85) calc(100% - 32px), rgba(0,0,0, 0.85))`
+        } 130px, rgba(248,248,248, 0.825) 130px, rgba(248,248,248, 0.825) calc(100% - 32px), rgba(40,0,115, 0.85) calc(100% - 32px), rgba(0,0,0, 0.85))`
         // 'box-shadow': '0 0 16px rgba(0,0,0,0.65)'
       }"
     >
@@ -73,32 +74,35 @@ const props = defineProps({
               {{ props.armament.name_jp }}
             </p>
           </div>
-          <div>
-            <div
-              style="
-                display: flex;
-                font-size: 16px;
-                justify-content: space-evenly;
-                flex-direction: row;
-              "
-            >
-              <div style="/*width: 165px*/">
-                <div class="span-f">
-                  <div class="span-tag">HP</div>
-                  <!--                  {{ armament['status_data'] }} <span style="color: crimson;">({{ armament['status']['mmhp'] }})</span>-->
-                  {{ JSON.parse(props.armament.status_data)[0] }}
-                </div>
-                <div class="span-f">
-                  <div class="span-tag">ATK</div>
-                  <!--                  {{ armament['status_data'] }} <span style="color: crimson;">({{ armament['status']['matk'] }})</span>-->
-                  {{ JSON.parse(props.armament.status_data)[1] }}
-                </div>
+
+          <div
+            style="
+              display: flex;
+              font-size: 16px;
+              width: 50%;
+              justify-content: space-evenly;
+              flex-direction: column;
+            "
+          >
+            <div>
+              <div class="span-f">
+                <div class="span-tag">HP</div>
+                {{ JSON.parse(props.armament.status_data)[0] }}
+              </div>
+              <div class="span-f">
+                <div class="span-tag">ATK</div>
+                {{ JSON.parse(props.armament.status_data)[1] }}
               </div>
             </div>
-            <!--          <div style="font-size: 16px;">-->
-            <!--            获取方式：{{ unit['obtain'] }}-->
-            <!--&lt;!&ndash;            {{ unit }}&ndash;&gt;-->
-            <!--          </div>-->
+            <div>
+              <template v-if="props.armament.tags">
+                <GameTag
+                  v-for="(tag_content, index) in JSON.parse(props.armament.tags)"
+                  :key="index"
+                  :content="tag_content"
+                />
+              </template>
+            </div>
           </div>
         </div>
       </div>
@@ -184,8 +188,11 @@ const props = defineProps({
         </div>
       </div>
       <hr style="width: 100%; margin: 12px 12px 8px" />
-      <div style="padding: 16px; font-size: 16px">
-        {{ props.armament.description }}
+      <div>
+        <div style="padding: 16px; font-size: 16px">
+          {{ props.armament.description }}
+        </div>
+        <div style="padding: 16px; font-size: 16px">获取方式：{{ props.armament.obtain }}</div>
       </div>
       <!--    <el-divider/>-->
     </div>
@@ -234,8 +241,6 @@ export default {
   text-align: center;
   font-size: 16px;
   font-weight: lighter;
-  /*font-family: 'pingfangR', serif;*/
-  /*background: linear-gradient(247.5deg, transparent 8px, rgba(220,220,220) 8px, rgba(220,220,220));*/
 }
 
 .span-ability {

@@ -1,19 +1,57 @@
 <script setup lang="ts">
-import { Table } from '@/stores/table'
+import {
+  Table,
+  TableElement,
+  TableElementHtml,
+  TableElementParty,
+  TableElementPartyUnion,
+  TableElementRow,
+  TableElementSubTitle,
+  TableElementTextArea,
+  TableElementWikiCard
+} from '@/stores/table'
 import PartyCardEliya from '@/components/party/PartyCardEliya.vue'
-import { manager, PartyRelease } from '@/stores/manager'
+import { Armament, Unit } from '@/stores/manager'
 import TableComponentTextContent from '@/views/table/TableComponentTextContent.vue'
 import UnitLiteCard from '@/components/card/UnitLiteCard.vue'
 import UnitWikiCard from '@/components/card/UnitWikiCard.vue'
 import ArmamentWikiCard from '@/components/card/ArmamentWikiCard.vue'
 
-const props = defineProps({
-  table: {
-    type: Table,
-    require: true,
-    default: new Table({})
+// const props = defineProps({
+//   table: {
+//     type: Table,
+//     required: true,
+//     default: new Table({})
+//   },
+//   party_params: {
+//     type: { show_name: '' },
+//     required: false,
+//     default: false
+//   }
+// })
+const props = defineProps<{
+  table: Table | undefined
+  party_style?: {
+    show_name?: boolean
+    show_awaken?: boolean
+    show_replacements?: boolean
   }
-})
+}>()
+
+function get_replacements_data(element: TableElement) {
+  // console.log(element instanceof TableElementParty)
+  if (element instanceof TableElementParty) {
+    // console.log(JSON.parse(element.party_data)['params'])
+    try {
+      const params = JSON.parse(element.party_data)['params']
+      if (params) {
+        return params['replacements']
+      }
+    } catch (e) {
+      return {}
+    }
+  }
+}
 </script>
 
 <template>
@@ -24,64 +62,78 @@ const props = defineProps({
     :style="{
       '--main-color': props.table.property.get_color_main(1),
       '--sub-color': props.table.property.get_color_sub(1),
-      '--main-background-color': props.table.property.get_color_main(0.6),
-      '--sub-background-color': props.table.property.get_color_sub(0.6)
+      '--main-background-color': props.table.property.get_color_main(0.8),
+      '--sub-background-color': props.table.property.get_color_sub(0.45),
+      '--little-about-color': props.table.property.get_color_sub(0.75)
     }"
   >
-    <div class="head" style="background-color: white">
+    <div class="table-header" style="background-color: white">
       <div
-        class="title"
-        style="
-          background: linear-gradient(to bottom, var(--sub-color), var(--sub-background-color));
-          width: 100%;
-          display: flex;
-          justify-content: center;
-        "
+        style="height: 540px; display: flex; flex-direction: column; align-items: center"
+        :style="'' + props.table.property.banner.replace('/assets', '/static')"
       >
         <div
+          class="title"
           style="
-            background: var(--main-color);
-            padding: 8px;
-            margin: -4px;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: white;
-            -webkit-text-stroke: 0.12em transparent;
-            font: 64px '黑体';
+            /*background: linear-gradient(to bottom, var(--sub-color), transparent);*/
+            background: var(--sub-color);
+            box-shadow: 0 0 16px var(--main-color);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            border-radius: 0 0 16px 16px;
           "
         >
-          {{ props.table.property.title }}
+          <TableComponentTextContent
+            style="padding-top: 4px; padding-bottom: 6px; font-weight: 700; font-size: 64px"
+            :content="props.table.property.title"
+          />
+        </div>
+        <div style="position: absolute; font-size: 32px; padding: 0 4px; left: 0; bottom: 0">
+          <TableComponentTextContent
+            style="font-weight: bolder"
+            :content="props.table.property.update_time"
+          />
+        </div>
+        <div
+          style="
+            position: absolute;
+            background: var(--little-about-color);
+            font-size: 28px;
+            padding: 8px 16px 4px;
+            right: 0;
+            bottom: 0;
+            border-top-left-radius: 16px;
+          "
+        >
+          <TableComponentTextContent :content="props.table.property.little_about" />
         </div>
       </div>
     </div>
     <div :style="'' + props.table.property.background.replace('/assets', '/static')">
       <div style="image-rendering: auto; background: var(--sub-background-color)">
-        <div class="content-container" style="display: flex; flex-direction: row; flex-wrap: wrap">
+        <div class="table-container" style="display: flex; flex-direction: row; flex-wrap: wrap">
           <template v-for="(c, key) in props.table.content" :key="key">
             <div
-              v-if="c.type === 'Row'"
+              v-if="c instanceof TableElementRow"
               style="
                 width: 100%;
                 display: flex;
                 flex-wrap: wrap;
                 align-items: flex-start;
-                justify-content: space-evenly;
+                /*justify-content: space-evenly;*/
+                justify-content: center;
+                padding: 16px 0;
               "
             >
-              <template v-for="(element, key) in c.data.elements" :key="key">
-                <template v-if="element.type === 'Party'">
-                  <div style="padding: 0; margin: 4px">
-                    <PartyCardEliya
-                      :party="PartyRelease.loads(element.data.party)"
-                      style="
-                        border: 6px solid var(--main-color);
-                        background-color: #fff;
-                        border-radius: 8px;
-                      "
-                    >
-                    </PartyCardEliya>
-                  </div>
+              <template v-for="(element, key) in c.elements" :key="key">
+                <template v-if="element instanceof TableElementHtml">
+                  <div
+                    style="margin: -16px 0"
+                    v-html="element.content.replace('assets', 'static')"
+                  />
                 </template>
-                <template v-else-if="element.type === 'PartyUnion'">
+                <template v-else-if="element instanceof TableElementPartyUnion">
                   <div
                     style="
                       width: 998px;
@@ -104,7 +156,7 @@ const props = defineProps({
                         /*background-size: 200px;*/
                       "
                     >
-                      <div style="margin-left: -12px">
+                      <div style="display: flex; align-items: flex-start">
                         <span
                           style="
                             color: white;
@@ -113,42 +165,59 @@ const props = defineProps({
                               transparent 12px,
                               rgb(234, 53, 75) 13px
                             );
-                            padding: 2px 16px 2px 8px;
+                            padding: 2px 16px 2px 20px;
+                            margin-left: -12px;
                           "
+                          v-show="element.label"
                         >
-                          {{ element.data['pre_title'] }}
+                          {{ element.label }}
                         </span>
-                        <span
+                        <TableComponentTextContent
                           style="
                             font-size: 18px;
                             margin: 4px;
                             font-weight: bold;
                             color: rgb(79, 79, 79);
                           "
-                        >
-                          {{ element.data.title }}
-                        </span>
+                          :text_border="false"
+                          :content="element.title"
+                        />
                       </div>
                       <div style="display: flex; margin: 4px 0">
-                        <PartyCardEliya :party="PartyRelease.loads(element.data.party)">
-                        </PartyCardEliya>
-                        <div
-                          style="
-                            font-size: 16px;
-                            padding: 0 24px;
-                            font-family: Arial, 华文细黑, serif;
-                          "
-                        >
-                          {{ element.data.content }}
+                        <PartyCardEliya :party="element.party"> </PartyCardEliya>
+
+                        <div style="padding: 0 24px">
+                          <TableComponentTextContent
+                            :text_border="false"
+                            style="color: rgb(79, 79, 79); font-size: 21px"
+                            :content="element.content"
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
                 </template>
-                <template v-else-if="element.type === 'TextRegion'">
+                <template v-else-if="element instanceof TableElementParty">
+                  <div style="padding: 0; margin: 0 6px 12px">
+                    <PartyCardEliya
+                      :show_name="props.party_style?.show_name || element.show_name"
+                      :show_awaken="props.party_style?.show_awaken || element.show_awaken"
+                      :always_show_replacements="props.party_style?.show_replacements"
+                      :party="element.party"
+                      :replacements="get_replacements_data(element)"
+                      style="
+                        border: 6px solid var(--main-color);
+                        background-color: #fff;
+                        border-radius: 8px;
+                      "
+                    >
+                    </PartyCardEliya>
+                  </div>
+                </template>
+                <template v-else-if="element instanceof TableElementTextArea">
                   <TableComponentTextContent
                     style="
-                      margin: 0 4px;
+                      margin: 0 6px;
                       box-sizing: content-box;
                       padding: 0 6px;
                       /*background-color: rgba(255, 255, 255, 0.6);*/
@@ -156,39 +225,50 @@ const props = defineProps({
                       /*border: 4px transparent solid;*/
                       /*background-color: blue;*/
                     "
-                    :style="{
-                      width: element.data['full'] ? '992px' : '480px',
-                      'font-size': element.data['little_title'] ? '26px' : '21px',
-                      'margin-top': element.data['little_title'] ? '16px' : ''
-                    }"
-                    :content="element.data.content"
+                    :style="
+                      (() => {
+                        const s = {}
+                        if (element instanceof TableElementTextArea) {
+                          s['width'] = element.full ? '992px' : '480px'
+                          s['margin-bottom'] = element.little_title ? '' : '12px'
+                          s['font-size'] = element.little_title ? '28px' : '22px'
+                          s['margin-top'] = element.little_title ? '8px' : ''
+                        }
+                        return s
+                      })()
+                    "
+                    :content="element.content"
                   />
                 </template>
-                <template v-else-if="element.type === 'LiteCard'">
-                  <UnitLiteCard
-                    style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
-                    v-if="element.data['unit']"
-                    :unit="manager.unit_data.get(element.data['unit'])"
-                  />
-                  <ArmamentWikiCard
-                    style="margin: 10px; width: 480px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
-                    v-else-if="element.data['armament']"
-                    :armament="manager.armament_data.get(element.data['armament'])"
-                  />
+                <template v-else-if="element instanceof TableElementWikiCard">
+                  <template v-if="element.lite">
+                    <UnitLiteCard
+                      style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
+                      v-if="element.object instanceof Unit"
+                      :unit="element.object"
+                    />
+                    <ArmamentWikiCard
+                      style="margin: 10px; width: 480px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
+                      v-else-if="element.object instanceof Armament"
+                      :armament="element.object"
+                    />
+                  </template>
+                  <template v-else>
+                    <template v-if="element instanceof TableElementWikiCard">
+                      <UnitWikiCard
+                        style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
+                        v-if="element.object instanceof Unit"
+                        :unit="element.object"
+                      />
+                      <ArmamentWikiCard
+                        style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
+                        v-else-if="element.object instanceof Armament"
+                        :armament="element.object"
+                      />
+                    </template>
+                  </template>
                 </template>
-                <template v-else-if="element.type === 'WikiCard'">
-                  <UnitWikiCard
-                    style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
-                    v-if="element.data['unit']"
-                    :unit="manager.unit_data.get(element.data['unit'])"
-                  />
-                  <ArmamentWikiCard
-                    style="margin: 10px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.6)"
-                    v-else-if="element.data['armament']"
-                    :armament="manager.armament_data.get(element.data['armament'])"
-                  />
-                </template>
-                <div v-else>未解析的组件: {{ element }}</div>
+                <div v-else>未解析的组件: {{ element.data() }}</div>
               </template>
             </div>
             <div
@@ -197,30 +277,63 @@ const props = defineProps({
                 backdrop-filter: blur(2px);
                 box-shadow: 0 0 16px black;
                 color: white;
-                font: 36px Arial, '黑体';
+                font: 38px Arial, '黑体';
                 width: 100%;
-                font-weight: bold;
                 padding: 6px 16px;
+                display: flex;
+                align-items: center;
+                z-index: 1;
                 /*margin-bottom: 16px;*/
               "
-              v-else-if="c.type === 'SubTitle'"
+              v-else-if="c instanceof TableElementSubTitle"
             >
-              {{ c.data['content'] }}
+              <img
+                style="width: 36px; margin: 0 4px"
+                :src="`/static/worldflipper/icon/${c.element}.png`"
+                alt=""
+              />
+              <TableComponentTextContent
+                style="font-weight: bold"
+                :text_border="false"
+                :content="c.content"
+              />
+              <!--              {{ c.content }}-->
             </div>
             <template v-else>
               <div style="color: red">{{ key }} {{ JSON.stringify(c) }}</div>
             </template>
           </template>
         </div>
+        <div
+          class="table-footer"
+          style="display: flex; align-items: center; flex-direction: column"
+          :style="{
+            background: `linear-gradient(to bottom, transparent,
+            ${props.table.property.get_color_main(0.8)} 65%,
+            ${props.table.property.get_color_main(1)} 100%)`
+          }"
+        >
+          <el-divider
+            style="width: 95%; margin: 8px 0; border-top-color: var(--sub-color)"
+          ></el-divider>
+          <TableComponentTextContent
+            style="
+              font-size: 22px;
+              display: flex;
+              justify-content: center;
+              flex-direction: column;
+              align-items: center;
+              padding: 16px;
+              color: white;
+            "
+            html_access
+            :text_border="false"
+            :content="props.table.property.footer"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
-
-<script lang="ts">
-export default {
-  name: 'SummaryTableCard'
-}
-</script>
 
 <style scoped></style>

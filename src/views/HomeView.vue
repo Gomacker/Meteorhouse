@@ -1,73 +1,57 @@
 <script setup lang="ts">
-import { manager, PartyRelease } from '@/stores/manager'
-import UnitWikiCard from '@/components/card/UnitWikiCard.vue'
-import UnitLiteCard from '@/components/card/UnitLiteCard.vue'
-import PartyCardEliya from '@/components/party/PartyCardEliya.vue'
-import { ref } from 'vue'
-import PartyCardWfwiki from '@/components/party/PartyCardWfwiki.vue'
-import PartyCardOriginLarge from '@/components/party/PartyCardOriginLarge.vue'
+import { useRouter } from 'vue-router'
 
-const show_name_test = ref(false)
-const awaken_test = ref(false)
-
-const test_party = ref({
-  party: {
-    union1: [1, 10, 1, 2],
-    union2: [111007, 4, 3, 4],
-    union3: [121002, 6, 5, 6]
-  }
-})
+const router = useRouter()
 </script>
 
 <template>
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center">
-    <div>
-      <div>
-        show name
-        <el-switch v-model="show_name_test" />
-        awaken
-        <el-switch v-model="awaken_test" />
-        <el-button
-          @click="
-            () => {
-              const unit_length = manager.unit_data.size
-              const armament_length = manager.armament_data.size
-              const ru = () =>
-                Array.from(manager.unit_data.keys())[Math.round(Math.random() * unit_length)]
-              const ra = () =>
-                Array.from(manager.armament_data.keys())[
-                  Math.round(Math.random() * armament_length)
-                ]
-              test_party = {
-                party: {
-                  union1: [ru(), ru(), ra(), ra()],
-                  union2: [ru(), ru(), ra(), ra()],
-                  union3: [ru(), ru(), ra(), ra()]
-                }
-              }
-            }
-          "
-        >
-          reactive test
-        </el-button>
-      </div>
-      <div>
-        <span style="font-weight: 600">PartyCardEliya</span>
-        <div
-          style="
-            border: 6px rgb(0, 255, 0) solid;
-            background: white;
-            border-radius: 6px;
-            width: fit-content;
-            height: fit-content;
-          "
-        >
-          <PartyCardEliya
-            :party="PartyRelease.loads(test_party)"
-            :show_name="show_name_test"
-            :show_awaken="awaken_test"
+  <div>
+    <div style="display: flex; align-items: center; flex-direction: column">
+      <div
+        style="
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          /*align-items: center*/
+          align-items: flex-start;
+          /*align-content: flex-start;*/
+          padding: 20px;
+        "
+      >
+        <div style="margin: 8px">
+          <div style="font-weight: 700; font-size: 24px">当前活动</div>
+          <el-image
+            style="
+              width: 480px;
+              height: 270px;
+              margin: 4px 0;
+              box-shadow: 0 0 16px rgba(0 0 0 / 0.5);
+            "
+            fit="cover"
+            :src="'/static/worldflipper/st/banner/dragon_light.png'"
           />
         </div>
+        <div style="margin: 8px">
+          <div style="font-weight: 700; font-size: 24px">当前卡池</div>
+          <el-image
+            style="
+              width: 480px;
+              height: 270px;
+              margin: 4px 0;
+              box-shadow: 0 0 16px rgba(0 0 0 / 0.5);
+            "
+            fit="cover"
+            :src="'/static/worldflipper/twitter/world_flipper-1432176284986081281-20210830_110009-img1.jpg'"
+          />
+        </div>
+      </div>
+      <div>
+        <el-button size="large" type="warning" @click="router.push('/partyEditor')">
+          组盘器
+        </el-button>
+        <el-button size="large" type="primary" @click="router.push('/partySearcher')">
+          茶盘器
+        </el-button>
       </div>
     </div>
   </div>

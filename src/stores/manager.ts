@@ -59,6 +59,24 @@ const race2zh: any = {
   Aquatic: '水栖',
   Undead: '不死'
 }
+export const ele2color = {
+  [-1]: 'rgb(68,68,68)',
+  0: 'rgb(234,53,75)',
+  1: 'rgb(68,137,255)',
+  2: 'rgb(244,204,36)',
+  3: 'rgb(119,217,47)',
+  4: 'rgb(244,255,186)',
+  5: 'rgb(90,57,95)'
+}
+export const ele2name = {
+  [-1]: '无属性',
+  0: '火属性',
+  1: '水属性',
+  2: '雷属性',
+  3: '风属性',
+  4: '光属性',
+  5: '暗属性'
+}
 export const ele_id2ele: any = {
   [-1]: 'none',
   0: 'fire',
@@ -84,6 +102,10 @@ export class Unit {
     this._data = data
   }
 
+  static load(data: any): Unit {
+    return new this(data)
+  }
+
   get data(): Object {
     return this._data
   }
@@ -104,6 +126,9 @@ export class Unit {
 
   get anise_id(): string {
     return this._data['anise_id']
+  }
+  get tags(): string {
+    return this._data['tags']
   }
   get wf_id(): string {
     return this._data['wf_id']
@@ -165,6 +190,10 @@ export class Unit {
   get description(): string {
     return this._data['description']
   }
+
+  get obtain(): string {
+    return this._data['obtain']
+  }
   private _ability(index: number): string {
     return this._data['ability' + index]
   }
@@ -210,6 +239,11 @@ export class Armament {
   constructor(data: Object) {
     this._data = data
   }
+
+  static load(data: any): Armament {
+    return new this(data)
+  }
+
   get id(): number {
     return parseInt(this.wf_id)
   }
@@ -241,6 +275,10 @@ export class Armament {
     return this._data['element']
   }
 
+  get tags(): string {
+    return this._data['tags']
+  }
+
   get ability(): string {
     return this._data['ability']
   }
@@ -258,15 +296,15 @@ export class Armament {
   }
 
   get ability_augment1(): string {
-    return this._data['ability_augment1']
+    return Object.hasOwn(this._data, 'ability_augment1') ? this._data['ability_augment1'] : ''
   }
 
   get ability_augment70(): string {
-    return this._data['ability_augment70']
+    return Object.hasOwn(this._data, 'ability_augment70') ? this._data['ability_augment70'] : ''
   }
 
   get ability_augment100(): string {
-    return this._data['ability_augment100']
+    return Object.hasOwn(this._data, 'ability_augment100') ? this._data['ability_augment100'] : ''
   }
 
   get status_data(): string {
@@ -275,6 +313,10 @@ export class Armament {
 
   get description(): string {
     return this._data['description']
+  }
+
+  get obtain(): string {
+    return this._data['obtain']
   }
 
   pic_url(soul: boolean): string {
@@ -360,6 +402,10 @@ export class Party {
     else this._union3 = new Union()
   }
 
+  union(id_: number): Union {
+    return id_ === 1 ? this.union1 : id_ === 2 ? this.union2 : id_ === 3 ? this.union3 : new Union()
+  }
+
   get union1(): Union {
     return this._union1
   }
@@ -436,8 +482,20 @@ export class Party {
   }
 }
 
-interface PartyParam {
+export interface PartyParam {
   data(): Object
+  is_empty(): boolean
+}
+
+function load_params(params_data: any): Map<string, PartyParam> {
+  const params = new Map()
+  if (params_data && Object.hasOwn(params_data, 'manaboard2')) {
+    params.set('manaboard2', PartyParamManaboard2.load(params_data['manaboard2']))
+  }
+  if (params_data && Object.hasOwn(params_data, 'replacements')) {
+    params.set('replacements', PartyParamReplacements.load(params_data['replacements']))
+  }
+  return params
 }
 
 class Manaboard2Levels {
@@ -456,36 +514,109 @@ class Manaboard2Levels {
   data() {
     return [this.manaboard4, this.manaboard5, this.manaboard6]
   }
+  is_empty(): boolean {
+    return !(
+      (typeof this.manaboard4 === 'number' && this.manaboard4 >= 0 && this.manaboard4 <= 5) ||
+      (typeof this.manaboard5 === 'number' && this.manaboard5 >= 0 && this.manaboard5 <= 5) ||
+      (typeof this.manaboard6 === 'number' && this.manaboard6 >= 0 && this.manaboard6 <= 5)
+    )
+  }
 }
 
-class PartyParamManaboard2 implements PartyParam {
-  public union1main: Manaboard2Levels;
-  public union2main: Manaboard2Levels;
-  public union3main: Manaboard2Levels;
-  public union1unison: Manaboard2Levels;
-  public union2unison: Manaboard2Levels;
-  public union3unison: Manaboard2Levels;
+export class PartyParamManaboard2 implements PartyParam {
+  public union1main: Manaboard2Levels
+  public union2main: Manaboard2Levels
+  public union3main: Manaboard2Levels
+  public union1unison: Manaboard2Levels
+  public union2unison: Manaboard2Levels
+  public union3unison: Manaboard2Levels
   constructor() {
-      this.union1main = new Manaboard2Levels(undefined, undefined, undefined)
-      this.union2main = new Manaboard2Levels(undefined, undefined, undefined)
-      this.union3main = new Manaboard2Levels(undefined, undefined, undefined)
-      this.union1unison = new Manaboard2Levels(undefined, undefined, undefined)
-      this.union2unison = new Manaboard2Levels(undefined, undefined, undefined)
-      this.union3unison = new Manaboard2Levels(undefined, undefined, undefined)
+    this.union1main = new Manaboard2Levels(undefined, undefined, undefined)
+    this.union2main = new Manaboard2Levels(undefined, undefined, undefined)
+    this.union3main = new Manaboard2Levels(undefined, undefined, undefined)
+    this.union1unison = new Manaboard2Levels(undefined, undefined, undefined)
+    this.union2unison = new Manaboard2Levels(undefined, undefined, undefined)
+    this.union3unison = new Manaboard2Levels(undefined, undefined, undefined)
   }
 
-  static load(): void {}
+  set_union_main(i: number, data: (number | undefined)[]) {
+    const union =
+      i == 1 ? this.union1main : i == 2 ? this.union2main : i == 3 ? this.union3main : undefined
+    if (union) {
+      union.manaboard4 = data[0] == -1 ? undefined : data[0]
+      union.manaboard5 = data[1] == -1 ? undefined : data[1]
+      union.manaboard6 = data[2] == -1 ? undefined : data[2]
+    }
+  }
+  set_union_unison(i: number, data: (number | undefined)[]) {
+    const union =
+      i == 1
+        ? this.union1unison
+        : i == 2
+        ? this.union2unison
+        : i == 3
+        ? this.union3unison
+        : undefined
+    if (union) {
+      union.manaboard4 = data[0] == -1 ? undefined : data[0]
+      union.manaboard5 = data[1] == -1 ? undefined : data[1]
+      union.manaboard6 = data[2] == -1 ? undefined : data[2]
+    }
+  }
 
-  data(): Object {
-    return {}
+  static load(params_data: any): PartyParamManaboard2 {
+    const ppm = new PartyParamManaboard2()
+    for (const i of [1, 2, 3]) {
+      if (Object.hasOwn(params_data, `union${i}`)) {
+        const mu: number[][] = params_data[`union${i}`]
+        ppm.set_union_main(i, mu.length > 0 ? mu[0] : [])
+        ppm.set_union_unison(i, mu.length > 1 ? mu[1] : [])
+        // console.log(mu)
+      }
+    }
+    return ppm
+  }
+
+  data(): object {
+    return {
+      union1: [this.union1main.data(), this.union1unison.data()],
+      union2: [this.union2main.data(), this.union2unison.data()],
+      union3: [this.union3main.data(), this.union3unison.data()]
+    }
+  }
+
+  is_empty(): boolean {
+    return (
+      this.union1main.is_empty() &&
+      this.union1unison.is_empty() &&
+      this.union2main.is_empty() &&
+      this.union2unison.is_empty() &&
+      this.union3main.is_empty() &&
+      this.union3unison.is_empty()
+    )
   }
 }
 
-const ppm = new PartyParamManaboard2()
+export class PartyParamReplacements implements PartyParam {
+  public _data: any
+  constructor(rpm: any) {
+    this._data = rpm
+  }
+  data(): Object {
+    return this._data
+  }
 
+  static load(data: any) {
+    return new this(data)
+  }
+
+  is_empty(): boolean {
+    return false
+  }
+}
 export class PartyRelease {
   private readonly _party: Party
-  private _params: Map<string, PartyParam>
+  public readonly _params: Map<string, PartyParam>
   title: string
   updater_id: string
   _id: string
@@ -508,10 +639,34 @@ export class PartyRelease {
     return this._id
   }
 
+  data(): object {
+    return {
+      party: this.party.data(),
+      params: Object.fromEntries(
+        Array.from(this._params.entries())
+          .filter((value) => !value[1].is_empty())
+          .map((value) => [value[0], value[1].data()])
+      )
+    }
+  }
+  data_for_upload(): object {
+    return {
+      title: this.title,
+      party: this.party.data(),
+      params: Object.fromEntries(
+        Array.from(this._params.entries())
+          .filter((value) => !value[1].is_empty())
+          .map((value) => [value[0], value[1].data()])
+      )
+    }
+  }
+
   static loads(data: any): PartyRelease {
     return new PartyRelease(
       Party.loads(data['party']),
-      new Map(),
+      // data['params'],
+      load_params(data['params']),
+      // new Map(),  // TODO
       data['title'],
       data['updater_id'],
       data['id']
@@ -524,19 +679,6 @@ export class PartyRelease {
   }
   get party(): Party {
     return this._party
-  }
-}
-
-export class PartyReleaseConstructor {
-  private party_release: PartyRelease
-
-  constructor(data: Object) {
-    this.party_release = PartyRelease.loads(data)
-  }
-  static empty(): PartyRelease {
-    return PartyRelease.loads({
-      party: { union1: [0, 0, 0, 0], union2: [0, 0, 0, 0], union3: [0, 0, 0, 0] }
-    })
   }
 }
 

@@ -67,7 +67,7 @@ onMounted(() => {
 
 <template>
   <div
-    style="overflow: hidden; display: flex; flex-direction: column; height: 100%; padding: 16px 0"
+    style="overflow: hidden; display: flex; flex-direction: column; padding: 16px 0"
   >
     <div style="margin: 16px 32px 8px; display: flex">
       <el-input
@@ -85,22 +85,21 @@ onMounted(() => {
         搜索
       </el-button>
     </div>
-    <el-scrollbar ref="scrollbar_ref" v-loading="loading" style="margin: 0 16px">
+    <div v-loading="loading" style="margin: 0">
       <div style="display: flex; flex-direction: row; justify-content: center; flex-wrap: wrap">
         <template v-if="page_party_list.size">
           <template v-for="party in page_party_list" :key="party[0]">
             <PartyReleaseCard style="margin: 4px" :party_release="PartyRelease.loads(party[1])" />
-<!--            {{ party }}-->
           </template>
         </template>
         <template v-else>
           <el-empty />
         </template>
       </div>
-    </el-scrollbar>
+    </div>
     <div style="margin: 16px; display: flex; justify-content: center">
       <el-pagination
-        v-model:current-page="current_page"
+        :current-page="current_page"
         background
         layout="prev, pager, next"
         :page-size="12"

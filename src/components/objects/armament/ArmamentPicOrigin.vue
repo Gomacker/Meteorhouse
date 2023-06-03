@@ -18,12 +18,12 @@ const frame_width = (props.size * 14) / 240
 
 <template>
   <div
-    style="display: inline-flex; vertical-align: bottom;"
     v-if="props.armament instanceof Armament"
+    style="display: inline-block; vertical-align: bottom"
     :title="`${props.armament.id}: ${props.armament.anise_id}: ${props.armament.extraction_id}`"
   >
     <svg
-      v-if="armament"
+      style="display: block"
       :width="props.size"
       :height="props.size"
       xmlns="http://www.w3.org/2000/svg"

@@ -38,7 +38,7 @@ const show_dialog = ref(false)
 <template>
   <el-card
     class="party-card"
-    style="margin: 8px 4px; min-width: 498px; width: 498px; height: fit-content"
+    style="min-width: 498px; width: 498px; height: fit-content"
     body-style="padding: 0;"
   >
     <div
@@ -109,10 +109,7 @@ const show_dialog = ref(false)
             size="small"
             type="warning"
             :data-clipboard-text="
-              JSON.stringify({
-                party: props.party_release.party.data(),
-                params: {} /*props.party_release.params.data()*/
-              })
+              JSON.stringify(props.party_release?.data())
             "
             :id="'copy-' + props.party_release?.id"
             @click="

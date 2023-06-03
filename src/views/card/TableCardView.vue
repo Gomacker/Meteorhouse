@@ -1,26 +1,24 @@
-
 <template>
-  <el-scrollbar>
+  <div>
     <SummaryTableCard :table="new Table(table)" :party_style="{
       show_awaken: show_awaken,
       show_name: show_name,
       show_replacements: show_replacements
     }" />
-  </el-scrollbar>
+  </div>
 </template>
 
 <script lang="ts">
-import SummaryTableCard from "@/components/card/SummaryTableCard.vue";
-import {ref} from "vue";
-import {useRoute} from "vue-router";
-import axios from "axios";
-import {Table} from "@/stores/table";
+import SummaryTableCard from '@/components/card/SummaryTableCard.vue'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import axios from 'axios'
+import { Table } from '@/stores/table'
 
 const table_data = ref({})
 
-
 export default {
-  name: "TableContentView",
+  name: 'TableCardView',
   computed: {
     Table() {
       return Table
@@ -48,18 +46,17 @@ export default {
   mounted() {
     const route = useRoute()
     axios
-        .post(`/api/v1/table/${route.params['table_id']}/data/`)
-        .then(r => {
-          table_data.value = r.data
-        })
+      // .post('/api/summary_table/' + route.params['table_id'] + '/data')
+      .post(`/api/v1/table/${route.query['table_id']}/data/`)
+      .then((r) => {
+        table_data.value = r.data
+      })
   },
   unmounted() {
     table_data.value = {}
   },
-  components: {SummaryTableCard}
+  components: { SummaryTableCard }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -3,25 +3,36 @@ import { Unit } from '@/stores/manager'
 import { ref } from 'vue'
 import UnitPicOrigin from '@/components/objects/unit/UnitPicOrigin.vue'
 import { format_content } from '@/stores/table'
+import GameTag from '@/components/party/GameTag.vue'
 
 const alpha = 0.85
 
 const ele2color = {
-    [-1]: 'rgb(105,105,105,' + alpha + ')',
-    0: 'rgba(234,53,75,' + alpha + ')',
-    1: 'rgba(68,137,255,' + alpha + ')',
-    2: 'rgba(244,204,36,' + alpha + ')',
-    3: 'rgba(119,217,47,' + alpha + ')',
-    4: 'rgba(245,255,186,' + alpha + ')',
-    5: 'rgba(90,57,95,' + alpha + ')'
+  [-1]: 'rgb(105,105,105,' + alpha + ')',
+  0: 'rgba(234,53,75,' + alpha + ')',
+  1: 'rgba(68,137,255,' + alpha + ')',
+  2: 'rgba(244,204,36,' + alpha + ')',
+  3: 'rgba(119,217,47,' + alpha + ')',
+  4: 'rgba(245,255,186,' + alpha + ')',
+  5: 'rgba(90,57,95,' + alpha + ')'
 }
 
 const show_awakened = ref(false)
 
+function get_tags(unit: Unit) {
+  let tags: string[]
+  try {
+    tags = JSON.parse(unit.tags)
+  }catch (e) {
+    tags = []
+  }
+  return tags
+}
+
 const props = defineProps({
   unit: {
-      type: Unit,
-      require: true
+    type: Unit,
+    require: true
   }
 })
 </script>
@@ -66,7 +77,9 @@ const props = defineProps({
           /*min-height: 100%;*/
         "
         :style="{
-          background: `linear-gradient(135deg, ${ele2color[props.unit.element_id]} 130px, rgba(248,248,248, 0.825) 130px, rgba(248,248,248, 0.825) calc(100% - 32px), rgb(54, 255, 162, 0.85) calc(100% - 32px), rgba(200,240,200, 0.85))`
+          background: `linear-gradient(135deg, ${
+            ele2color[props.unit.element_id]
+          } 130px, rgba(248,248,248, 0.825) 130px, rgba(248,248,248, 0.825) calc(100% - 32px), rgb(54, 255, 162, 0.85) calc(100% - 32px), rgba(200,240,200, 0.85))`
         }"
       >
         <div style="display: flex; width: 100%; margin: 16px 16px 0">
@@ -137,6 +150,15 @@ const props = defineProps({
                     {{ props.unit.cv }}
                   </div>
                 </div>
+              </div>
+              <div>
+                <template v-if="props.unit.tags">
+                  <GameTag
+                    v-for="(tag_content, index) in get_tags(props.unit)"
+                    :key="index"
+                    :content="tag_content"
+                  />
+                </template>
               </div>
             </div>
           </div>
@@ -217,8 +239,11 @@ const props = defineProps({
           </div>
         </div>
         <hr style="width: 100%; margin: 12px 12px 8px" />
-        <div style="padding: 16px; font-size: 16px">
-          {{ props.unit.description }}
+        <div style="display: flex; flex-direction: column">
+          <div style="padding: 16px; font-size: 16px">
+            {{ props.unit.description }}
+          </div>
+          <div style="padding: 16px; font-size: 16px">获取方式：{{ props.unit.obtain }}</div>
         </div>
         <!--    <el-divider/>-->
       </div>

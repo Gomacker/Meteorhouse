@@ -1,6 +1,6 @@
 <template>
   <template v-if="typeof id_list.wf_id === 'number'">
-    <ArmamentWikiCard :unit="manager.armament_data.get(id_list.wf_id)" />
+    <ArmamentWikiCard id="main-card" :armament="manager.armament_data.get(id_list.wf_id)" />
   </template>
   <template v-else> 缺少ID </template>
 </template>

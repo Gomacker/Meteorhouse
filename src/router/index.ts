@@ -12,9 +12,6 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('@/views/AboutView.vue')
     },
     {
@@ -43,6 +40,11 @@ const router = createRouter({
       component: () => import('@/views/profile/CharacterView.vue')
     },
     {
+      path: '/author_profile',
+      name: 'author_profile',
+      component: () => import('@/views/AuthorProfileView.vue')
+    },
+    {
       path: '/editor',
       name: 'editor',
       component: () => import('@/views/EditorView.vue')
@@ -61,6 +63,21 @@ const router = createRouter({
       path: '/editor/table',
       name: 'table_editor',
       component: () => import('@/views/editor/TableEditorView.vue')
+    },
+    {
+      path: '/editor/request',
+      name: 'request_editor',
+      component: () => import('@/views/editor/RequestEditorView.vue')
+    },
+    {
+      path: '/editor/nickname',
+      name: 'nickname_editor',
+      component: () => import('@/views/editor/NicknameEditorView.vue')
+    },
+    {
+      path: '/card/test',
+      name: 'card_test',
+      component: () => import('@/views/TestCardView.vue')
     },
     {
       path: '/test/room',
@@ -88,6 +105,11 @@ const router = createRouter({
       component: () => import('@/views/pure/TestView.vue')
     },
     {
+      path: '/pure/partySearcher',
+      name: 'pure_party_searcher',
+      component: () => import('@/views/pure/PartySearcherView.vue')
+    },
+    {
       path: '/card/unit',
       name: 'card_unit',
       component: () => import('@/views/card/UnitCardView.vue')
@@ -96,6 +118,11 @@ const router = createRouter({
       path: '/card/armament',
       name: 'card_armament',
       component: () => import('@/views/card/ArmamentCardView.vue')
+    },
+    {
+      path: '/card/table',
+      name: 'card_table',
+      component: () => import('@/views/card/TableCardView.vue')
     },
     {
       path: '/card/room',
