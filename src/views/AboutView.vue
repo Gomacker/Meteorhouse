@@ -12,7 +12,7 @@
       <p>
         <el-button type="warning" @click="$router.push('/login')">后台登录</el-button>
       </p>
-      <p>Meteorhouse Version：<span style="color: coral">v1.0-pre3</span></p>
+      <p>Meteorhouse Version：<span style="color: coral">v1.0-pre4</span></p>
       <p>
         Author：@Kranca / Gomacker
         <a href="https://space.bilibili.com/11466987" target="_blank">
@@ -82,7 +82,7 @@
       </div>
     </div>
     <div>
-      <p>喜欢的话可以爱发电赞助口牙！</p>
+      <p>终于暑假了惹</p>
       <iframe
         src="https://afdian.net/leaflet?slug=Gomacker"
         width="320"

@@ -325,7 +325,8 @@ const unit_list = ref<Array<number>>(new Array<number>())
                   margin-top: 1px;
                   text-align: center;
                   font-weight: bold;
-                  font: 21px Arial, '黑体', serif;
+                  font-size: 18px;
+                  /*font: 21px Arial, '黑体', serif;*/
                 "
               >
                 {{ u.name_zh }}

@@ -20,6 +20,7 @@ const card_paths: Array<string> = [
     '/card/test',
     '/card/unit',
     '/card/table',
+    '/card/month_table',
     '/card/armament',
     '/card/room'
 ]

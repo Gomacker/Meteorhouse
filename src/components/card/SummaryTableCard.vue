@@ -70,7 +70,7 @@ function get_replacements_data(element: TableElement) {
     <div class="table-header" style="background-color: white">
       <div
         style="height: 540px; display: flex; flex-direction: column; align-items: center"
-        :style="'' + props.table.property.banner.replace('/assets', '/static')"
+        :style="'' + props.table.property.banner"
       >
         <div
           class="title"
@@ -110,7 +110,7 @@ function get_replacements_data(element: TableElement) {
         </div>
       </div>
     </div>
-    <div :style="'' + props.table.property.background.replace('/assets', '/static')">
+    <div :style="'' + props.table.property.background">
       <div style="image-rendering: auto; background: var(--sub-background-color)">
         <div class="table-container" style="display: flex; flex-direction: row; flex-wrap: wrap">
           <template v-for="(c, key) in props.table.content" :key="key">
@@ -130,7 +130,7 @@ function get_replacements_data(element: TableElement) {
                 <template v-if="element instanceof TableElementHtml">
                   <div
                     style="margin: -16px 0"
-                    v-html="element.content.replace('assets', 'static')"
+                    v-html="element.content"
                   />
                 </template>
                 <template v-else-if="element instanceof TableElementPartyUnion">
@@ -152,8 +152,6 @@ function get_replacements_data(element: TableElement) {
                         background: url('/static/worldflipper/dialog_deco2.png') no-repeat;
                         background-position-x: 100%;
                         background-position-y: 100%;
-                        /*filter: drop-shadow(0 0 4px black);*/
-                        /*background-size: 200px;*/
                       "
                     >
                       <div style="display: flex; align-items: flex-start">

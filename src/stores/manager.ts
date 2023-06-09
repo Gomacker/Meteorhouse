@@ -433,12 +433,6 @@ export class Party {
   }
 
   can_exchange(position1: number, position2: number) {
-    // const pm = {
-    //     0: 'main',
-    //     1: 'armament',
-    //     2: 'unison',
-    //     3: 'core'
-    // }
     if (position1 === 0 || position1 === 2) return position2 === 0 || position2 === 2
     if (position1 === 1 || position1 === 3) return position2 === 1 || position2 === 3
   }

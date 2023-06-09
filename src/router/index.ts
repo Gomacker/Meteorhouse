@@ -125,6 +125,11 @@ const router = createRouter({
       component: () => import('@/views/card/TableCardView.vue')
     },
     {
+      path: '/card/month_table',
+      name: 'month_table',
+      component: () => import('@/views/card/MonthTableCardView.vue')
+    },
+    {
       path: '/card/room',
       name: 'room_card',
       component: () => import('@/views/card/RoomCardView.vue')

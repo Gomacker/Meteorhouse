@@ -5,7 +5,6 @@ import {
   Armament,
   ele2color,
   manager,
-  PartyParam,
   PartyParamManaboard2,
   PartyRelease,
   Union,
@@ -19,10 +18,11 @@ import { useUserStore } from '@/stores/user'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import { sum } from 'lodash-es'
+import EmptyPicOrigin from "@/components/objects/EmptyPicOrigin.vue";
 
 const user = useUserStore()
 
-const selected_obj: Ref<Unit | Armament | undefined> = ref(undefined)
+const selected_obj: Ref<Unit | Armament | null | undefined> = ref(undefined)
 const selected_position = ref<{
   union: string | undefined
   position: number | undefined
@@ -177,9 +177,9 @@ function get_pic_url(obj: Unit | Armament, awakened_or_soul = false) {
 }
 
 function select_party(union: string, position: number) {
-  if (selected_obj.value) {
+  if (selected_obj.value !== undefined) {
     if (union != undefined && position != undefined) {
-      if (party.value.party.set_by_position(selected_obj.value, union, position)) {
+      if (party.value.party.set_by_position(selected_obj.value === null ? undefined : selected_obj.value, union, position)) {
         selected_obj.value = undefined
       }
     }
@@ -219,11 +219,11 @@ function select_party(union: string, position: number) {
   }
 }
 
-function select_object(obj: Unit | Armament) {
+function select_object(obj: Unit | Armament | null) {
   if (selected_position.value.union != undefined && selected_position.value.position != undefined) {
     if (
       party.value.party.set_by_position(
-        obj,
+        obj === null ? undefined : obj,
         selected_position.value.union,
         selected_position.value.position
       )
@@ -243,7 +243,7 @@ const show_name = ref(false)
 const show_awaken = ref(false)
 function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean) {
   if (show_name.value) {
-    if (unit instanceof Unit) return unit.name_zh
+    if (unit) return unit.name_zh
   }
   return main_slot ? (union === 'union1' ? '队长' : '主要角色') : '辅助角色'
 }
@@ -255,10 +255,7 @@ function upload_party() {
       console.log(r.data)
       if (r.data['result'] === 'success') {
         ElMessage.success('上传成功')
-        // if (loaded_party_id.value) {
-        //   loaded_party_id.value = ''
-        //   clear_party();
-        // }
+        party.value = PartyRelease.empty()
       } else {
         ElMessage.error('上传失败')
       }
@@ -315,7 +312,7 @@ function get_skill_weight(union: Union) {
       wrap-style="width: 100%;"
     >
       <CalculatorWikiCardView
-        :obj="selected_obj"
+        :obj="selected_obj === null ? undefined : selected_obj"
         style="height: 100%; min-height: 100%"
         v-if="selected_module === 'WikiCard'"
       >
@@ -369,7 +366,7 @@ function get_skill_weight(union: Union) {
                     border-top-right-radius: 6px;
                   "
                   v-if="(() => {
-                  const ppm: PartyParam = party._params.get('manaboard2')
+                  const ppm = party._params.get('manaboard2')
                   return ppm instanceof PartyParamManaboard2 ? !ppm[`${union}main`].is_empty() : false
                 })()"
                 >
@@ -431,7 +428,7 @@ function get_skill_weight(union: Union) {
                     border-top-right-radius: 6px;
                   "
                   v-if="(() => {
-                  const ppm: PartyParam = party._params.get('manaboard2')
+                  const ppm = party._params.get('manaboard2')
                   return ppm instanceof PartyParamManaboard2 ? !ppm[`${union}unison`].is_empty() : false
                 })()"
                 >
@@ -708,7 +705,7 @@ function get_skill_weight(union: Union) {
       </div>
 
       <CalculatorResourcesView
-        :selected_obj="selected_obj"
+        :selected_obj="selected_obj === null ? undefined : selected_obj"
         v-else-if="selected_module === 'Resources'"
       >
       </CalculatorResourcesView>
@@ -817,6 +814,20 @@ function get_skill_weight(union: Union) {
       >
         <div style="padding-top: 16px; display: flex; flex-wrap: wrap; justify-content: center">
           <template v-if="showed_list">
+            <div
+              class="wfo"
+              :style="{
+                  '--element-color': ele2color[-1],
+                  filter:
+                    selected_obj === null ? `drop-shadow(0 0 8px var(--element-color))` : '',
+                  'background-color': selected_obj === null ? 'rgba(52,255,201,0.8)' : ''
+                }"
+            >
+              <EmptyPicOrigin
+                @click="select_object(null)"
+                :size="90"
+              />
+            </div>
             <template v-for="element in showed_list" :key="element">
               <div
                 class="wfo"

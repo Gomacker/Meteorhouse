@@ -156,6 +156,7 @@ export class TableElementRow extends TableElement {
     this.elements.splice(index, 1)
   }
 }
+
 export class TableElementSubTitle extends TableElement {
   public readonly content: string
   public readonly element: string
@@ -257,6 +258,36 @@ export class TableElementPartyUnion extends TableElementParty {
   }
 }
 
+export class TableElementTextArea extends TableElement {
+  public content: string
+  public little_title: boolean
+  public full: boolean
+
+  constructor(data: any) {
+    // super('TextArea')
+    super('TextRegion')
+    this.content = typeof data['content'] === 'string' ? data['content'] : ''
+    this.little_title = typeof data['little_title'] === 'boolean' ? data['little_title'] : false
+    this.full = typeof data['full'] === 'boolean' ? data['full'] : false
+  }
+
+  get full_row(): any {
+    return this.full
+  }
+
+  data(): object {
+    return {
+      type: this.type, // for legacy
+      // type: this.type,
+      data: {
+        content: this.content,
+        full: this.full,
+        little_title: this.little_title
+      }
+    }
+  }
+}
+
 export class TableElementWikiCard extends TableElement {
   public object_type: 'Unit' | 'Armament'
   public object_id: number
@@ -286,31 +317,19 @@ export class TableElementWikiCard extends TableElement {
   }
 }
 
-export class TableElementTextArea extends TableElement {
-  public content: string
-  public little_title: boolean
-  public full: boolean
+export class TableElementObjectMap extends TableElement {
+  public id_list: string
 
   constructor(data: any) {
-    // super('TextArea')
-    super('TextRegion')
-    this.content = typeof data['content'] === 'string' ? data['content'] : ''
-    this.little_title = typeof data['little_title'] === 'boolean' ? data['little_title'] : false
-    this.full = typeof data['full'] === 'boolean' ? data['full'] : false
-  }
-
-  get full_row(): any {
-    return this.full
+    super('ObjectMap')
+    this.id_list = typeof data['id_list'] == 'string' ? data['id_list'] : '["u1"]'
   }
 
   data(): object {
     return {
-      type: this.type, // for legacy
-      // type: this.type,
+      type: this.type,
       data: {
-        content: this.content,
-        full: this.full,
-        little_title: this.little_title
+
       }
     }
   }

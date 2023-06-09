@@ -2,7 +2,7 @@
 import TableComponentEditor from '@/components/editor/TableComponentEditor.vue'
 import { ref } from 'vue'
 import axios from 'axios'
-import { Table, TableElement, TableElementParty, TableElementTextArea } from '@/stores/table'
+import { Table, TableElement } from '@/stores/table'
 import SummaryTableCard from '@/components/card/SummaryTableCard.vue'
 import { ElMessage } from 'element-plus'
 
@@ -10,7 +10,11 @@ const table_list = ref({})
 const combine_view = ref(false)
 
 axios.post('/api/v1/table_list/').then((r) => {
-  table_list.value = r.data['tables']
+  table_list.value = new Map(
+    Object.entries(r.data['tables']).map((value) => {
+      return [value[1]['name'], value[0]]
+    })
+  )
 })
 
 const table_select = ref<string>('')
@@ -58,12 +62,17 @@ function save_table() {
         padding: 0 8px;
       "
     >
-      <el-button @click="save_table" :disabled="!table_selected" type="primary" size="small"
-        >保存</el-button
-      >
+      <el-button @click="save_table" :disabled="!table_selected" type="primary" size="small">
+        保存
+      </el-button>
       <el-select v-model="table_select" style="margin-left: 8px" size="small">
-        <el-option v-for="(t, table_name) in table_list" :key="t" :value="t" :label="table_name">
-          {{ table_name }}: <span style="color: lightgray">{{ t }}</span>
+        <el-option
+          v-for="table_profile in table_list"
+          :key="table_profile[1]"
+          :value="table_profile[1]"
+          :label="table_profile[0]"
+        >
+          {{ table_profile[0] }}: <span style="color: lightgray">{{ table_profile[1] }}</span>
         </el-option>
       </el-select>
       <el-button
