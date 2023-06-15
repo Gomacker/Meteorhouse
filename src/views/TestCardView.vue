@@ -406,7 +406,7 @@ const unit_list = ref<Array<number>>(new Array<number>())
                 .map((v) => manager.unit_data.get(v))
                 .filter((t) =>
                   filter_list.length > 0
-                    ? filter_list.includes(t.id) && t.element_id === element_id - 1
+                    ? filter_list.includes(t.id) && t.element === element_id - 1
                     : true
                 )"
               :key="index"

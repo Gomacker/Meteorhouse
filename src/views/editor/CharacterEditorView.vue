@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Unit, ele_id2ele, type2zh } from '@/stores/manager'
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import UnitWikiCard from '@/components/card/UnitWikiCard.vue'
@@ -65,48 +65,34 @@ function load_source(source_id: string) {
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
     <div style="display: flex; flex-direction: column; height: 100%; width: 100%">
-      <div
-        style="
-          display: flex;
-          flex-direction: row;
-          width: 100%;
-          align-items: center;
-          justify-content: space-between;
-        "
-      >
-        <div style="flex: 33%">
-          <el-button
-            type="primary"
-            :disabled="!(selected_unit instanceof Unit)"
-            @click="
-              () => {
-                if (selected_unit instanceof Unit) {
-                  if (typeof selected_source === 'string') {
-                    save_unit(selected_source, selected_unit.id, selected_unit)
-                  }
+      <v-toolbar density="compact">
+        <v-btn
+          :disabled="!(selected_unit instanceof Unit)"
+          @click="
+            () => {
+              if (selected_unit instanceof Unit) {
+                if (typeof selected_source === 'string') {
+                  save_unit(selected_source, selected_unit.id, selected_unit)
                 }
               }
-            "
-          >
-            保存
-          </el-button>
-        </div>
-        <div style="flex: 33%; display: flex; justify-content: center">
-          <el-button
-            @click="
-              selected_unit = Unit.load(JSON.parse(JSON.stringify(unit_list.get(ra())._data)))
-            "
-            :disabled="unit_list.size <= 0"
-          >
-            debug random
-          </el-button>
-        </div>
-        <div style="flex: 33%">
-          <el-button @click="drawer = true" style="float: right" type="primary">
-            选择角色
-          </el-button>
-        </div>
-      </div>
+            }
+          "
+          color="primary"
+          variant="tonal"
+        >
+          保存
+        </v-btn>
+        <v-spacer/>
+<!--        <v-text-field-->
+<!--          style="margin: 0 16px"-->
+<!--          color="primary"-->
+<!--          hide-details-->
+<!--          density="compact"-->
+<!--          label="测试"-->
+<!--        ></v-text-field>-->
+        <v-btn @click="drawer = true" color="primary" variant="tonal">选择角色</v-btn>
+      </v-toolbar>
+
       <el-scrollbar always style="box-shadow: 0 0 4px black; width: 100%; height: 30%">
         <UnitWikiCard
           v-if="selected_unit instanceof Unit"

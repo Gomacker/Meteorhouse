@@ -148,12 +148,8 @@ export class Unit {
   get rarity(): number {
     return this._data['rarity']
   }
-  get element_id(): number {
-    return this._data['element']
-  }
   get element(): number {
-    // console.log(ele_id2ele[this.element_id])
-    return this.element_id in ele_id2ele ? ele_id2ele[this.element_id] : ele_id2ele[-1]
+    return this._data['element']
   }
   get gender(): number {
     return this._data['gender'] in gender2zh

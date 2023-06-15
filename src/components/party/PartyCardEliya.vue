@@ -7,7 +7,7 @@ import {
   PartyParamManaboard2,
   Union,
   PartyParam,
-  manager
+  manager, ele_id2ele
 } from '@/stores/manager'
 import UnitLiteCard from '@/components/card/UnitLiteCard.vue'
 
@@ -147,7 +147,7 @@ function get_pic_url(obj: Unit | Armament | undefined, awakened_or_soul = false)
               class="wfo-slot main"
               :class="[
                 props.party.party.union(union).main instanceof Unit
-                  ? `ele-${props.party.party.union(union).main?.element}`
+                  ? `ele-${ele_id2ele[props.party.party.union(union).main?.element]}`
                   : ''
               ]"
             >
@@ -210,7 +210,7 @@ function get_pic_url(obj: Unit | Armament | undefined, awakened_or_soul = false)
           class="wfo-slot main"
           :class="[
             props.party.party.union(union).main instanceof Unit
-              ? `ele-${props.party.party.union(union).main?.element}`
+              ? `ele-${ele_id2ele[props.party.party.union(union).main?.element]}`
               : ''
           ]"
         >
@@ -289,7 +289,7 @@ function get_pic_url(obj: Unit | Armament | undefined, awakened_or_soul = false)
               class="wfo-slot unison"
               :class="[
                 props.party.party.union(union).unison instanceof Unit
-                  ? `ele-${props.party.party.union(union).unison?.element}`
+                  ? `ele-${ele_id2ele[props.party.party.union(union).unison?.element]}`
                   : ''
               ]"
             >
@@ -347,7 +347,7 @@ function get_pic_url(obj: Unit | Armament | undefined, awakened_or_soul = false)
           class="wfo-slot unison"
           :class="[
             props.party.party.union(union).unison
-              ? `ele-${props.party.party.union(union).unison?.element}`
+              ? `ele-${ele_id2ele[props.party.party.union(union).unison?.element]}`
               : ''
           ]"
         >

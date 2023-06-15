@@ -10,7 +10,7 @@
   >
     <div>
       <p>
-        <el-button type="warning" @click="$router.push('/login')">后台登录</el-button>
+        <v-btn color="orange" @click="$router.push('/login')">后台登录</v-btn>
       </p>
       <p>Meteorhouse Version：<span style="color: coral">v1.0-pre4</span></p>
       <p>

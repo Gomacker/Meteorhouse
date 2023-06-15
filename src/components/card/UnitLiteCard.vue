@@ -60,7 +60,7 @@ const props = defineProps({
         color: rgb(50, 50, 50);
       "
       :style="{
-        background: `linear-gradient(135deg, ${chroma(ele2color[props.unit.element_id]).alpha(
+        background: `linear-gradient(135deg, ${chroma(ele2color[props.unit.element]).alpha(
           alpha
         )} 101px, rgba(248,248,248, 0.77) 101px, rgba(248,248,248, 0.85) calc(100% - 32px), rgba(0,40,115, 0.85) calc(100% - 32px), rgba(0,0,0, 0.85))`
       }"

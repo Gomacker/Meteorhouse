@@ -46,7 +46,7 @@ const props = defineProps({
       background-position-x: -10px;
       background-position-y: -10px;
       image-rendering: pixelated;
-      border-radius: 12px;
+      /*border-radius: 12px;*/
       overflow: hidden;
     "
   >
@@ -78,7 +78,7 @@ const props = defineProps({
         "
         :style="{
           background: `linear-gradient(135deg, ${
-            ele2color[props.unit.element_id]
+            ele2color[props.unit.element]
           } 130px, rgba(248,248,248, 0.825) 130px, rgba(248,248,248, 0.825) calc(100% - 32px), rgb(54, 255, 162, 0.85) calc(100% - 32px), rgba(200,240,200, 0.85))`
         }"
       >

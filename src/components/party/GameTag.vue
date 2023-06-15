@@ -14,7 +14,7 @@ const props = defineProps({
     required: true
   }
 })
-const default_color = 'rgba(0, 0, 0, 0.5)'
+const default_color = 'rgba(0, 0, 0, 0.8)'
 const color = computed(
   () => {
     const type = content2type.get(props.content)
@@ -28,9 +28,9 @@ const color = computed(
 </script>
 
 <template>
-  <el-tag class="tag" :color="color">
+  <v-chip v-ripple label="" density="comfortable" class="tag" :style="{'background': color}">
     {{ props.content }}
-  </el-tag>
+  </v-chip>
 </template>
 
 <script lang="ts">
@@ -44,8 +44,6 @@ export default {
   border: none;
   color: white;
   margin: 2px;
-  /*padding: 2px 6px;*/
-  /*border-radius: 4px;*/
-  /*font-size: 10px;*/
+  user-select: none;
 }
 </style>

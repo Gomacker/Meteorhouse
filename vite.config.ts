@@ -20,10 +20,10 @@ export default defineConfig({
     port: 5174,
     proxy: {
       '/api': {
-        // target: 'http://127.0.0.1:10317/api/',
+        target: 'http://127.0.0.1:10317/api/',
         // target: 'http://test.meteorhouse.wiki:10317/api/',
         // target: 'http://test.meteorhouse.wiki/api/',
-        target: 'http://meteorhouse.wiki/api/',
+        // target: 'http://meteorhouse.wiki/api/',
         // target: 'http://test.meteorhouse.wiki/api/v1/',
         // target: 'https://alpha0317.meteorhouse.wiki/api/',
         changeOrigin: true,

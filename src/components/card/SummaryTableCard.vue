@@ -17,18 +17,6 @@ import UnitLiteCard from '@/components/card/UnitLiteCard.vue'
 import UnitWikiCard from '@/components/card/UnitWikiCard.vue'
 import ArmamentWikiCard from '@/components/card/ArmamentWikiCard.vue'
 
-// const props = defineProps({
-//   table: {
-//     type: Table,
-//     required: true,
-//     default: new Table({})
-//   },
-//   party_params: {
-//     type: { show_name: '' },
-//     required: false,
-//     default: false
-//   }
-// })
 const props = defineProps<{
   table: Table | undefined
   party_style?: {
@@ -58,7 +46,7 @@ function get_replacements_data(element: TableElement) {
   <div
     v-if="props.table instanceof Table"
     class="table"
-    style="width: 1036px; overflow: hidden"
+    style="width: 1036px; overflow: hidden; height: fit-content"
     :style="{
       '--main-color': props.table.property.get_color_main(1),
       '--sub-color': props.table.property.get_color_sub(1),
@@ -128,10 +116,7 @@ function get_replacements_data(element: TableElement) {
             >
               <template v-for="(element, key) in c.elements" :key="key">
                 <template v-if="element instanceof TableElementHtml">
-                  <div
-                    style="margin: -16px 0"
-                    v-html="element.content"
-                  />
+                  <div style="margin: -16px 0" v-html="element.content" />
                 </template>
                 <template v-else-if="element instanceof TableElementPartyUnion">
                   <div
@@ -295,7 +280,6 @@ function get_replacements_data(element: TableElement) {
                 :text_border="false"
                 :content="c.content"
               />
-              <!--              {{ c.content }}-->
             </div>
             <template v-else>
               <div style="color: red">{{ key }} {{ JSON.stringify(c) }}</div>
@@ -311,9 +295,10 @@ function get_replacements_data(element: TableElement) {
             ${props.table.property.get_color_main(1)} 100%)`
           }"
         >
-          <el-divider
+          <v-divider
             style="width: 95%; margin: 8px 0; border-top-color: var(--sub-color)"
-          ></el-divider>
+            class="border-opacity-100"
+          ></v-divider>
           <TableComponentTextContent
             style="
               font-size: 22px;
@@ -334,4 +319,14 @@ function get_replacements_data(element: TableElement) {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.table {
+  line-height: normal;
+  font-family: Arial, '黑体', '华文细黑', sans-serif;
+  --main-color: #333;
+  --sub-color: #ccc;
+  --main-background-color: rgba(51, 51, 51, 0.8);
+  --sub-background-color: rgba(204, 204, 204, 0.8);
+  --little-about-color: rgba(204, 204, 204, 0.75);
+}
+</style>

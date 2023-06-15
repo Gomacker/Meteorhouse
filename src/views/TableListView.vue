@@ -15,48 +15,52 @@ interface TableProfile {
 const table_list = ref<Map<string, TableProfile>>(new Map())
 
 axios.post('/api/v1/table_list/').then((r) => {
-  table_list.value = new Map(Object.entries(r.data['tables']).map((value) => {
-    return [
-      value[0],
-      {
-        name: value[1]['name'],
-        img: value[1]['img'],
-        type: TableType.DEFAULT
-      }
-    ]
-  }))
+  table_list.value = new Map(
+    Object.entries(r.data['tables']).map((value) => {
+      return [
+        value[0],
+        {
+          name: value[1]['name'],
+          img: value[1]['img'],
+          type: TableType.DEFAULT
+        }
+      ]
+    })
+  )
 })
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column;">
-    <el-scrollbar>
+  <div style="display: flex; flex-direction: column">
+    <div style="overflow-y: scroll; height: 100%">
       <div
         style="
           margin: 32px 0;
-          display: flex;
-          flex-wrap: wrap;
-          align-items: flex-start;
-          justify-content: space-evenly;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, 320px);
+          grid-gap: 16px;
+          justify-content: center;
         "
       >
-        <el-card
-          class="table-card"
-          shadow="hover"
-          body-style="padding: 0; display: flex; justify-content: center; align-items: center;"
+        <v-card
+          class="table-card elevation-4"
           :key="table_profile[0]"
           v-for="table_profile in table_list.entries()"
           @click="$router.push(`/table/${table_profile[0]}`)"
         >
-          <div style="display: flex; flex-direction: column; align-items: center">
-            <el-image
-              style="min-height: 60px"
-              :src="table_profile[1].img ? table_profile[1].img : '/static/worldflipper/st/banner/world_flipper-1609036650079981568-img1.png'"
-              fit="contain"
-              draggable="false"
-            />
-            <div
-              style="
+          <v-img
+            style="min-height: 60px; height: 100%"
+            @dragstart.prevent
+            :aspect-ratio="16 / 9"
+            :cover="true"
+            :src="
+              table_profile[1].img
+                ? table_profile[1].img
+                : '/static/worldflipper/st/banner/world_flipper-1609036650079981568-img1.png'
+            "
+          />
+          <div
+            style="
               text-align: center;
               margin-top: -24px;
               height: 24px;
@@ -64,13 +68,12 @@ axios.post('/api/v1/table_list/').then((r) => {
               background-color: rgba(255, 255, 255, 0.9);
               width: 100%;
             "
-            >
-              {{ table_profile[1].name }}
-            </div>
+          >
+            {{ table_profile[1].name }}
           </div>
-        </el-card>
+        </v-card>
       </div>
-    </el-scrollbar>
+    </div>
   </div>
 </template>
 
@@ -83,17 +86,18 @@ export default {
 <style scoped>
 .table-card {
   user-select: none;
-  margin: 8px;
+  //margin: 8px;
   cursor: pointer;
-  width: 45%;
-  border-radius: 16px;
+  //width: 45%;
+  border-radius: 8px;
   font-size: 16px;
   //min-height: 60px;
   max-width: 320px;
+  transition: transform 0.4s ease;
 }
 .table-card:hover {
   transform: scale(1.05);
   z-index: 1;
-  box-shadow: 0 0 16px rgba(0 0 0 / 0.6);
+  //box-shadow: 0 0 16px rgba(0 0 0 / 0.6);
 }
 </style>

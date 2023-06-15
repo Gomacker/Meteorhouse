@@ -63,7 +63,7 @@ const props = defineProps({
               s.startsWith('[bigicon:u') &&
               manager.unit_data.get(parseInt(s.substring(10, s.length - 1)))
             "
-            style="margin: 2px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
+            style="margin: 0 4px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
             :size="90"
             :unit="manager.unit_data.get(parseInt(s.substring(10, s.length - 1)))"
           />
@@ -73,7 +73,7 @@ const props = defineProps({
               s.startsWith('[icon:u') &&
               manager.unit_data.get(parseInt(s.substring(7, s.length - 1)))
             "
-            style="margin: 1px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
+            style="margin: 0 2px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
             :size="60"
             :unit="manager.unit_data.get(parseInt(s.substring(7, s.length - 1)))"
           />
@@ -83,7 +83,7 @@ const props = defineProps({
               s.startsWith('[bigicon:a') &&
               manager.armament_data.get(parseInt(s.substring(10, s.length - 1)))
             "
-            style="margin: 2px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
+            style="margin: 0 4px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
             :size="90"
             :armament="manager.armament_data.get(parseInt(s.substring(10, s.length - 1)))"
           />
@@ -93,7 +93,7 @@ const props = defineProps({
               s.startsWith('[icon:a') &&
               manager.armament_data.get(parseInt(s.substring(7, s.length - 1)))
             "
-            style="margin: 1px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
+            style="margin: 0 2px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
             :size="60"
             :armament="manager.armament_data.get(parseInt(s.substring(7, s.length - 1)))"
           />
