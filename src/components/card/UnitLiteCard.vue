@@ -6,15 +6,6 @@ import GameTag from '@/components/party/GameTag.vue'
 import chroma from 'chroma-js'
 
 const alpha = 0.85
-// const ele2color = {
-//   [-1]: 'rgb(105,105,105,' + alpha + ')',
-//   0: 'rgba(234,53,75,' + alpha + ')',
-//   1: 'rgba(68,137,255,' + alpha + ')',
-//   2: 'rgba(244,204,36,' + alpha + ')',
-//   3: 'rgba(119,217,47,' + alpha + ')',
-//   4: 'rgba(245,255,186,' + alpha + ')',
-//   5: 'rgba(90,57,95,' + alpha + ')'
-// }
 
 const show_awakened = ref(false)
 
@@ -36,16 +27,6 @@ const props = defineProps({
   <div
     class="unit-lite-card"
     v-if="props.unit"
-    style="
-      display: block;
-      width: 480px;
-      background: url('/static/worldflipper/ui/background_cut_official.png');
-      background-size: 136px;
-      background-position-x: -10px;
-      background-position-y: -10px;
-      image-rendering: pixelated;
-      border-radius: 16px;
-    "
   >
     <div
       style="
@@ -55,7 +36,6 @@ const props = defineProps({
         flex-wrap: wrap;
         height: 100%;
         padding: 16px;
-        /*background-color: rgb(248,248,248, 0.85);*/
         border-radius: inherit;
         color: rgb(50, 50, 50);
       "
@@ -115,6 +95,14 @@ const props = defineProps({
 
 <style scoped>
 .unit-lite-card {
+  display: block;
+  width: 480px;
+  background: url('/static/worldflipper/ui/background_cut_official.png');
+  background-size: 136px;
+  background-position-x: -10px;
+  background-position-y: -10px;
+  image-rendering: pixelated;
+  //border-radius: 16px;
   --content-size: 12px;
 }
 .span-f {

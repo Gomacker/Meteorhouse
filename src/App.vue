@@ -22,7 +22,7 @@ onMounted(() => {
 })
 </script>
 <template>
-  <v-app style="--v-theme-background: 248, 248, 248">
+  <v-app style="--v-theme-background: 248, 248, 248, 0">
     <v-navigation-drawer :width="160" v-model="sidebar_hidden" temporary="">
       <div style="display: flex; flex-direction: column; height: 100%">
         <v-list density="compact" :nav="true">
@@ -47,6 +47,13 @@ onMounted(() => {
             title="茶盘器"
             value="partysearcher"
             @click="$router.push('/partySearcher')"
+          />
+          <v-list-item
+              prepend-icon="mdi-calendar"
+              color="purple"
+              title="Events"
+              value="calendar"
+              @click="$router.push('/calendar')"
           />
           <v-list-item
             prepend-icon="mdi-table"
@@ -83,14 +90,16 @@ onMounted(() => {
 
     <v-app-bar
       density="comfortable"
-      style="background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)"
+      style="
+      background: linear-gradient(120deg, rgba(132,250,176,0.6) 0%, rgba(143,211,244,0.6) 100%);
+      backdrop-filter: blur(2px);
+"
       :order="-1"
     >
       <v-app-bar-nav-icon @click="sidebar_hidden = !sidebar_hidden"></v-app-bar-nav-icon>
       <v-toolbar-title>
         <a style="font-weight: 600; color: #5a31ff" href="/">流星屋图书馆</a>
       </v-toolbar-title>
-      <span style="margin-right: 30px">{{ user.token }}</span>
     </v-app-bar>
 
     <v-main>

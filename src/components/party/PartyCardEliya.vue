@@ -432,8 +432,6 @@ export default {
   transition: box-shadow 0.2s linear;
   box-shadow: none;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  /* font-family: 'Courier New', Courier, monospace; */
-  /* font-family: "黑体"; */
   font-size: 13px;
   color: black;
 }
@@ -509,9 +507,9 @@ export default {
   border-radius: 3px;
   margin: 2px;
   position: absolute;
-  /* background-color: aqua; */
   background-color: white;
-  box-shadow: 0 0 2px black;
+  box-shadow: rgba(9, 30, 66, 0.35) 0 1px 1px, rgba(9, 30, 66, 0.25) 0 0 1px 1px;
+  //box-shadow: 0 0 2px black;
   /*cursor: pointer;*/
   cursor: auto;
 }

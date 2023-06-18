@@ -105,6 +105,7 @@ onMounted(() => {
         <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: center; flex-wrap: wrap">
           <template v-if="page_party_list.size">
             <template v-for="party in page_party_list" :key="party[0]">
+<!--              <PartyReleaseCard @click="$router.push(`/pr/${party[0]}`)" style="margin: 4px" :party_release="PartyRelease.loads(party[1])" />-->
               <PartyReleaseCard style="margin: 4px" :party_release="PartyRelease.loads(party[1])" />
             </template>
           </template>

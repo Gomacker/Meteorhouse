@@ -12,7 +12,7 @@
       <p>
         <v-btn color="orange" @click="$router.push('/login')">后台登录</v-btn>
       </p>
-      <p>Meteorhouse Version：<span style="color: coral">v1.0-pre4</span></p>
+      <p>Meteorhouse Version：<span style="color: coral">v1.0-pre5</span></p>
       <p>
         Author：@Kranca / Gomacker
         <a href="https://space.bilibili.com/11466987" target="_blank">
@@ -22,12 +22,6 @@
             alt=""
           />
         </a>
-      </p>
-      <p>
-        开发环境：
-        <a href="https://vitejs.dev/" target="_blank">Vite</a> +
-        <a href="https://vuejs.org/" target="_blank">Vue 3</a> &
-        <a href="https://www.djangoproject.com/" target="_blank">Django</a>
       </p>
       <p>
         攻略发布：@芙洛斯Official

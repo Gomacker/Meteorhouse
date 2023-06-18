@@ -16,7 +16,7 @@ const table_list = ref<Map<string, TableProfile>>(new Map())
 
 axios.post('/api/v1/table_list/').then((r) => {
   table_list.value = new Map(
-    Object.entries(r.data['tables']).map((value) => {
+    Object.entries(r.data['tables']).map((value: any) => {
       return [
         value[0],
         {
@@ -31,48 +31,46 @@ axios.post('/api/v1/table_list/').then((r) => {
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column">
-    <div style="overflow-y: scroll; height: 100%">
-      <div
-        style="
-          margin: 32px 0;
-          display: grid;
-          grid-template-columns: repeat(auto-fill, 320px);
-          grid-gap: 16px;
-          justify-content: center;
-        "
+  <div>
+    <div
+      style="
+        margin: 32px 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 320px);
+        grid-gap: 16px;
+        justify-content: center;
+      "
+    >
+      <v-card
+        class="table-card elevation-4"
+        :key="table_profile[0]"
+        v-for="table_profile in table_list.entries()"
+        @click="$router.push(`/table/${table_profile[0]}`)"
       >
-        <v-card
-          class="table-card elevation-4"
-          :key="table_profile[0]"
-          v-for="table_profile in table_list.entries()"
-          @click="$router.push(`/table/${table_profile[0]}`)"
+        <v-img
+          style="min-height: 60px; height: 100%"
+          @dragstart.prevent
+          :aspect-ratio="16 / 9"
+          :cover="true"
+          :src="
+            table_profile[1].img
+              ? table_profile[1].img
+              : '/static/worldflipper/st/banner/world_flipper-1609036650079981568-img1.png'
+          "
+        />
+        <div
+          style="
+            text-align: center;
+            margin-top: -24px;
+            height: 24px;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.9);
+            width: 100%;
+          "
         >
-          <v-img
-            style="min-height: 60px; height: 100%"
-            @dragstart.prevent
-            :aspect-ratio="16 / 9"
-            :cover="true"
-            :src="
-              table_profile[1].img
-                ? table_profile[1].img
-                : '/static/worldflipper/st/banner/world_flipper-1609036650079981568-img1.png'
-            "
-          />
-          <div
-            style="
-              text-align: center;
-              margin-top: -24px;
-              height: 24px;
-              z-index: 1;
-              background-color: rgba(255, 255, 255, 0.9);
-              width: 100%;
-            "
-          >
-            {{ table_profile[1].name }}
-          </div>
-        </v-card>
-      </div>
+          {{ table_profile[1].name }}
+        </div>
+      </v-card>
     </div>
   </div>
 </template>

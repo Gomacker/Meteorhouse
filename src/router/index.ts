@@ -25,6 +25,16 @@ const router = createRouter({
       component: () => import('@/views/PartySearcherView.vue')
     },
     {
+      path: '/calendar',
+      name: 'calendar',
+      component: () => import('@/views/CalendarView.vue')
+    },
+    {
+      path: '/pr/:release_id',
+      name: 'partyRelease',
+      component: () => import('@/views/party/PartyReleaseView.vue')
+    },
+    {
       path: '/table',
       name: 'table',
       component: () => import('@/views/TableListView.vue')

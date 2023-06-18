@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Armament, Unit } from "@/stores/manager";
-import UnitWikiCard from "@/components/card/UnitWikiCard.vue";
-import ArmamentWikiCard from "@/components/card/ArmamentWikiCard.vue";
+import { Armament, Unit } from '@/stores/manager'
+import UnitWikiCard from '@/components/card/UnitWikiCard.vue'
+import ArmamentWikiCard from '@/components/card/ArmamentWikiCard.vue'
 
 defineProps<{
   obj: Unit | Armament | undefined
@@ -23,18 +23,18 @@ defineProps<{
         v-else-if="obj instanceof Armament"
         :armament="obj"
       />
-      <div style="text-align: center; width: 100%;" v-else>选择一个角色 / 装备</div>
+      <div style="text-align: center; width: 100%" v-else>选择一个角色 / 装备</div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .wiki-card {
-    zoom: 100%;
+  zoom: 100%;
 }
 @media (max-width: 1080px) {
-    .wiki-card {
-        zoom: 75%;
-    }
+  .wiki-card {
+    zoom: 75%;
+  }
 }
 </style>

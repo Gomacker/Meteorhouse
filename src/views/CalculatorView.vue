@@ -25,6 +25,7 @@ import GameTag from '@/components/party/GameTag.vue'
 const user = useUserStore()
 
 const selected_obj: Ref<Unit | Armament | null | undefined> = ref(undefined)
+const memo_obj: Ref<Unit | Armament | null | undefined> = ref(undefined)
 const selected_position = ref<{
   union: string | undefined
   position: number | undefined
@@ -67,7 +68,7 @@ function check_tag(text: string, obj: Unit | Armament) {
   return false
 }
 
-const list_filter = (obj: Unit | Armament | undefined) => {
+function list_filter(obj: Unit | Armament | undefined) {
   if (obj instanceof Unit) {
     let access_text = !filter.text
     const ft = filter.text.toLowerCase()
@@ -171,14 +172,22 @@ if (!showed_list.value.length) {
 
 const party = ref<PartyRelease>(PartyRelease.empty())
 
-function select_module(key: string) {
-  selected_module.value = key
-}
 function get_pic_url(obj: Unit | Armament, awakened_or_soul = false) {
   return obj ? obj.pic_url(awakened_or_soul) : '/static/worldflipper/unit/blank.png'
 }
 
+class PartyEditor {
+  public selected_union;
+  public selected_position;
+  constructor() {
+    this.selected_union = 0
+    this.selected_position = 0
+  }
+  select_party() {}
+}
+
 function select_party(union: string, position: number) {
+  // 选择Party内object
   if (selected_obj.value !== undefined) {
     if (union != undefined && position != undefined) {
       if (
@@ -223,6 +232,8 @@ function select_party(union: string, position: number) {
       }
     } else {
       selected_position.value = { union: union, position: position }
+      const obj = party.value.party.get_by_position(union, position)
+      if (obj) memo_obj.value = obj
     }
   }
 }
@@ -243,6 +254,7 @@ function select_object(obj: Unit | Armament | null) {
       selected_obj.value = undefined
     } else {
       selected_obj.value = obj
+      if (obj) memo_obj.value = obj
     }
   }
 }
@@ -298,14 +310,14 @@ function get_skill_weight(union: Union) {
         <v-tab value="Calculator">计算器</v-tab>
         <v-tab value="WikiCard">资料卡</v-tab>
         <v-tab value="Editor">编队</v-tab>
-        <v-tab value="Upload">上传器</v-tab>
+        <v-tab value="Upload" @click="hidden_menu = true">上传器</v-tab>
         <v-tab value="Resources">资源站</v-tab>
       </v-tabs>
       <v-window style="height: 100%" v-model="selected_module">
         <v-window-item value="Calculator">Calculator</v-window-item>
         <v-window-item style="height: 100%" value="WikiCard">
           <CalculatorWikiCardView
-            :obj="selected_obj === null ? undefined : selected_obj"
+            :obj="memo_obj === null ? undefined : memo_obj"
             style="height: 100%; overflow-y: auto"
           >
           </CalculatorWikiCardView>
@@ -329,13 +341,15 @@ function get_skill_weight(union: Union) {
                 </v-card>
               </v-menu>
               <v-switch
-                style="margin: 0 8px -26px"
+                style="margin: 0 8px"
+                hide-details
                 label="显示名称"
                 density="compact"
                 v-model="show_name"
               />
               <v-switch
-                style="margin: 0 8px -26px"
+                style="margin: 0 8px"
+                hide-details
                 label="显示觉醒"
                 density="compact"
                 v-model="show_awaken"
@@ -353,6 +367,7 @@ function get_skill_weight(union: Union) {
                   v-for="union in ['union1', 'union2', 'union3']"
                 >
                   <div
+                    v-ripple
                     class="party-wfo-slot party-main"
                     :class="[
                       selected_position.union == union && selected_position.position === 0
@@ -404,6 +419,7 @@ function get_skill_weight(union: Union) {
                     </div>
                   </div>
                   <div
+                    v-ripple
                     class="party-wfo-slot party-armament"
                     :class="[
                       selected_position.union == union && selected_position.position === 1
@@ -425,6 +441,7 @@ function get_skill_weight(union: Union) {
                     </div>
                   </div>
                   <div
+                    v-ripple
                     class="party-wfo-slot party-unison"
                     :class="[
                       selected_position.union == union && selected_position.position === 2
@@ -478,6 +495,7 @@ function get_skill_weight(union: Union) {
                     </div>
                   </div>
                   <div
+                    v-ripple
                     class="party-wfo-slot party-core"
                     :class="[
                       selected_position.union == union && selected_position.position === 3
@@ -594,10 +612,16 @@ function get_skill_weight(union: Union) {
               >
                 <div>
                   <div>{{ i === 1 ? '队长' : '主要角色' }}</div>
-                  <el-slider
+                  <v-slider
                     v-for="j in 3"
                     :key="j"
-                    placement="left"
+                    :min="-1"
+                    :max="5"
+                    :step="1"
+                    size="small"
+                    hide-details
+                    thumb-size="12px"
+                    style="height: 22px"
                     :model-value="
                       (() => {
                         const ppm = party._params.get('manaboard2')
@@ -608,24 +632,31 @@ function get_skill_weight(union: Union) {
                         return -1
                       })()
                     "
-                    @input="(value) => input_mb2(party, value, i, j, false)"
-                    :format-tooltip="
-                      (value) => {
-                        if (value === -1) return '无'
-                        else return value
-                      }
-                    "
-                    :min="-1"
-                    :max="5"
-                    size="small"
-                  ></el-slider>
+                    @update:model-value="(value) => input_mb2(party, value, i, j, false)"
+                    thumb-label
+                  >
+                    <template v-slot:thumb-label="{ modelValue }">
+                      {{
+                        ((value) => {
+                          if (value === -1) return '无'
+                          else return value
+                        })(modelValue)
+                      }}
+                    </template>
+                  </v-slider>
                 </div>
                 <div style="margin-top: 16px">
                   <div>辅助角色</div>
-                  <el-slider
+                  <v-slider
                     v-for="j in 3"
                     :key="j"
-                    placement="left"
+                    :min="-1"
+                    :max="5"
+                    :step="1"
+                    size="small"
+                    hide-details
+                    thumb-size="12px"
+                    style="height: 22px"
                     :model-value="
                       (() => {
                         const ppm = party._params.get('manaboard2')
@@ -636,23 +667,24 @@ function get_skill_weight(union: Union) {
                         return -1
                       })()
                     "
-                    @input="(value) => input_mb2(party, value, i, j, true)"
-                    :format-tooltip="
-                      (value) => {
-                        if (value === -1) return '无'
-                        else return value
-                      }
-                    "
-                    :min="-1"
-                    :max="5"
-                    size="small"
-                  ></el-slider>
+                    @update:model-value="(value) => input_mb2(party, value, i, j, true)"
+                    thumb-label
+                  >
+                    <template v-slot:thumb-label="{ modelValue }">
+                      {{
+                        ((value) => {
+                          if (value === -1) return '无'
+                          else return value
+                        })(modelValue)
+                      }}
+                    </template>
+                  </v-slider>
                 </div>
               </div>
             </div>
           </div>
         </v-window-item>
-        <v-window-item value="Upload" @click="hidden_menu = true">
+        <v-window-item value="Upload">
           <div style="display: flex; align-items: center; flex-direction: column; padding: 16px">
             <div
               style="
@@ -758,9 +790,7 @@ function get_skill_weight(union: Union) {
           </div>
         </v-window-item>
         <v-window-item style="height: 100%" value="Resources">
-          <CalculatorResourcesView
-            :selected_obj="selected_obj === null ? undefined : selected_obj"
-          />
+          <CalculatorResourcesView :memo_obj="memo_obj === null ? undefined : memo_obj" />
         </v-window-item>
       </v-window>
     </div>
@@ -828,7 +858,7 @@ function get_skill_weight(union: Union) {
         margin: 0;
         width: 100%;
         z-index: 6;
-        border-radius: 12px;
+        border-radius: 12px 12px 0 0;
         transition: height 0.3s ease;
       "
       :style="{
@@ -846,6 +876,7 @@ function get_skill_weight(union: Union) {
         >
           <template v-if="showed_list">
             <EmptyPicOrigin
+              v-ripple
               class="wfo"
               :class="selected_obj === null ? ['selected'] : []"
               @click="select_object(null)"
@@ -856,6 +887,7 @@ function get_skill_weight(union: Union) {
               :key="element"
             >
               <UnitPicOrigin
+                v-ripple
                 v-if="element instanceof Unit"
                 class="wfo"
                 :class="selected_obj === element ? ['selected'] : []"
@@ -870,6 +902,7 @@ function get_skill_weight(union: Union) {
               :key="element"
             >
               <ArmamentPicOrigin
+                v-ripple
                 v-if="element instanceof Armament"
                 class="wfo"
                 :class="selected_obj === element ? ['selected'] : []"
@@ -887,19 +920,21 @@ function get_skill_weight(union: Union) {
         :style="{ display: hidden_menu || hidden_filters ? 'none' : '' }"
       >
         <div style="margin: 4px; display: flex">
-          <span style="margin: 4px; display: inline-block; width: 50px">搜索</span>
-          <el-input v-model="filter.text" clearable></el-input>
+          <v-text-field
+            label="搜索"
+            hide-details
+            v-model="filter.text"
+            variant="outlined"
+            density="compact"
+          ></v-text-field>
         </div>
         <div
           style="display: flex; flex-wrap: wrap; --button-active-color: rgba(189, 255, 235, 0.8)"
         >
           <div style="margin: 4px">
             <span style="margin: 4px; display: inline-block; width: 50px">属性</span>
-            <el-button
+            <v-btn
               size="small"
-              type="primary"
-              plain
-              style="margin: 0 8px 0 0"
               @click="
                 () => {
                   if (filter_default.element.length === filter.element.length) filter.element = []
@@ -908,14 +943,14 @@ function get_skill_weight(union: Union) {
               "
             >
               {{ filter_default.element.length !== filter.element.length ? '全部' : '清空' }}
-            </el-button>
-            <el-checkbox-group
-              fill="var(--button-active-color)"
+            </v-btn>
+            <v-btn-toggle
+              color="light-blue-accent-1"
               v-model="filter.element"
-              style="display: inline; vertical-align: middle"
-              size="small"
+              multiple=""
+              style="margin-left: 8px; height: 28px"
             >
-              <el-checkbox-button
+              <v-btn
                 v-for="(ele, id_) in {
                   [-1]: 'none',
                   0: 'fire',
@@ -925,9 +960,10 @@ function get_skill_weight(union: Union) {
                   4: 'light',
                   5: 'dark'
                 }"
+                size="small"
                 :key="id_"
-                :label="parseInt(id_)"
-                @change="
+                :value="parseInt(id_)"
+                @click="
                   () => {
                     if (filter.element.length === filter_default.element.length) {
                       filter.element.splice(0, filter.element.length)
@@ -937,20 +973,17 @@ function get_skill_weight(union: Union) {
                 "
               >
                 <img
-                  style="width: 14px; height: 14px"
+                  style="width: 16px; height: 16px; filter: drop-shadow(0 0 2px rgba(0 0 0 / 0.6))"
                   :src="`/static/worldflipper/icon/${ele}.png`"
                   alt=""
                 />
-              </el-checkbox-button>
-            </el-checkbox-group>
+              </v-btn>
+            </v-btn-toggle>
           </div>
           <div style="margin: 4px">
             <span style="margin: 4px; display: inline-block; width: 50px">稀有度</span>
-            <el-button
+            <v-btn
               size="small"
-              type="primary"
-              plain
-              style="margin: 0 8px 0 0"
               @click="
                 () => {
                   if (filter_default.rarity.length === filter.rarity.length) filter.rarity = []
@@ -959,18 +992,20 @@ function get_skill_weight(union: Union) {
               "
             >
               {{ filter_default.rarity.length !== filter.rarity.length ? '全部' : '清空' }}
-            </el-button>
-            <el-checkbox-group
-              fill="var(--button-active-color)"
+            </v-btn>
+            <v-btn-toggle
+              color="light-blue-accent-1"
               v-model="filter.rarity"
-              style="display: inline; vertical-align: middle"
-              size="small"
+              multiple=""
+              density="compact"
+              style="margin-left: 8px; height: 28px"
             >
-              <el-checkbox-button
+              <v-btn
                 v-for="(rarity, id_) in { 1: '1', 2: '2', 3: '3', 4: '4', 5: '5' }"
                 :key="id_"
-                :label="parseInt(id_)"
-                @change="
+                :value="parseInt(id_)"
+                size="small"
+                @click="
                   () => {
                     if (filter.rarity.length === filter_default.rarity.length) {
                       filter.rarity.splice(0, filter.rarity.length)
@@ -980,20 +1015,17 @@ function get_skill_weight(union: Union) {
                 "
               >
                 <img
-                  style="height: 14px"
+                  style="height: 16px; filter: drop-shadow(0 0 2px rgba(0 0 0 / 0.6))"
                   :src="`/static/worldflipper/icon/star${rarity}.png`"
                   alt=""
                 />
-              </el-checkbox-button>
-            </el-checkbox-group>
+              </v-btn>
+            </v-btn-toggle>
           </div>
           <div v-if="selected_type === 'Unit'" style="margin: 4px">
             <span style="margin: 4px; display: inline-block; width: 50px">类型</span>
-            <el-button
+            <v-btn
               size="small"
-              type="primary"
-              plain
-              style="margin: 0 8px 0 0"
               @click="
                 () => {
                   if (filter_default.type.length === filter.type.length) filter.type = []
@@ -1002,19 +1034,19 @@ function get_skill_weight(union: Union) {
               "
             >
               {{ filter_default.type.length !== filter.type.length ? '全部' : '清空' }}
-            </el-button>
-            <el-checkbox-group
-              text-color="rgba(0, 0, 0, 0.85)"
-              fill="var(--button-active-color)"
+            </v-btn>
+            <v-btn-toggle
+              color="light-blue-accent-1"
               v-model="filter.type"
-              style="display: inline; vertical-align: middle"
-              size="small"
+              multiple=""
+              density="compact"
+              style="margin-left: 8px; height: 28px"
             >
-              <el-checkbox-button
+              <v-btn
                 v-for="(name, id_) in { 0: '剑士', 1: '格斗', 2: '射击', 3: '辅助', 4: '特殊' }"
                 :key="id_"
-                :label="parseInt(id_)"
-                @change="
+                :value="parseInt(id_)"
+                @click="
                   () => {
                     if (filter.type.length === filter_default.type.length) {
                       filter.type.splice(0, filter.type.length)
@@ -1024,16 +1056,13 @@ function get_skill_weight(union: Union) {
                 "
               >
                 {{ name }}
-              </el-checkbox-button>
-            </el-checkbox-group>
+              </v-btn>
+            </v-btn-toggle>
           </div>
           <div v-if="selected_type === 'Unit'" style="margin: 4px">
             <span style="margin: 4px; display: inline-block; width: 50px">种族</span>
-            <el-button
+            <v-btn
               size="small"
-              type="primary"
-              plain
-              style="margin: 0 8px 0 0"
               @click="
                 () => {
                   if (filter_default.race.length === filter.race.length) filter.race = []
@@ -1042,15 +1071,15 @@ function get_skill_weight(union: Union) {
               "
             >
               {{ filter_default.race.length !== filter.race.length ? '全部' : '清空' }}
-            </el-button>
-            <el-checkbox-group
-              text-color="rgba(0, 0, 0, 0.85)"
-              fill="var(--button-active-color)"
+            </v-btn>
+            <v-btn-toggle
+              color="light-blue-accent-1"
               v-model="filter.race"
-              style="display: inline; vertical-align: middle"
-              size="small"
+              multiple=""
+              density="compact"
+              style="margin-left: 8px; height: 28px"
             >
-              <el-checkbox-button
+              <v-btn
                 v-for="(name, id_) in {
                   Human: '人',
                   Beast: '兽',
@@ -1064,8 +1093,8 @@ function get_skill_weight(union: Union) {
                   Undead: '不死'
                 }"
                 :key="id_"
-                :label="id_"
-                @change="
+                :value="id_"
+                @click="
                   () => {
                     if (filter.race.length === filter_default.race.length) {
                       filter.race.splice(0, filter.race.length)
@@ -1075,8 +1104,8 @@ function get_skill_weight(union: Union) {
                 "
               >
                 {{ name }}
-              </el-checkbox-button>
-            </el-checkbox-group>
+              </v-btn>
+            </v-btn-toggle>
           </div>
         </div>
       </div>
@@ -1112,7 +1141,6 @@ export default {
   background: rgba(255 255 255 / 0.1);
   width: 8px;
   border-radius: 4px;
-  //height: 20px;
   padding: 0 16px;
   margin: 2px;
 }
@@ -1236,7 +1264,7 @@ export default {
   /*background-color: aqua;*/
   background-color: white;
   transition: border 0.2s ease;
-  box-shadow: 0 0 2px black;
+  box-shadow: rgba(9, 30, 66, 0.35) 0 1px 1px, rgba(9, 30, 66, 0.25) 0 0 1px 1px;
   /*cursor: pointer;*/
   cursor: auto;
 }

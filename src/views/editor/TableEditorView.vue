@@ -120,7 +120,7 @@ function save_table() {
     <div v-if="table instanceof Table" style="height: 100%; display: flex; justify-content: center">
       <div
         :style="{ width: combine_view ? '50%' : '100%' }"
-        style="display: flex; justify-content: center; padding: 60px 0; overflow-y: scroll"
+        style="padding: 60px 0; overflow: auto"
       >
         <div
           style="
@@ -225,11 +225,9 @@ function save_table() {
       </div>
       <div
         style="
-          display: flex;
-          justify-content: center;
           padding: 60px 0;
           width: 50%;
-          overflow-y: scroll;
+          overflow: auto;
         "
         v-if="combine_view"
       >
