@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { manager } from '@/stores/manager'
 import ArmamentPicOrigin from '@/components/objects/armament/ArmamentPicOrigin.vue'
-import GameTag from "@/components/party/GameTag.vue";
+import GameTag from '@/components/party/GameTag.vue'
 
 function splitByBrackets(str: string) {
   str = str.replaceAll('\n', '</span><span style="padding-bottom: 5px;">')
@@ -24,7 +24,7 @@ const status = {
   novice: false,
   del_line: false,
   bold: false,
-  tag: false,
+  tag: false
 }
 
 function init_status() {
@@ -50,13 +50,13 @@ const props = defineProps({
 <template>
   <div>
     <template v-if="typeof props.content == 'string'">
+      {{ init_status() }}
       <div
         style="font-weight: inherit"
         :key="row_index"
         class="table-row"
         v-for="(row, row_index) in props.content.split('\n')"
       >
-        {{ init_status() }}
         <template :key="s_index" v-for="(s, s_index) in splitByBrackets(row)">
           <UnitPicOrigin
             v-if="
@@ -97,11 +97,18 @@ const props = defineProps({
             :size="60"
             :armament="manager.armament_data.get(parseInt(s.substring(7, s.length - 1)))"
           />
+          <img
+            @dragstart.prevent
+            v-else-if="s.startsWith('[icon:') && s.substring(6, s.length - 1).length > 0"
+            style="height: 1em; margin: 0 0.075em; display: inline; vertical-align: text-bottom"
+            :src="`/static/worldflipper/icon/${s.substring(6, s.length - 1)}.png`"
+            alt=""
+          />
           <!-- [icon:aX] -->
           <img
             v-else-if="s === '[biliicon]'"
             style="
-              width: 24px;
+              height: 1em;
               vertical-align: text-bottom;
               filter: drop-shadow(0 0 2px rgba(0 0 0 / 0.6));
               margin: 0 4px;
@@ -112,7 +119,7 @@ const props = defineProps({
           <img
             v-else-if="s === '[ngaicon]'"
             style="
-              width: 24px;
+              height: 1em;
               vertical-align: text-bottom;
               filter: drop-shadow(0 0 2px rgba(0 0 0 / 0.6));
               margin: 0 4px;
@@ -164,7 +171,7 @@ const props = defineProps({
             {{ init_status() }}
           </template>
           <template v-else-if="status.tag">
-            <GameTag style="margin-bottom: 4px" :content="s"/>
+            <GameTag style="margin-bottom: 4px" :content="s" />
           </template>
           <template v-else-if="props.html_access">
             <div
@@ -174,7 +181,7 @@ const props = defineProps({
                 status.highlight ? 'highlight' : '',
                 status.novice ? 'novice' : '',
                 status.del_line ? 'del' : '',
-                status.bold ? 'bold' : '',
+                status.bold ? 'bold' : ''
               ]"
               v-html="s"
             ></div>
@@ -187,7 +194,7 @@ const props = defineProps({
                 status.highlight ? 'highlight' : '',
                 status.novice ? 'novice' : '',
                 status.del_line ? 'del' : '',
-                status.bold ? 'bold' : '',
+                status.bold ? 'bold' : ''
               ]"
             >
               {{ s }}
@@ -217,7 +224,8 @@ export default {
 }
 
 .table-text-bordered {
-  display: inline-block;
+  display: inline;
+  word-wrap: break-word;
   padding: 4px;
   //margin: -4px;
   margin: -4px -4px -2px;
@@ -225,21 +233,22 @@ export default {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: white;
-  -webkit-text-stroke: 0.12em transparent;
+  -webkit-text-stroke: 0.136em transparent;
   font-family: Arial, '黑体', serif;
 }
 .table-text {
-  display: inline-block;
+  display: inline;
+  word-wrap: break-word;
   color: inherit;
   font-family: Arial, '黑体', serif;
 }
 .highlight {
-  color: #ffad49;
-  -webkit-text-fill-color: rgb(255 173 73);
+  color: rgb(255, 159, 28);
+  -webkit-text-fill-color: rgb(255, 159, 28);
 }
 .novice {
-  color: #58ffb7;
-  -webkit-text-fill-color: rgb(88, 255, 183);
+  color: rgb(46, 196, 182);
+  -webkit-text-fill-color: rgb(46, 196, 182);
 }
 .del {
   text-decoration: line-through;

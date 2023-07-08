@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { TableElement, TableElementHtml, TableElementPartyUnion, TableElementWikiCard } from "@/stores/table";
+import {
+  TableElement,
+  TableElementHtml,
+  TableElementParty2,
+  TableElementPartyUnion,
+  TableElementWikiCard
+} from '@/stores/table'
 import {
   TableElementParty,
   TableElementRow,
@@ -29,6 +35,7 @@ function refresh(row: TableElementRow, index: number, element: TableElement) {
 const component_types = [
   'TextArea',
   'Party',
+  'Party2',
   'Html',
   'PartyUnion',
   'EventCard',
@@ -49,7 +56,6 @@ function get_replacements_data(element: TableElement) {
     }
   }
 }
-
 </script>
 
 <template>
@@ -73,7 +79,6 @@ function get_replacements_data(element: TableElement) {
       }"
       body-style="padding: 0;"
     >
-      <!--      <div style="font-size: 8px">{{ JSON.stringify($props.table_element.data()) }}</div>-->
       <el-form style="padding: 4px" label-width="50px" label-position="left">
         <el-form-item label="类型" style="margin-bottom: 0">
           <el-select v-model="$props.table_element.type" @change="$emit('refresh')">
@@ -81,7 +86,6 @@ function get_replacements_data(element: TableElement) {
           </el-select>
         </el-form-item>
       </el-form>
-      <!--      {{ JSON.stringify(element.data()) }}-->
       <el-divider style="margin: 4px" />
       <div
         v-if="$props.table_element instanceof TableElementRow"
@@ -148,7 +152,6 @@ function get_replacements_data(element: TableElement) {
       :class="$props.table_element.full_row ? ['full'] : undefined"
       body-style="padding: 8px;"
     >
-      <!--      <div style="font-size: 8px">{{ JSON.stringify($props.table_element.data()) }}</div>-->
       <el-form label-width="50px" size="small" label-position="left">
         <el-form-item label="类型">
           <el-select v-model="$props.table_element.type" @change="$emit('refresh')">
@@ -229,11 +232,51 @@ function get_replacements_data(element: TableElement) {
               <div style="width: 49%; margin: 0 0 0 1%">
                 <el-form label-width="50px" size="small" label-position="left">
                   <el-form-item label="内容">
-                    <el-input v-model="$props.table_element.content" type="textarea" :autosize="{ minRows: 2 }"></el-input>
+                    <el-input
+                      v-model="$props.table_element.content"
+                      type="textarea"
+                      :autosize="{ minRows: 2 }"
+                    ></el-input>
                   </el-form-item>
                 </el-form>
               </div>
             </div>
+          </div>
+        </template>
+        <template v-else-if="$props.table_element instanceof TableElementParty2">
+          <div style="display: flex">
+            <v-switch v-model="$props.table_element.show_name" density="compact" hide-details :inline="true" label="显示名称"/>
+            <v-switch v-model="$props.table_element.show_awaken" density="compact" hide-details :inline="true" label="显示觉醒"/>
+          </div>
+          <v-text-field
+            label="标题"
+            density="compact"
+            hide-details
+            v-model="$props.table_element.title"
+          ></v-text-field>
+          <v-text-field
+            label="小标题"
+            density="compact"
+            hide-details
+            v-model="$props.table_element.subtitle"
+          ></v-text-field>
+          <el-form label-width="50px" size="small" label-position="left">
+              <v-textarea
+                v-model="$props.table_element.party_data"
+                hide-details
+                label="队伍"
+                style="font-family: Consolas, serif; background: rgb(54,54,54); color: white"
+                :autosize="{ minRows: 2, maxRows: 6 }"
+              ></v-textarea>
+          </el-form>
+          <div style="display: flex; justify-content: center">
+            <PartyCardEliya
+              :party="$props.table_element.party"
+              :replacements="get_replacements_data($props.table_element)"
+              :show_name="$props.table_element.show_name"
+              :show_awaken="$props.table_element.show_awaken"
+              always_show_replacements
+            />
           </div>
         </template>
         <template v-else-if="$props.table_element instanceof TableElementParty">
@@ -246,9 +289,6 @@ function get_replacements_data(element: TableElement) {
             </el-form-item>
           </el-form>
           <el-form label-width="50px" size="small" label-position="left">
-            <!--          <el-form-item label="队伍ID">-->
-            <!--            <el-input></el-input>-->
-            <!--          </el-form-item>-->
             <el-form-item label="队伍">
               <el-input
                 v-model="$props.table_element.party_data"
@@ -258,9 +298,6 @@ function get_replacements_data(element: TableElement) {
                 :autosize="{ minRows: 2, maxRows: 6 }"
               ></el-input>
             </el-form-item>
-            <!--          <el-form-item label="替换">-->
-            <!--            <div style="width: 100%; height: 60px; background-color: rgb(0 255 0)"></div>-->
-            <!--          </el-form-item>-->
           </el-form>
           <div style="display: flex; justify-content: center">
             <PartyCardEliya

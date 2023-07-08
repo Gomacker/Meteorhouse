@@ -17,7 +17,7 @@ const ele_size = (props.size * 44) / 240
 <template>
   <div
     v-if="props.unit instanceof Unit"
-    style="display: inline; vertical-align: bottom"
+    style="display: inline-block; vertical-align: bottom"
     :title="props.unit.anise_id + ': ' + props.unit.extraction_id + ': ' + props.unit.id"
   >
     <svg

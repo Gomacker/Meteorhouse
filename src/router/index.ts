@@ -30,6 +30,11 @@ const router = createRouter({
       component: () => import('@/views/CalendarView.vue')
     },
     {
+      path: '/statistic',
+      name: 'statistic',
+      component: () => import('@/views/StatisticView.vue')
+    },
+    {
       path: '/pr/:release_id',
       name: 'partyRelease',
       component: () => import('@/views/party/PartyReleaseView.vue')
@@ -83,6 +88,11 @@ const router = createRouter({
       path: '/editor/nickname',
       name: 'nickname_editor',
       component: () => import('@/views/editor/NicknameEditorView.vue')
+    },
+    {
+      path: '/editor/event',
+      name: 'event_editor',
+      component: () => import('@/views/editor/EventEditorView.vue')
     },
     {
       path: '/card/test',

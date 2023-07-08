@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import ScheduleCalender from "@/components/schedule/ScheduleCalendarLegacy.vue";
+import ScheduleCalendar from "@/components/schedule/ScheduleCalendarLegacy.vue";
 </script>
 
 <template>
   <div>
     <div>
-      <ScheduleCalender/>
+      <ScheduleCalendar/>
     </div>
   </div>
 </template>

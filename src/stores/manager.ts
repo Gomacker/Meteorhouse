@@ -87,6 +87,11 @@ export const ele_id2ele: any = {
   5: 'dark'
 }
 
+export async function get_party(party_id: string) {
+  const r = await axios.post(`/api/v1/party/release/${party_id}/`)
+  return PartyRelease.loads(r.data['data'])
+}
+
 function format_race(race: string) {
   const l = race.split(',')
   if (l[0] === '') l.splice(0, 1)

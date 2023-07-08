@@ -68,6 +68,10 @@ function check_tag(text: string, obj: Unit | Armament) {
   return false
 }
 
+function get_party_card_style() {
+  return 'background: radial-gradient(ellipse farthest-side at 76% 77%, rgba(245, 228, 212, 0.25) 4%, rgba(255, 255, 255, 0) calc(4% + 1px)), radial-gradient(circle at 76% 40%, #fef6ec 4%, rgba(255, 255, 255, 0) 4.18%), linear-gradient(135deg, #ff0000 0%, #000036 100%), radial-gradient(ellipse at 28% 0%, #ffcfac 0%, rgba(98, 149, 144, 0.5) 100%), linear-gradient(180deg, #cd6e8a 0%, #f5eab0 69%, #d6c8a2 70%, #a2758d 100%); background-blend-mode: normal, normal, screen, overlay, normal;'
+}
+
 function list_filter(obj: Unit | Armament | undefined) {
   if (obj instanceof Unit) {
     let access_text = !filter.text
@@ -87,7 +91,8 @@ function list_filter(obj: Unit | Armament | undefined) {
       obj.ability6.toLowerCase().includes(ft) ||
       obj.cv.toLowerCase() === ft ||
       obj.obtain.toLowerCase().includes(ft) ||
-      check_tag(ft, obj)
+      check_tag(ft, obj) ||
+      obj.id.toString() == ft
     )
       access_text = true
     const access_element = filter.element.indexOf(obj.element) > -1
@@ -112,7 +117,8 @@ function list_filter(obj: Unit | Armament | undefined) {
       obj.ability_augment70.toLowerCase().includes(ft) ||
       obj.ability_augment100.toLowerCase().includes(ft) ||
       obj.obtain.toLowerCase().includes(ft) ||
-      check_tag(ft, obj)
+      check_tag(ft, obj) ||
+      obj.id.toString() == ft
     )
       access_text = true
     return access_text && access_element && access_rarity
@@ -177,8 +183,8 @@ function get_pic_url(obj: Unit | Armament, awakened_or_soul = false) {
 }
 
 class PartyEditor {
-  public selected_union;
-  public selected_position;
+  public selected_union
+  public selected_position
   constructor() {
     this.selected_union = 0
     this.selected_position = 0
@@ -696,101 +702,33 @@ function get_skill_weight(union: Union) {
               "
             >
               <span>上传预览</span>
-              <PartyReleaseCard v-if="party instanceof PartyRelease" :party_release="party" />
-              <el-form label-width="70px" label-position="left" style="width: 100%; padding: 16px">
-                <el-form-item label="自动Tag">
-                  <div style="display: flex; flex-wrap: wrap">
-                    <GameTag content="暗" />
-                  </div>
-                </el-form-item>
-                <el-form-item label="已选Tag">
-                  <div style="display: flex; flex-wrap: wrap">
-                    <GameTag v-for="(tag, index) in []" :key="index" :content="tag" />
-                  </div>
-                </el-form-item>
-                <el-form-item label="选择tag">
-                  <div style="display: flex; flex-wrap: wrap">
-                    <GameTag v-for="(tag, index) in []" :key="index" :content="tag" />
-                  </div>
-                </el-form-item>
-                {{ quest_cascader }}
-                <el-form-item label="副本Tag">
-                  <el-cascader
-                    v-model="quest_cascader"
-                    :options="[
-                      {
-                        value: 'normal',
-                        label: '常驻',
-                        children: [
-                          {
-                            value: 101,
-                            label: '猫头鹰',
-                            children: [
-                              {
-                                value: 1,
-                                label: '初级'
-                              }
-                            ]
-                          },
-                          {
-                            value: 102,
-                            label: '废墟魔像',
-                            children: [
-                              {
-                                value: 1,
-                                label: '中级'
-                              },
-                              {
-                                value: 2,
-                                label: '高级'
-                              },
-                              {
-                                value: 3,
-                                label: '高级+'
-                              },
-                              {
-                                value: 4,
-                                label: '超级'
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]"
-                    filterable
-                  >
-                  </el-cascader>
-                  <el-button style="margin-left: 8px" type="primary">添加</el-button>
-                </el-form-item>
-                <el-form-item label="标题">
-                  <el-input
-                    v-model="party.title"
-                    placeholder="注意：投稿标题与上传标题可能不同，未来将会弃用"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="来源">
-                  <el-input v-model="source_input" placeholder="可选，上传后添加"></el-input>
-                </el-form-item>
-              </el-form>
-              <div style="display: flex">
-                <!--            <el-button type="primary">投稿</el-button>-->
-                <el-popover v-if="!user.is_login()" placement="top">
-                  <span style="text-align: center">没有上传权限</span>
-                  <template #reference>
-                    <div style="margin-left: 16px">
-                      <el-button disabled type="warning">上传</el-button>
-                    </div>
-                  </template>
-                </el-popover>
-                <div v-else style="margin-left: 16px">
-                  <el-button @click="upload_party" type="warning">上传</el-button>
-                </div>
+              <PartyReleaseCard
+                :style="get_party_card_style()"
+                v-if="party instanceof PartyRelease"
+                :party_release="party"
+              />
+              <div style="width: 100%; padding: 16px">
+                <v-text-field
+                  v-model="party.title"
+                  variant="outlined"
+                  label="标题"
+                  density="compact"
+                />
+                <v-text-field
+                  v-model="source_input"
+                  variant="outlined"
+                  label="来源"
+                  density="compact"
+                />
+                <v-btn :disabled="!user.is_login()" @click="upload_party" color="orange">
+                  上传
+                </v-btn>
               </div>
             </div>
           </div>
         </v-window-item>
         <v-window-item style="height: 100%" value="Resources">
-          <CalculatorResourcesView :memo_obj="memo_obj === null ? undefined : memo_obj" />
+          <CalculatorResourcesView :selected_obj="memo_obj === null ? undefined : memo_obj" />
         </v-window-item>
       </v-window>
     </div>

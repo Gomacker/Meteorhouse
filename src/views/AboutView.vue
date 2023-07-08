@@ -12,7 +12,7 @@
       <p>
         <v-btn color="orange" @click="$router.push('/login')">后台登录</v-btn>
       </p>
-      <p>Meteorhouse Version：<span style="color: coral">v1.0-pre5</span></p>
+      <p>Meteorhouse Version：<span style="color: coral">v1.0-pre6</span></p>
       <p>
         Author：@Kranca / Gomacker
         <a href="https://space.bilibili.com/11466987" target="_blank">

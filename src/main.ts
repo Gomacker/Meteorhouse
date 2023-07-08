@@ -15,7 +15,6 @@ import * as directives from 'vuetify/directives'
 import './assets/main.css'
 
 import App from '@/App.vue'
-// import App from '@/App_bu.vue'
 import AppPure from '@/AppPure.vue'
 import AppCard from "@/AppCard.vue";
 
