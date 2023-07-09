@@ -6,6 +6,12 @@ import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
+import '@mdi/font/css/materialdesignicons.css'
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
 import './assets/main.css'
 
 import App from '@/App.vue'
@@ -24,6 +30,12 @@ const card_paths: Array<string> = [
     '/card/armament',
     '/card/room'
 ]
+
+const vuetify = createVuetify({
+    components,
+    directives,
+})
+
 // const app = createApp(AppPure)
 if (card_paths.includes(location.pathname) || card_paths.includes(location.pathname.substring(0, location.pathname.length - 1))) {
     const app = createApp(AppCard)
@@ -32,6 +44,7 @@ if (card_paths.includes(location.pathname) || card_paths.includes(location.pathn
     app.use(pinia)
     app.use(router)
     app.use(ElementPlus)
+    app.use(vuetify)
 
     app.mount('#app')
 }else if (pure_paths.includes(location.pathname) || pure_paths.includes(location.pathname.substring(0, location.pathname.length - 1))) {
@@ -41,6 +54,7 @@ if (card_paths.includes(location.pathname) || card_paths.includes(location.pathn
     app.use(pinia)
     app.use(router)
     app.use(ElementPlus)
+    app.use(vuetify)
 
     app.mount('#app')
 }
@@ -51,6 +65,7 @@ else {
     app.use(pinia)
     app.use(router)
     app.use(ElementPlus)
+    app.use(vuetify)
 
     app.mount('#app')
 }

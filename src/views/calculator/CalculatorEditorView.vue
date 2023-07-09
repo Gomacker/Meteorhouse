@@ -25,18 +25,6 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
   <div
     style="display: flex; flex-direction: column; align-items: center"
   >
-    <!--        <div style="margin-top: 16px">-->
-    <!--          裁剪框-->
-    <!--          <el-color-picker-->
-    <!--            show-alpha-->
-    <!--            v-model="border_color"-->
-    <!--            :predefine="Object['values'](ele2color)"-->
-    <!--          />-->
-    <!--          显示名称-->
-    <!--          <el-switch v-model="show_name" />-->
-    <!--          显示觉醒-->
-    <!--          <el-switch v-model="show_awaken" />-->
-    <!--        </div>-->
     <template v-if="party instanceof PartyRelease">
       <div
         class="party-body"
@@ -144,11 +132,6 @@ function get_show_text(unit: Unit | undefined, union: string, main_slot: boolean
       </el-button>
       <el-button type="danger" @click="party = PartyRelease.empty()"> Clear </el-button>
     </div>
-    <!--        <div style="width: 480px; margin: 16px; border: red solid 1px;">-->
-    <!--          <div>-->
-    <!--            <el-slider size="small" :min="-1" :max="5"></el-slider>-->
-    <!--          </div>-->
-    <!--        </div>-->
   </div>
 </template>
 

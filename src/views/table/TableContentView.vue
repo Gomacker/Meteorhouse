@@ -1,12 +1,12 @@
 
 <template>
-  <el-scrollbar>
-    <SummaryTableCard :table="new Table(table)" :party_style="{
+  <div style="width: 100%; height: 100%; overflow: auto;">
+      <SummaryTableCard :table="new Table(table)" :party_style="{
       show_awaken: show_awaken,
       show_name: show_name,
       show_replacements: show_replacements
     }" />
-  </el-scrollbar>
+  </div>
 </template>
 
 <script lang="ts">

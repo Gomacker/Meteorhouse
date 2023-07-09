@@ -8,21 +8,30 @@ import { useUserStore } from '@/stores/user'
 const username_input = ref<string>('')
 const password_input = ref<string>('')
 const router = useRouter()
+const user = useUserStore()
 function login() {
   axios
-    .post('/api/v1/login/', {
-      username: username_input.value,
-      password: password_input.value
-    })
+    .post(
+      '/api/v1/login/',
+      {
+        username: username_input.value,
+        password: password_input.value
+      },
+      {
+        headers: {
+          token: user.token
+        }
+      }
+    )
     .then((r) => {
       console.log(r.data)
       if (r.data['result'] === 'success') {
         ElMessage.success('成功')
         const user = useUserStore()
-        // console.log(r.)
-        user.login(r.data['username'], '')
-        location.reload()
-        router.go(0)
+        if (user.token) {
+          user.login(r.data['username'], user.token)
+        }
+        router.push('/')
       } else {
         ElMessage.error('失败')
       }
@@ -31,31 +40,35 @@ function login() {
       ElMessage.error('失败(失败)')
     })
 }
-function get_token() {
-    axios.post('/api/v1/token_get/').then(r => test_token.value = r.data['token'])
-}
-const test_token = ref<string>('')
 </script>
 <template>
   <div style="display: flex; flex-direction: column; justify-content: center; align-items: center">
-    <el-card>
-        <el-button @click="get_token">测试</el-button>
-        {{ test_token }}
-    </el-card>
-    <el-card style="width: 60%; border-radius: 16px" body-style="padding: 16px;">
-      <el-form>
-        <el-form-item label="账号">
-          <el-input v-model="username_input"></el-input>
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input show-password v-model="password_input"></el-input>
-        </el-form-item>
-      </el-form>
-      <div style="display: flex; justify-content: space-between">
-        <div />
-        <el-button type="primary" @click="login">登录</el-button>
-      </div>
-    </el-card>
+    <v-card elevation="12">
+      {{ user.token }}
+    </v-card>
+    <v-card elevation="12" min-width="320px">
+      <v-card-text>
+        <v-form>
+          <v-text-field
+            density="comfortable"
+            variant="outlined"
+            v-model="username_input"
+            label="账号"
+          />
+          <v-text-field
+            density="comfortable"
+            variant="outlined"
+            type="password"
+            v-model="password_input"
+            label="密码"
+          />
+        </v-form>
+        <div style="display: flex; justify-content: space-between">
+          <div />
+          <v-btn color="primary" @click="login">登录</v-btn>
+        </div>
+      </v-card-text>
+    </v-card>
     <div style=""></div>
   </div>
 </template>

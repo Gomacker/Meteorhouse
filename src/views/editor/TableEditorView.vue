@@ -50,21 +50,31 @@ function save_table() {
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column">
-    <div
+  <div style="display: flex; flex-direction: column; height: 100%">
+    <v-toolbar
+      density="compact"
       style="
         display: flex;
         align-items: center;
+        position: absolute;
+        top: 0;
         width: 100%;
-        height: 40px;
-        background-color: rgba(0 0 0 / 0.5);
+        z-index: 10;
+        /*height: 40px;*/
+        background-color: rgba(0 0 0 / 0.35);
         color: white;
         padding: 0 8px;
       "
     >
-      <el-button @click="save_table" :disabled="!table_selected" type="primary" size="small">
+      <v-btn
+        variant="flat"
+        @click="save_table"
+        :disabled="!table_selected"
+        color="blue"
+        size="small"
+      >
         保存
-      </el-button>
+      </v-btn>
       <el-select v-model="table_select" style="margin-left: 8px" size="small">
         <el-option
           v-for="table_profile in table_list"
@@ -75,18 +85,19 @@ function save_table() {
           {{ table_profile[0] }}: <span style="color: lightgray">{{ table_profile[1] }}</span>
         </el-option>
       </el-select>
-      <el-button
+      <v-btn
+        variant="flat"
         style="margin-left: 8px"
-        type="warning"
+        color="warning"
         size="small"
         :disabled="!table_select"
         @click="load_table(table_select)"
       >
         读取
-      </el-button>
+      </v-btn>
       <div style="display: flex; align-items: center; margin-left: 8px">
         <div>独立视图</div>
-        <el-switch style="margin: 0 8px" v-model="combine_view"></el-switch>
+        <v-switch hide-details color="blue" style="margin: 0 8px" v-model="combine_view"></v-switch>
         <div>结合视图</div>
       </div>
       <a
@@ -105,12 +116,12 @@ function save_table() {
       >
         Card页（替换展开）
       </a>
-    </div>
-    <div
-      v-if="table instanceof Table"
-      style="display: flex; justify-content: center; height: calc(100% - 40px)"
-    >
-      <el-scrollbar :style="{ width: combine_view ? '50%' : '' }" view-style="height: 100%;">
+    </v-toolbar>
+    <div v-if="table instanceof Table" style="height: 100%; display: flex; justify-content: center">
+      <div
+        :style="{ width: combine_view ? '50%' : '100%' }"
+        style="padding: 60px 0; overflow: auto"
+      >
         <div
           style="
             display: flex;
@@ -211,10 +222,21 @@ function save_table() {
             </el-form>
           </el-card>
         </div>
-      </el-scrollbar>
-      <el-scrollbar style="width: 50%" v-if="combine_view">
-        <SummaryTableCard :table="table" />
-      </el-scrollbar>
+      </div>
+      <div
+        style="
+          padding: 60px 0;
+          width: 50%;
+          overflow: auto;
+        "
+        v-if="combine_view"
+      >
+        <SummaryTableCard
+          class="elevation-12"
+          style="flex-shrink: 0; overflow: auto; height: fit-content; border-radius: 16px"
+          :table="table"
+        />
+      </div>
     </div>
   </div>
 </template>

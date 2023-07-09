@@ -14,10 +14,9 @@ defineProps<{ selected_obj: Unit | Armament | undefined }>()
           class="character-drawing"
           :style="{
             background: `linear-gradient(to bottom,
-            ${ele2color[selected_obj.element_id]},
-            ${chroma(ele2color[selected_obj.element_id]).alpha(0.1).hex()})`,
-            'box-shadow': `0 0 16px ${ele2color[selected_obj.element_id]}`
-            // flex: main_show == 'left' ? '100%' : ''
+            ${ele2color[selected_obj.element]},
+            ${chroma(ele2color[selected_obj.element]).alpha(0.1).hex()})`,
+            'box-shadow': `0 0 16px ${ele2color[selected_obj.element]}`
           }"
         >
           <a
@@ -25,7 +24,7 @@ defineProps<{ selected_obj: Unit | Armament | undefined }>()
             :href="`/static/worldflipper/unit/full/base/${selected_obj.extraction_id}.png`"
           >
             <el-image
-              style="float: right; height: calc(100% - 4px)"
+              style="float: right; height: 100%"
               fit="cover"
               :src="`/static/worldflipper/unit/full/base/${selected_obj.extraction_id}.png`"
             />
@@ -43,7 +42,11 @@ defineProps<{ selected_obj: Unit | Armament | undefined }>()
         >
           <el-menu
             mode="horizontal"
-            @select="r => {menu_active = r}"
+            @select="
+              (r) => {
+                menu_active = r
+              }
+            "
             :default-active="menu_active"
             :active-text-color="'rgba(200,0,255,0.8)'"
             style="display: flex; width: 100%; justify-content: center"
@@ -75,9 +78,9 @@ defineProps<{ selected_obj: Unit | Armament | undefined }>()
           class="character-drawing"
           :style="{
             background: `linear-gradient(to bottom,
-            ${ele2color[selected_obj.element_id]},
-            ${chroma(ele2color[selected_obj.element_id]).alpha(0.1).hex()})`,
-            'box-shadow': `0 0 16px ${ele2color[selected_obj.element_id]}`
+            ${ele2color[selected_obj.element]},
+            ${chroma(ele2color[selected_obj.element]).alpha(0.1).hex()})`,
+            'box-shadow': `0 0 16px ${ele2color[selected_obj.element]}`
             // flex: main_show == 'right' ? '100%' : ''
           }"
         >
@@ -86,7 +89,7 @@ defineProps<{ selected_obj: Unit | Armament | undefined }>()
             :href="`/static/worldflipper/unit/full/awakened/${selected_obj.extraction_id}.png`"
           >
             <el-image
-              style="float: left; height: calc(100% - 4px)"
+              style="float: left; height: 100%"
               fit="cover"
               :src="`/static/worldflipper/unit/full/awakened/${selected_obj.extraction_id}.png`"
             />
@@ -109,7 +112,7 @@ defineProps<{ selected_obj: Unit | Armament | undefined }>()
   height: 100%;
   transition: width 0.4s ease;
   transition-delay: 0.3s;
-    z-index: 1;
+  z-index: 1;
 }
 .character-drawing:hover {
   width: 100%;

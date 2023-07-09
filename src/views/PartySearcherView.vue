@@ -48,6 +48,7 @@ function get_data(page_index: number, search_content = '') {
 function search_party(search_content: string) {
   search_content_applied.value = search_content
   get_data(current_page.value, search_content_applied.value)
+  current_page.value = 1
 }
 onMounted(() => {
   const route = useRoute()
@@ -62,56 +63,69 @@ onMounted(() => {
     if (page) current_page.value = page
   }
   get_data(current_page.value, search_content_applied.value)
+  current_page.value = 1
 })
 </script>
 
 <template>
   <div
-    style="overflow: hidden; display: flex; flex-direction: column; height: 100%; padding: 16px 0"
+    style="
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      padding: 16px 0;
+    "
   >
     <div style="margin: 16px 32px 8px; display: flex">
-      <el-input
+      <v-text-field
+        label="搜索鸭"
+        variant="solo"
+        prepend-icon="mdi-magnify"
         v-model="search_content"
-        placeholder="搜索鸭"
-        size="large"
         @keydown.enter="search_party(search_content)"
-      ></el-input>
-      <el-button
+      ></v-text-field>
+      <v-btn
         :color="'rgba(163,56,220,0.75)'"
-        style="margin-left: 16px"
+        style="margin-left: 16px; margin-top: 6px"
         size="large"
         @click="search_party(search_content)"
       >
         搜索
-      </el-button>
+      </v-btn>
     </div>
-    <el-scrollbar ref="scrollbar_ref" v-loading="loading" style="margin: 0 16px">
-      <div style="display: flex; flex-direction: row; justify-content: center; flex-wrap: wrap">
-        <template v-if="page_party_list.size">
-          <template v-for="party in page_party_list" :key="party[0]">
-            <PartyReleaseCard style="margin: 4px" :party_release="PartyRelease.loads(party[1])" />
-<!--            {{ party }}-->
+    <v-card
+      ref="scrollbar_ref"
+      v-loading="loading"
+      class="elevation-0"
+      style="background-color: #ffffff80; height: 100%; padding: 8px; margin: 0 16px"
+    >
+      <div style="overflow-y: scroll; height: 100%">
+        <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: center; flex-wrap: wrap">
+          <template v-if="page_party_list.size">
+            <template v-for="party in page_party_list" :key="party[0]">
+<!--              <PartyReleaseCard @click="$router.push(`/pr/${party[0]}`)" style="margin: 4px" :party_release="PartyRelease.loads(party[1])" />-->
+              <PartyReleaseCard style="margin: 4px" :party_release="PartyRelease.loads(party[1])" />
+            </template>
           </template>
-        </template>
-        <template v-else>
-          <el-empty />
-        </template>
+          <template v-else>
+            <el-empty />
+          </template>
+        </div>
       </div>
-    </el-scrollbar>
+    </v-card>
     <div style="margin: 16px; display: flex; justify-content: center">
-      <el-pagination
-        v-model:current-page="current_page"
-        background
-        layout="prev, pager, next"
-        :page-size="12"
-        :total="party_count"
-        @currentChange="
+      <v-pagination
+        v-model="current_page"
+        :length="Math.ceil(party_count / 12)"
+        style="width: 50%"
+        @update:model-value="
           () => {
             get_data(current_page, search_content_applied)
-            scrollbar_ref.setScrollTop(0)
           }
         "
-      ></el-pagination>
+      ></v-pagination>
     </div>
   </div>
 </template>

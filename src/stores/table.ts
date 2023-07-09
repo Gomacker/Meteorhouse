@@ -92,14 +92,13 @@ export abstract class TableElement {
     if (data['type'] === 'TextArea' || data['type'] === 'TextRegion') {
       return new TableElementTextArea(data.data)
     }
+    if (data['type'] === 'Party2') {
+      return new TableElementParty2(data.data)
+    }
     if (data['type'] === 'Party') {
-      // return new TableElementTextArea('')
-      // return new TableElementAny(data.type, data.data)
       return new TableElementParty(data.data)
     }
     if (data['type'] === 'PartyUnion') {
-      // return new TableElementTextArea('')
-      // return new TableElementAny(data.type, data.data)
       return new TableElementPartyUnion(data.data)
     }
     if (data['type'] === 'WikiCard') {
@@ -191,6 +190,9 @@ export class TableElementHtml extends TableElement {
       }
     }
   }
+  get full_row(): boolean {
+    return true
+  }
 }
 
 export class TableElementParty extends TableElement {
@@ -200,7 +202,9 @@ export class TableElementParty extends TableElement {
 
   constructor(data: any) {
     super('Party')
-    this.party_data = data['party'] ? JSON.stringify(data['party'], null, 2) : JSON.stringify(PartyRelease.empty().data(), null, 2)
+    this.party_data = data['party']
+      ? JSON.stringify(data['party'], null, 2)
+      : JSON.stringify(PartyRelease.empty().data(), null, 2)
     this.show_name = data['show_name']
     this.show_awaken = data['show_awaken']
   }
@@ -227,6 +231,27 @@ export class TableElementParty extends TableElement {
   }
 }
 
+export class TableElementParty2 extends TableElementParty {
+  public title: string
+  public subtitle: string
+  constructor(data: any) {
+    super(data)
+    this.type = 'Party2'
+    this.title = data['title']
+    this.subtitle = data['subtitle']
+  }
+
+  data(): object {
+    const obj: any = super.data()
+    obj['data'] = Object.fromEntries(Object.entries(obj['data']).concat(
+        Object.entries({
+          title: this.title,
+          subtitle: this.subtitle
+        })))
+    return obj
+  }
+}
+
 export class TableElementPartyUnion extends TableElementParty {
   public label: string
   public title: string
@@ -244,17 +269,14 @@ export class TableElementPartyUnion extends TableElementParty {
   }
 
   data(): object {
-    return Object.fromEntries(
-      new Map(
-        Object.entries(super.data()).concat(
-          Object.entries({
-            label: this.label,
-            title: this.title,
-            content: this.content
-          })
-        )
-      )
-    )
+    const obj: any = super.data()
+    obj['data'] = Object.fromEntries(Object.entries(obj['data']).concat(
+        Object.entries({
+          label: this.label,
+          title: this.title,
+          content: this.content
+        })))
+    return obj
   }
 }
 
@@ -328,9 +350,7 @@ export class TableElementObjectMap extends TableElement {
   data(): object {
     return {
       type: this.type,
-      data: {
-
-      }
+      data: {}
     }
   }
 }

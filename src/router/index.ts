@@ -25,6 +25,16 @@ const router = createRouter({
       component: () => import('@/views/PartySearcherView.vue')
     },
     {
+      path: '/calendar',
+      name: 'calendar',
+      component: () => import('@/views/CalendarView.vue')
+    },
+    {
+      path: '/pr/:release_id',
+      name: 'partyRelease',
+      component: () => import('@/views/party/PartyReleaseView.vue')
+    },
+    {
       path: '/table',
       name: 'table',
       component: () => import('@/views/TableListView.vue')
@@ -75,6 +85,11 @@ const router = createRouter({
       component: () => import('@/views/editor/NicknameEditorView.vue')
     },
     {
+      path: '/editor/event',
+      name: 'event_editor',
+      component: () => import('@/views/editor/EventEditorView.vue')
+    },
+    {
       path: '/card/test',
       name: 'card_test',
       component: () => import('@/views/TestCardView.vue')
@@ -88,11 +103,6 @@ const router = createRouter({
       path: '/test/player',
       name: 'test_player',
       component: () => import('@/views/TestPlayerView.vue')
-    },
-    {
-      path: '/test/schedule',
-      name: 'test_schedule',
-      component: () => import('@/views/TestScheduleView.vue')
     },
     {
       path: '/login',
@@ -123,11 +133,6 @@ const router = createRouter({
       path: '/card/table',
       name: 'card_table',
       component: () => import('@/views/card/TableCardView.vue')
-    },
-    {
-      path: '/card/month_table',
-      name: 'month_table',
-      component: () => import('@/views/card/MonthTableCardView.vue')
     },
     {
       path: '/card/room',

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { PartyRelease } from '@/stores/manager'
-import { ArrowDownBold, DocumentCopy } from '@element-plus/icons-vue'
 import PartyCard from '@/components/party/PartyCardEliya.vue'
 import ClipboardA from 'clipboard'
 import { ElMessage } from 'element-plus'
@@ -24,6 +23,14 @@ const props = defineProps({
   }
 })
 
+function copy_release_id(id_: string) {
+  const cb = new ClipboardA('#copy-id-' + id_)
+  cb.on('success', () => {
+    ElMessage.success('复制成功')
+    cb.destroy()
+  })
+}
+
 function copy_party(id_: string) {
   const cb = new ClipboardA('#copy-' + id_)
   cb.on('success', () => {
@@ -36,81 +43,95 @@ const show_dialog = ref(false)
 </script>
 
 <template>
-  <el-card
-    class="party-card"
-    style="min-width: 498px; width: 498px; height: fit-content"
-    body-style="padding: 0;"
-  >
-    <div
-      style="padding: 12px 8px 8px"
-      :style="{
-        background: props.event
-          ? 'linear-gradient(to bottom, rgb(56 255 173 / 70%) 24px, transparent 82px, transparent)'
-          : 'transparent'
-      }"
-    >
+  <v-card v-ripple class="party-card elevation-6">
+    <div style="padding: 12px 8px 8px; background: transparent">
       <div style="display: flex; justify-content: space-between">
         <div>
-          <span style="font-weight: bold; font-size: 18px">{{ props.party_release.title }}</span
-          ><span style="color: darkgray">({{ props.party_release.id }})</span>
+          <span style="font-weight: bold; font-size: 18px">{{ props.party_release.title }}</span>
+          <v-chip
+            v-if="false"
+            v-ripple
+            style="user-select: none; margin: 0 4px; color: white; flex-shrink: 0"
+            color="warning"
+            density="comfortable"
+          >
+            无盘子码
+          </v-chip>
+          <v-chip
+            v-ripple
+            style="
+              user-select: none;
+              margin: 0 4px;
+              height: 20px;
+              color: white;
+              flex-shrink: 0;
+              background: dimgray;
+              cursor: default;
+              vertical-align: text-bottom;
+            "
+            density="comfortable"
+            @click="
+              () => {
+                if (props.party_release instanceof PartyRelease) {
+                  copy_release_id(props.party_release.id)
+                }
+              }
+            "
+            :data-clipboard-text="props.party_release?.id"
+            :id="'copy-id-' + props.party_release?.id"
+          >
+            {{ props.party_release.id }}
+          </v-chip>
         </div>
-        <!--      <div><span style="color: gray;"></span></div>-->
         <div>
-          <el-popover placement="right">
-            <template #default>
+          <v-menu open-delay="0" location="end" open-on-hover>
+            <template v-slot:activator="{ props }">
+              <div v-bind="props" class="party-card-source-tag">
+                <v-icon icon="mdi-magnify"></v-icon>
+                <span>来源</span>
+              </div>
+            </template>
+            <v-card style="padding: 16px">
               <p>Oops...</p>
               <p>还没有来源记录</p>
               <p style="color: lightgrey">上传id: {{ props.party_release.updater_id }}</p>
-            </template>
-            <template #reference>
-              <el-alert
-                show-icon
-                type="warning"
-                :closable="false"
-                style="padding: 0 4px; height: 24px; width: 76px; min-width: 76px"
-              >
-                来源
-              </el-alert>
-            </template>
-          </el-popover>
+            </v-card>
+          </v-menu>
         </div>
       </div>
-      <el-divider style="margin: 4px 0"></el-divider>
-      <!--    <hr style="border-color: red;"/>-->
+      <v-divider :thickness="2" style="margin: 2px 0" />
       <PartyCard :party="party_release"></PartyCard>
       <div v-if="props.extra_option" style="display: flex; justify-content: space-between">
         <div>
-          <el-button size="small" type="primary" @click="() => {} /*show_ensure*/" plain>
-            提交来源
-          </el-button>
-          <el-dialog v-model="show_dialog" title="提交来源">
-            <el-form-item label="链接">
-              <el-input v-model="submit_url" @keydown.enter="submit_source"></el-input>
-            </el-form-item>
-            <div style="display: flex; flex-direction: row-reverse">
-              <el-button type="primary" @click="submit_source"> 提交 </el-button>
-            </div>
-          </el-dialog>
+          <v-dialog v-model="show_dialog" width="auto">
+            <template v-slot:activator="{ props }">
+              <v-btn v-bind="props" variant="flat" color="blue" size="small"> 提交来源 </v-btn>
+            </template>
+            <v-card>
+              <v-card-text> 好吧，确实在摸 </v-card-text>
+            </v-card>
+          </v-dialog>
         </div>
         <div>
-          <el-button-group style="margin: 0 2px">
-            <!--            <el-button size="default" style="color: deeppink; padding-right: 64px;">-->
-
-            <el-button disabled size="small" style="color: deeppink">
-              <div style="width: 100%; height: 100%; position: absolute"></div>
-              <div>❤ 0</div>
-            </el-button>
-            <el-button disabled size="small" type="primary" plain>
-              添加记录
-              <el-icon><ArrowDownBold /></el-icon>
-            </el-button>
-          </el-button-group>
-          <el-button
+          <v-btn-group style="height: 28px" variant="flat" density="compact">
+            <v-btn disabled="" size="small" color="pink">❤ 0</v-btn>
+            <v-menu open-on-click :close-on-content-click="false">
+              <template v-slot:activator="{ props }">
+                <v-btn disabled="" v-bind="props" size="small">
+                  添加记录
+                  <v-icon icon="mdi-chevron-down" />
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-text>aa</v-card-text>
+              </v-card>
+            </v-menu>
+          </v-btn-group>
+          <v-btn
+            variant="flat"
+            color="warning"
             size="small"
-            type="warning"
-            :data-clipboard-text="
-              JSON.stringify(props.party_release?.data())
-            "
+            :data-clipboard-text="JSON.stringify(props.party_release?.data())"
             :id="'copy-' + props.party_release?.id"
             @click="
               () => {
@@ -121,22 +142,29 @@ const show_dialog = ref(false)
             "
             style="margin: 0 2px"
           >
-            <el-icon><DocumentCopy /></el-icon>
-          </el-button>
+            <v-icon icon="mdi-content-copy" />
+          </v-btn>
         </div>
       </div>
     </div>
-  </el-card>
+  </v-card>
 </template>
 
-<style>
-.el-alert .el-icon svg {
-  height: 0.5em;
-  width: 0.5em;
+<style scoped>
+.party-card {
+  min-width: 498px;
+  width: 498px;
 }
-.el-alert .el-alert__description {
-  margin: 5px 0;
+.party-card-source-tag {
+  background-color: rgb(253, 246, 236);
+  padding: 4px;
+  font-size: 12px;
+  border-radius: 4px;
+  width: 60px;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
 }
 </style>
-
-<style scoped></style>

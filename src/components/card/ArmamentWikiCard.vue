@@ -27,23 +27,14 @@ const props = defineProps({
     v-if="props.armament instanceof Armament"
     style="
       width: 720px;
-      background: url(/static/worldflipper/ui/background_cut_official.png);
+      background: url('/static/worldflipper/ui/background_cut_official.png');
       background-size: 136px;
       background-position-x: -10px;
       background-position-y: -10px;
       image-rendering: pixelated;
-      border-radius: 16px;
+      /*border-radius: 16px;*/
     "
   >
-    <!--    <div-->
-    <!--      style="-->
-    <!--        border-radius: inherit;-->
-    <!--        background-position: 150% 80%;-->
-    <!--        background-size: 720px;-->
-    <!--        image-rendering: initial;-->
-    <!--        height: 100%;-->
-    <!--      "-->
-    <!--    >-->
     <div
       style="
         image-rendering: initial;
@@ -189,14 +180,12 @@ const props = defineProps({
       </div>
       <hr style="width: 100%; margin: 12px 12px 8px" />
       <div>
-        <div style="padding: 16px; font-size: 16px">
+        <div style="padding: 8px 16px; font-size: 16px">
           {{ props.armament.description }}
         </div>
-        <div style="padding: 16px; font-size: 16px">获取方式：{{ props.armament.obtain }}</div>
+        <div style="padding: 8px 16px; font-size: 16px">获取方式：{{ props.armament.obtain }}</div>
       </div>
-      <!--    <el-divider/>-->
     </div>
-    <!--    </div>-->
   </div>
 </template>
 

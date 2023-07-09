@@ -7,7 +7,7 @@ import {
   PartyParamManaboard2,
   Union,
   PartyParam,
-  manager
+  manager, ele_id2ele
 } from '@/stores/manager'
 import UnitLiteCard from '@/components/card/UnitLiteCard.vue'
 
@@ -127,90 +127,11 @@ function get_pic_url(obj: Unit | Armament | undefined, awakened_or_soul = false)
             />
           </div>
         </div>
-        <el-popover
-          v-if="popover"
-          :auto-close="0"
-          :show-after="100"
-          :hide-after="0"
-          :show-arrow="false"
-          width="fit-content"
-          popper-style="
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            margin-bottom: -20px;
-            "
-          placement="top"
-        >
-          <template #reference>
-            <div
-              class="wfo-slot main"
-              :class="[
-                props.party.party.union(union).main instanceof Unit
-                  ? `ele-${props.party.party.union(union).main?.element}`
-                  : ''
-              ]"
-            >
-              <img
-                :src="get_pic_url(props.party.party.union(union).main, props.show_awaken)"
-                alt=""
-                loading="lazy"
-                @dragstart.prevent
-              />
-              <div
-                style="
-                  position: absolute;
-                  display: flex;
-                  background-color: rgba(0, 0, 0, 0.55);
-                  color: white;
-                  left: 0;
-                  bottom: 16px;
-                  border-top-right-radius: 6px;
-                "
-                v-if="(() => {
-                  const ppm: PartyParam = props.party?._params.get('manaboard2')
-                  return ppm instanceof PartyParamManaboard2 ? !ppm[`union${union}main`].is_empty() : false
-                })()"
-              >
-                <div v-for="i in 3" :key="i" style="width: 16px; text-align: center">
-                  {{
-                    (() => {
-                      // if (true) {
-                      const m =
-                        props.party._params.get('manaboard2')[`union${union}main`][
-                          `manaboard${i + 3}`
-                        ]
-                      return typeof m === 'number' ? m : '-'
-                    })()
-                  }}
-                </div>
-              </div>
-              <div style="text-align: center">
-                {{
-                  props.show_name
-                    ? props.party.party.union(union).main instanceof Unit
-                      ? props.party.party.union(union).main['name_zh']
-                      : union === 1
-                      ? '队长'
-                      : '主要角色'
-                    : union === 1
-                    ? '队长'
-                    : '主要角色'
-                }}
-              </div>
-            </div>
-          </template>
-          <UnitLiteCard
-            style="zoom: 75%; box-shadow: 0 0 12px rgba(48, 48, 48, 0.65); cursor: pointer"
-            :unit="props.party.party.union(union).main"
-          />
-        </el-popover>
         <div
-          v-else
           class="wfo-slot main"
           :class="[
             props.party.party.union(union).main instanceof Unit
-              ? `ele-${props.party.party.union(union).main?.element}`
+              ? `ele-${ele_id2ele[props.party.party.union(union).main?.element]}`
               : ''
           ]"
         >
@@ -269,85 +190,11 @@ function get_pic_url(obj: Unit | Armament | undefined, awakened_or_soul = false)
           />
           <div style="text-align: center">装备</div>
         </div>
-        <el-popover
-          v-if="popover"
-          :auto-close="0"
-          :show-after="100"
-          :hide-after="0"
-          :show-arrow="false"
-          width="fit-content"
-          popper-style="
-          background: transparent;
-          border: none;
-          box-shadow: none;
-          margin-top: -20px;
-          "
-          placement="bottom"
-        >
-          <template #reference>
-            <div
-              class="wfo-slot unison"
-              :class="[
-                props.party.party.union(union).unison instanceof Unit
-                  ? `ele-${props.party.party.union(union).unison?.element}`
-                  : ''
-              ]"
-            >
-              <img
-                :src="get_pic_url(props.party.party.union(union).unison, props.show_awaken)"
-                alt=""
-                loading="lazy"
-                @dragstart.prevent
-              />
-              <div
-                style="
-                  position: absolute;
-                  display: flex;
-                  background-color: rgba(0, 0, 0, 0.55);
-                  color: white;
-                  left: 0;
-                  bottom: 16px;
-                  border-top-right-radius: 6px;
-                "
-                v-if="(() => {
-                  const ppm: PartyParam = props.party?._params.get('manaboard2')
-                  return ppm instanceof PartyParamManaboard2 ? !ppm[`union${union}unison`].is_empty() : false
-                })()"
-              >
-                <div v-for="i in 3" :key="i" style="width: 16px; text-align: center">
-                  {{
-                    (() => {
-                      const m =
-                        props.party._params.get('manaboard2')[`union${union}unison`][
-                          `manaboard${i + 3}`
-                        ]
-                      return typeof m === 'number' ? m : '-'
-                    })()
-                  }}
-                </div>
-              </div>
-              <div style="text-align: center">
-                {{
-                  props.show_name
-                    ? props.party.party.union(union).unison instanceof Unit
-                      ? props.party.party.union(union).unison.name_zh
-                      : '辅助角色'
-                    : '辅助角色'
-                }}
-              </div>
-            </div>
-          </template>
-          <UnitLiteCard
-            style="zoom: 75%; box-shadow: 0 0 12px rgba(48, 48, 48, 0.65); cursor: pointer"
-            :unit="props.party.party.union(union).unison"
-          />
-        </el-popover>
         <div
-          v-else
           class="wfo-slot unison"
           :class="[
             props.party.party.union(union).unison
-              ? `ele-${props.party.party.union(union).unison?.element}`
+              ? `ele-${ele_id2ele[props.party.party.union(union).unison?.element]}`
               : ''
           ]"
         >
@@ -432,8 +279,6 @@ export default {
   transition: box-shadow 0.2s linear;
   box-shadow: none;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  /* font-family: 'Courier New', Courier, monospace; */
-  /* font-family: "黑体"; */
   font-size: 13px;
   color: black;
 }
@@ -509,9 +354,9 @@ export default {
   border-radius: 3px;
   margin: 2px;
   position: absolute;
-  /* background-color: aqua; */
   background-color: white;
-  box-shadow: 0 0 2px black;
+  box-shadow: rgba(9, 30, 66, 0.35) 0 1px 1px, rgba(9, 30, 66, 0.25) 0 0 1px 1px;
+  //box-shadow: 0 0 2px black;
   /*cursor: pointer;*/
   cursor: auto;
 }

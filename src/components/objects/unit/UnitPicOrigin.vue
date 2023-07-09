@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Unit } from '@/stores/manager'
+import {ele_id2ele, Unit} from '@/stores/manager'
 
 const props = defineProps({
   unit: Unit,
@@ -53,7 +53,7 @@ const ele_size = (props.size * 44) / 240
           x="0"
         />
         <image
-          :href="`/static/worldflipper/icon/${props.unit.element}.png`"
+          :href="`/static/worldflipper/icon/${ele_id2ele[props.unit.element]}.png`"
           id="element_icon"
           :height="ele_size"
           :width="ele_size"
