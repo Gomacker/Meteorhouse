@@ -111,14 +111,6 @@ const show_dialog = ref(false)
               <v-card-text> 好吧，确实在摸 </v-card-text>
             </v-card>
           </v-dialog>
-          <!--          <el-dialog v-model="show_dialog" title="提交来源">-->
-          <!--            <el-form-item label="链接">-->
-          <!--              <el-input v-model="submit_url" @keydown.enter="submit_source"></el-input>-->
-          <!--            </el-form-item>-->
-          <!--            <div style="display: flex; flex-direction: row-reverse">-->
-          <!--              <el-button type="primary" @click="submit_source"> 提交 </el-button>-->
-          <!--            </div>-->
-          <!--          </el-dialog>-->
         </div>
         <div>
           <v-btn-group style="height: 28px" variant="flat" density="compact">

@@ -5,6 +5,7 @@
       height: 100%;
       display: flex;
       justify-content: space-evenly;
+      align-items: center;
       flex-direction: column;
     "
   >
@@ -49,35 +50,33 @@
         、
         <a href="https://worldflipper.jp/">弹射世界官网</a>
       </p>
-      <div v-show="false">
-        攻略/内容协力感谢：
-        <div class="thanks-list">
-          <p>
-            @白鸢别馆Official
-            <a href="https://space.bilibili.com/148736" target="_blank">
-              <img
-                style="width: 16px; vertical-align: middle"
-                src="https://www.bilibili.com/favicon.ico"
-                alt=""
-              />
-            </a>
-          </p>
-          <p>
-            @御坂葉子
-            <a href="https://ngabbs.com/nuke.php?func=ucp&uid=60999453" target="_blank">
-              <img
-                style="width: 16px; vertical-align: middle"
-                src="https://ngabbs.com/favicon.ico"
-                alt=""
-              />
-            </a>
-          </p>
-        </div>
-      </div>
     </div>
+    <v-card v-show="false" width="80%">
+      攻略/内容协力感谢：
+      <div class="thanks-list">
+        <p>
+          @白鸢别馆Official
+          <a href="https://space.bilibili.com/148736" target="_blank">
+            <img
+              style="width: 16px; vertical-align: middle"
+              src="https://www.bilibili.com/favicon.ico"
+              alt=""
+            />
+          </a>
+        </p>
+        <p>@安息香酸</p>
+        <p>@猫猫球</p>
+        <p>@御坂葉子</p>
+        <p>@DMeow</p>
+        <p>@Nyaaakui</p>
+        <p>@真帆</p>
+      </div>
+    </v-card>
     <div>
-      <p>终于暑假了惹</p>
+      <p><a href="https://kook.top/HEVjfY">Kook频道</a></p>
+      <p><a href="https://github.com/Gomacker/Anisebot">Anisebot</a></p>
       <iframe
+        v-if="true"
         src="https://afdian.net/leaflet?slug=Gomacker"
         width="320"
         scrolling="no"
@@ -139,11 +138,9 @@
 
 <style scoped>
 .thanks-list {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 150px);
   justify-content: center;
-}
-.thanks-list p {
-  margin: 2px 8px;
 }
 </style>
 <script setup lang="ts"></script>

@@ -25,7 +25,6 @@ function load_data() {
     >
       <span>类型</span>
       <el-select v-model="type_select" style="margin-left: 8px" size="small">
-        <!--        <el-option label="盘子提交" value="origin"></el-option>-->
         <el-option label="盘子源提交" value="origin"></el-option>
       </el-select>
       <el-button @click="load_data" size="small" style="margin-left: 8px" type="warning">

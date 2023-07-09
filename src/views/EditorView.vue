@@ -1,6 +1,6 @@
 <template>
-  <div style="display: flex; align-items: center">
-    <div style="display: flex; justify-content: center; flex-wrap: wrap; align-items: flex-start">
+  <div style="display: flex; justify-content: center; align-items: center">
+    <div style="display: grid; grid-template-columns: repeat(4, auto)">
       <v-card class="editor-select active" @click="$router.push('/editor/character')">
         <p style="font-size: 28px; font-weight: 600">角色</p>
         <p>已加载 {{ manager.unit_data.size }} 个角色</p>
@@ -27,10 +27,6 @@
       <v-card class="editor-select"> 副本</v-card>
       <v-card class="editor-select active" @click="$router.push('/editor/event')"> 事件</v-card>
       <v-card class="editor-select"> 资源</v-card>
-      <v-card class="editor-select">
-        <p>Bot</p>
-        <p>0 个Bot</p>
-      </v-card>
     </div>
   </div>
 </template>

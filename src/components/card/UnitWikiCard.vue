@@ -245,7 +245,6 @@ const props = defineProps({
           </div>
           <div style="padding: 16px; font-size: 16px">获取方式：{{ props.unit.obtain }}</div>
         </div>
-        <!--    <el-divider/>-->
       </div>
     </div>
   </div>

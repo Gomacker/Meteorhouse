@@ -23,7 +23,7 @@ onMounted(() => {
 </script>
 <template>
   <v-app style="--v-theme-background: 248, 248, 248, 0">
-    <v-navigation-drawer :width="160" v-model="sidebar_hidden" temporary="">
+    <v-navigation-drawer width="280" v-model="sidebar_hidden" temporary="">
       <div style="display: flex; flex-direction: column; height: 100%">
         <v-list density="compact" :nav="true">
           <v-list-item
@@ -96,9 +96,9 @@ onMounted(() => {
     </v-navigation-drawer>
 
     <v-app-bar
-      density="comfortable"
       style="
-      background: linear-gradient(120deg, rgba(132,250,176,0.6) 0%, rgba(143,211,244,0.6) 100%);
+      background: linear-gradient(110deg, transparent 220px, yellow 220px, yellow 240px, transparent 240px, transparent 250px, yellow 250px, yellow 260px, transparent 260px), linear-gradient(120deg, rgba(132,250,176,0.6) 0%, rgba(143,211,244,0.6) 100%);
+      background-blend-mode: overlay, normal;
       backdrop-filter: blur(2px);
 "
       :order="-1"
@@ -107,6 +107,8 @@ onMounted(() => {
       <v-toolbar-title>
         <a style="font-weight: 600; color: #5a31ff" href="/">流星屋图书馆</a>
       </v-toolbar-title>
+      <v-text-field label="搜索" hide-details></v-text-field>
+      <v-btn style="margin: 8px" icon="mdi-magnify"/>
     </v-app-bar>
 
     <v-main>

@@ -30,11 +30,6 @@ const router = createRouter({
       component: () => import('@/views/CalendarView.vue')
     },
     {
-      path: '/statistic',
-      name: 'statistic',
-      component: () => import('@/views/StatisticView.vue')
-    },
-    {
       path: '/pr/:release_id',
       name: 'partyRelease',
       component: () => import('@/views/party/PartyReleaseView.vue')
@@ -110,11 +105,6 @@ const router = createRouter({
       component: () => import('@/views/TestPlayerView.vue')
     },
     {
-      path: '/test/schedule',
-      name: 'test_schedule',
-      component: () => import('@/views/TestScheduleView.vue')
-    },
-    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/LoginView.vue')
@@ -143,11 +133,6 @@ const router = createRouter({
       path: '/card/table',
       name: 'card_table',
       component: () => import('@/views/card/TableCardView.vue')
-    },
-    {
-      path: '/card/month_table',
-      name: 'month_table',
-      component: () => import('@/views/card/MonthTableCardView.vue')
     },
     {
       path: '/card/room',

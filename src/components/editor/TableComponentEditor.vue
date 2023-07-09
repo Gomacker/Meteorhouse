@@ -203,9 +203,6 @@ function get_replacements_data(element: TableElement) {
                   </el-form-item>
                 </el-form>
                 <el-form label-width="50px" size="small" label-position="left">
-                  <!--          <el-form-item label="队伍ID">-->
-                  <!--            <el-input></el-input>-->
-                  <!--          </el-form-item>-->
                   <el-form-item label="队伍">
                     <el-input
                       v-model="$props.table_element.party_data"
@@ -215,9 +212,6 @@ function get_replacements_data(element: TableElement) {
                       :autosize="{ minRows: 2, maxRows: 6 }"
                     ></el-input>
                   </el-form-item>
-                  <!--          <el-form-item label="替换">-->
-                  <!--            <div style="width: 100%; height: 60px; background-color: rgb(0 255 0)"></div>-->
-                  <!--          </el-form-item>-->
                 </el-form>
                 <div style="display: flex; justify-content: center">
                   <PartyCardEliya
