@@ -1,6 +1,6 @@
 
 <template>
-  <div style="width: 100%; height: 100%; overflow: auto;">
+  <div style="width: 100%; height: 100%; padding: 24px; display: flex; justify-content: center; overflow: auto;">
       <SummaryTableCard :table="new Table(table)" :party_style="{
       show_awaken: show_awaken,
       show_name: show_name,

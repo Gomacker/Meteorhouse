@@ -56,13 +56,6 @@ onMounted(() => {
               @click="$router.push('/calendar')"
           />
           <v-list-item
-              prepend-icon="mdi-chart-bar"
-              color="purple"
-              title="统计"
-              value="statistic"
-              @click="$router.push('/statistic')"
-          />
-          <v-list-item
             prepend-icon="mdi-table"
             color="blue"
             title="一图流"
@@ -158,7 +151,6 @@ onMounted(() => {
 }
 main {
   height: calc(100vh - 60px);
-  //margin-top: 60px;
   width: 100%;
 }
 </style>

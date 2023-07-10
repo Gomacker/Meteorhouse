@@ -1,13 +1,23 @@
 <script setup lang="ts">
-import PartySearcherView from '@/views/PartySearcherView.vue'
-import { ref } from 'vue'
+import PartySearcherView from "@/views/PartySearcherView.vue";
+import { computed, ref } from "vue";
+import { Character, Element } from "@/anise/worldflipper/object";
 
 const show_mainpage = ref([0])
+const c = computed(() =>
+  new Character(
+    0,
+    'a',
+    ['b'],
+    1,
+    0
+  )
+)
 </script>
 
 <template>
   <div style="overflow: auto; display: flex; flex-direction: column">
-
+    {{ c }}
     <v-expansion-panels v-if="false" v-model="show_mainpage">
       <v-expansion-panel title=" ">
         <v-expansion-panel-text>
