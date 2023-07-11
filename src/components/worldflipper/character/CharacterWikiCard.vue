@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Character } from '@/anise/worldflipper/object'
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
+import {format_content} from "@/stores/table";
 
 defineProps({
   character: {
@@ -97,6 +98,22 @@ const ele2color = {
               </p>
             </div>
           </div>
+        </div>
+        <hr style="width: 100%; margin: 12px 12px 8px"/>
+        <div>
+          <div style="display: flex; margin: 16px 16px 0">
+            <div class="span-title">队长</div>
+            <div style="display: flex; flex-direction: column">
+              <div class="span-ability" style="padding-bottom: 4px">
+                <div style="margin: 0 8px; font-weight: 600; font-size: 22px">
+                  {{ character.leader_ability.name }}
+                </div>
+              </div>
+              <div class="span-ability" style="padding-bottom: 4px">
+                <div style="margin: 0 8px" v-html="format_content(character.leader_ability.description)" />
+              </div>
+            </div>
+          </div>
           {{ character }}
         </div>
       </div>
@@ -104,4 +121,24 @@ const ele2color = {
   </v-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+.span-title {
+  float: right;
+  width: 75px;
+  min-width: 75px;
+  height: fit-content;
+  padding: 4px 8px;
+  background: url(/static/worldflipper/ui/black.png) no-repeat center;
+  background-size: 70px;
+  color: white;
+  text-align: center;
+  font-size: 16px;
+  font-weight: lighter;
+}
+.span-ability {
+  display: flex;
+  font-size: 20px;
+  margin-left: 16px;
+  padding-bottom: 16px;
+}
+</style>

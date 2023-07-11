@@ -21,6 +21,11 @@ interface Skill {
   description: string;
 }
 
+interface LeaderAbility {
+  name: string;
+  description: string;
+}
+
 export class Character extends GameObject {
   readonly __type_id: string = 'worldflipper/unit';
   constructor(
@@ -35,6 +40,7 @@ export class Character extends GameObject {
     public gender: string, // 未优化
     // public stance: number, // 未优化
 
+    public leader_ability: LeaderAbility,
     public skill: Skill,
 
     public abilities: Array<string>,
@@ -64,6 +70,10 @@ export class Character extends GameObject {
         unit.gender,
         // unit.data['stance'],
         // unit.cv,
+        new class implements LeaderAbility {
+          description: string = unit.leader_ability;
+          name: string = unit.leader_ability_name;
+        },
         new class implements Skill {
           description: string = unit.skill_description;
           name: string = unit.skill_name;
