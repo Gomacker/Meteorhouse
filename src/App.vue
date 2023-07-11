@@ -23,7 +23,7 @@ onMounted(() => {
 </script>
 <template>
   <v-app style="--v-theme-background: 248, 248, 248, 0">
-    <v-navigation-drawer width="280" v-model="sidebar_hidden" temporary="">
+    <v-navigation-drawer width="200" v-model="sidebar_hidden" temporary="">
       <div style="display: flex; flex-direction: column; height: 100%">
         <v-list density="compact" :nav="true">
           <v-list-item
@@ -98,10 +98,10 @@ onMounted(() => {
     >
       <v-app-bar-nav-icon @click="sidebar_hidden = !sidebar_hidden"></v-app-bar-nav-icon>
       <v-toolbar-title>
-        <a style="font-weight: 600; color: #5a31ff" href="/">流星屋图书馆</a>
+        <a @click="$router.push('/')" style="cursor:pointer; font-weight: 600; color: #5a31ff">流星屋图书馆</a>
       </v-toolbar-title>
-      <v-text-field label="搜索" hide-details></v-text-field>
-      <v-btn style="margin: 8px" icon="mdi-magnify"/>
+<!--      <v-text-field label="搜索" hide-details></v-text-field>-->
+<!--      <v-btn style="margin: 8px" icon="mdi-magnify"/>-->
     </v-app-bar>
 
     <v-main>

@@ -111,7 +111,7 @@ export class Unit {
     return new this(data)
   }
 
-  get data(): Object {
+  get data(): any {
     return this._data
   }
 
@@ -156,7 +156,7 @@ export class Unit {
   get element(): number {
     return this._data['element']
   }
-  get gender(): number {
+  get gender(): string {
     return this._data['gender'] in gender2zh
       ? gender2zh[this._data['gender']]
       : this._data['gender']

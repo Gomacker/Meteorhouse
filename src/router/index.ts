@@ -45,16 +45,6 @@ const router = createRouter({
       component: () => import('@/views/table/TableContentView.vue')
     },
     {
-      path: '/profile/character/:unit_id',
-      name: 'character_view',
-      component: () => import('@/views/profile/CharacterView.vue')
-    },
-    {
-      path: '/author_profile',
-      name: 'author_profile',
-      component: () => import('@/views/AuthorProfileView.vue')
-    },
-    {
       path: '/editor',
       name: 'editor',
       component: () => import('@/views/EditorView.vue')

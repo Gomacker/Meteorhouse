@@ -13,7 +13,6 @@ const props = defineProps({
   soul: Boolean
 })
 const frame_width = (props.size * 14) / 240
-// const ele_size = width * 44 / 240
 </script>
 
 <template>

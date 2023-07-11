@@ -84,18 +84,14 @@ export default {
 <style scoped>
 .table-card {
   user-select: none;
-  //margin: 8px;
   cursor: pointer;
-  //width: 45%;
   border-radius: 8px;
   font-size: 16px;
-  //min-height: 60px;
   max-width: 320px;
   transition: transform 0.4s ease;
 }
 .table-card:hover {
   transform: scale(1.05);
   z-index: 1;
-  //box-shadow: 0 0 16px rgba(0 0 0 / 0.6);
 }
 </style>

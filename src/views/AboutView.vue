@@ -73,8 +73,8 @@
       </div>
     </v-card>
     <div>
-      <p><a href="https://kook.top/HEVjfY">Kook频道</a></p>
-      <p><a href="https://github.com/Gomacker/Anisebot">Anisebot</a></p>
+      <p><a target="_blank" href="https://kook.top/HEVjfY">Kook频道</a></p>
+      <p><a target="_blank" href="https://github.com/Gomacker/Anisebot">Anisebot</a></p>
       <iframe
         v-if="true"
         src="https://afdian.net/leaflet?slug=Gomacker"

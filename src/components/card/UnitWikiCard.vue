@@ -274,7 +274,7 @@ const props = defineProps({
   /*background: linear-gradient(90deg, black 2px, orange 2px, orange 6px, black 8px, black);*/
   height: fit-content;
   padding: 4px 8px;
-  background: url('@/assets/worldflipper/ui/black.png') no-repeat center;
+  background: url(/static/worldflipper/ui/black.png) no-repeat center;
   background-size: 70px;
   /*font-size: 14px;*/
   /*font-weight: 600;*/

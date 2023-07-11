@@ -542,6 +542,7 @@ function get_skill_weight(union: Union) {
                 <div>{{ '技能条长' }} {{ get_skill_weight(party.party.union(i)) }}</div>
                 <div>
                   <div
+                      class="elevation-3"
                     style="
                       background-color: deepskyblue;
                       height: 16px;

@@ -1,23 +1,73 @@
 <script setup lang="ts">
-import PartySearcherView from "@/views/PartySearcherView.vue";
-import { computed, ref } from "vue";
-import { Character, Element } from "@/anise/worldflipper/object";
+import PartySearcherView from '@/views/PartySearcherView.vue'
+import { computed, ref } from 'vue'
+import { Character, Element, Equipment } from '@/anise/worldflipper/object'
+import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
+import EquipmentIcon from '@/components/worldflipper/equipment/EquipmentIcon.vue'
+import { manager } from '../stores/manager'
+import {useRouter} from "vue-router";
+import CharacterWikiCard from "@/components/worldflipper/character/CharacterWikiCard.vue";
+import UnitWikiCard from "@/components/card/UnitWikiCard.vue";
 
 const show_mainpage = ref([0])
-const c = computed(() =>
-  new Character(
-    0,
-    'a',
-    ['b'],
-    1,
-    0
-  )
-)
+const c = computed(() => Character.from_legacy(manager.unit_data.get(1)))
+const e = computed(() => new Equipment(1, 'item/equipment/general/chapter_1_orb'))
+
+const router = useRouter()
 </script>
 
 <template>
-  <div style="overflow: auto; display: flex; flex-direction: column">
-    {{ c }}
+  <div style="overflow: auto; display: flex; flex-direction: column; justify-content: center;">
+<!--    <div v-if="manager.unit_data.size">-->
+<!--      <div>{{ manager.unit_data.get(1) }}</div>-->
+<!--      <div>{{ Character.from_legacy(manager.unit_data.get(1)) }}</div>-->
+<!--    </div>-->
+    <CharacterWikiCard style="width: 100%" :character="c" />
+    <UnitWikiCard style="width: 100%" :unit="manager.unit_data.get(1)" />
+    <div
+      style="
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 180px);
+        justify-content: center;
+        margin: 8px;
+        grid-gap: 2%;
+      "
+    >
+      <v-card
+        elevation="6"
+        @click="router.push('/partyEditor')"
+        class="main-page-button"
+      >
+        <p style="font-size: 18px;">组盘器</p>
+        <p><v-icon size="42" icon="mdi-calculator" /></p>
+      </v-card>
+      <v-card
+        elevation="6"
+        @click="router.push('/partySearcher')"
+        class="main-page-button"
+      >
+        <p style="font-size: 18px;">查盘器</p>
+        <p><v-icon size="42" icon="mdi-magnify" /></p>
+      </v-card>
+      <v-card
+        elevation="6"
+        @click="router.push('/table')"
+        class="main-page-button"
+      >
+        <p style="font-size: 18px;">一图流</p>
+        <p><v-icon size="42" icon="mdi-table" /></p>
+      </v-card>
+      <a href="https://github.com/Gomacker/Anisebot" target="_blank">
+        <v-card
+            v-ripple
+            elevation="6"
+            class="main-page-button"
+        >
+          <p style="font-size: 18px;">开源Bot</p>
+          <p><v-icon size="42" icon="mdi-github" /></p>
+        </v-card>
+      </a>
+    </div>
     <v-expansion-panels v-if="false" v-model="show_mainpage">
       <v-expansion-panel title=" ">
         <v-expansion-panel-text>
@@ -57,4 +107,11 @@ const c = computed(() =>
 </template>
 
 <style scoped>
+.main-page-button {
+  user-select: none;
+  background: rgba(0 0 0 / 0.35);
+  backdrop-filter: blur(4px);
+  color: black;
+  padding: 16px;
+}
 </style>
