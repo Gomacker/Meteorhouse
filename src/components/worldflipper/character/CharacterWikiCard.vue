@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Character } from '@/anise/worldflipper/object'
+import { Character, SpecialityType } from '@/anise/worldflipper/object'
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
-import {format_content} from "@/stores/table";
+import { format_content } from '@/stores/table'
+import GameTag from '@/components/party/GameTag.vue'
 
 defineProps({
   character: {
@@ -73,15 +74,15 @@ const ele2color = {
         <div style="display: flex; width: 100%; padding: 16px 16px 0">
           <div style="position: absolute; z-index: 1">
             <img
-                style="
+              style="
                 width: 200%;
                 height: 200%;
                 image-rendering: pixelated;
                 left: calc(120px - 120%);
                 top: calc(75px);
               "
-                :src="`/static/${character.__type_id}/pixelart/walk_front/${character.resource_id}.gif`"
-                alt=""
+              :src="`/static/${character.__type_id}/pixelart/walk_front/${character.resource_id}.gif`"
+              alt=""
             />
           </div>
           <CharacterIcon :character="character" :size="120" />
@@ -97,9 +98,57 @@ const ele2color = {
                 {{ character.names[2] }}
               </p>
             </div>
+            <div>
+              <div
+                style="
+                  display: grid;
+                  grid-auto-flow: column;
+                  grid-template-rows: repeat(2, auto);
+                  grid-template-columns: repeat(3, 160px);
+                  grid-gap: 12px;
+                  padding: 16px 4px;
+                  font-size: 16px;
+                  justify-content: space-evenly;
+                "
+              >
+                <div class="span-f">
+                  <div class="span-tag">HP</div>
+                  <!--                    {{ props.unit.status['mhp'] }}-->
+                  <!--                    <span style="color: crimson">({{ props.unit.status['mmhp'] }})</span>-->
+                </div>
+                <div class="span-f">
+                  <div class="span-tag">ATK</div>
+                  <!--                    {{ props.unit.status['atk'] }}-->
+                  <!--                    <span style="color: crimson">({{ props.unit.status['matk'] }})</span>-->
+                </div>
+                <div class="span-f">
+                  <div class="span-tag">类型</div>
+                  {{ SpecialityType[character.type] }}
+                </div>
+                <div class="span-f">
+                  <div class="span-tag">种族</div>
+                  {{ character.race }}
+                </div>
+                <div class="span-f">
+                  <div class="span-tag">性别</div>
+                  {{ character.gender }}
+                </div>
+                <div class="span-f">
+                  <div class="span-tag">CV</div>
+                  {{ character.cv }}
+                </div>
+              </div>
+              <template v-if="character.tags">
+                <GameTag
+                  v-for="(tag_content, index) in character.tags"
+                  :key="index"
+                  :content="tag_content"
+                />
+              </template>
+            </div>
           </div>
         </div>
-        <hr style="width: 100%; margin: 12px 12px 8px"/>
+        <hr style="width: 100%; margin: 12px 12px 8px" />
         <div>
           <div style="display: flex; margin: 16px 16px 0">
             <div class="span-title">队长</div>
@@ -110,18 +159,93 @@ const ele2color = {
                 </div>
               </div>
               <div class="span-ability" style="padding-bottom: 4px">
-                <div style="margin: 0 8px" v-html="format_content(character.leader_ability.description)" />
+                <div
+                  style="margin: 0 8px"
+                  v-html="format_content(character.leader_ability.description)"
+                />
               </div>
             </div>
           </div>
-          {{ character }}
+          <div style="display: flex; margin: 16px 16px 0">
+            <div class="span-title">技能</div>
+            <div style="display: flex; flex-direction: column">
+              <div class="span-ability" style="padding-bottom: 4px">
+                <div style="margin: 0 8px; font-weight: 600; font-size: 22px">
+                  {{ character.skill.name }}
+                </div>
+              </div>
+              <div class="span-ability" style="padding-bottom: 4px">
+                <div style="margin: 0 8px" v-html="format_content(character.skill.description)" />
+              </div>
+              <div class="span-ability" style="padding-bottom: 4px">
+                <div style="margin: 0 8px">技能能量：{{ character.skill.weight }}</div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; margin: 16px 16px 0">
+            <div class="span-title">能力</div>
+            <div style="display: flex; flex-direction: column">
+              <div class="span-ability">
+                <div style="color: rgb(47, 195, 183); font-size: 20px">❶</div>
+                <div style="margin: 0 8px" v-html="format_content(character.abilities[0])" />
+              </div>
+              <div class="span-ability">
+                <div style="color: rgb(47, 195, 183); font-size: 20px">❷</div>
+                <div style="margin: 0 8px" v-html="format_content(character.abilities[1])" />
+              </div>
+              <div class="span-ability">
+                <div style="color: rgb(47, 195, 183); font-size: 20px">❸</div>
+                <div
+                  v-if="character.abilities[2]"
+                  style="margin: 0 8px"
+                  v-html="format_content(character.abilities[2])"
+                />
+                <div v-else style="margin: 0 8px">--</div>
+              </div>
+              <div v-if="character.abilities[3]" class="span-ability">
+                <div style="color: rgb(47, 195, 183); font-size: 20px">❹</div>
+                <div
+                  style="margin: 0 8px; opacity: 0.55"
+                  v-html="format_content(character.abilities[3])"
+                />
+              </div>
+              <div v-if="character.abilities[4]" class="span-ability">
+                <div style="color: rgb(47, 195, 183); font-size: 20px">❺</div>
+                <div style="margin: 0 8px; opacity: 0.55" v-html="character.abilities[4]" />
+              </div>
+              <div v-if="character.abilities[5]" class="span-ability">
+                <div style="color: rgb(47, 195, 183); font-size: 20px">❻</div>
+                <div style="margin: 0 8px; opacity: 0.55" v-html="character.abilities[5]" />
+              </div>
+            </div>
+          </div>
         </div>
+        <hr style="width: 100%; margin: 12px 12px 8px" />
+        <div style="display: flex; flex-direction: column">
+          <div style="padding: 16px; font-size: 16px">
+            {{ character.description }}
+          </div>
+          <div style="padding: 16px; font-size: 16px">获取方式：{{ character.obtain }}</div>
+        </div>
+        {{ character }}
       </div>
     </div>
   </v-card>
 </template>
 
 <style scoped>
+.span-tag {
+  float: left;
+  padding: 0 4px;
+  margin-right: 4px;
+  width: 45px;
+  background: linear-gradient(
+    247.5deg,
+    transparent 8px,
+    rgba(220, 220, 220) 8px,
+    rgba(220, 220, 220)
+  );
+}
 .span-title {
   float: right;
   width: 75px;

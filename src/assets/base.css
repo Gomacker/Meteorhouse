@@ -78,4 +78,5 @@ html {
   line-height: normal;
   /*overflow-y: hidden;*/
   overflow-y: auto;
+  overflow-x: auto;
 }

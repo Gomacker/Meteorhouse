@@ -12,7 +12,15 @@ export enum Element {
 }
 
 export enum Race {
-  Human
+  Human,
+}
+
+export enum SpecialityType {
+  KNIGHT,
+  FIGHTER,
+  RANGED,
+  SUPPORTER,
+  SPECIAL,
 }
 
 interface Skill {
@@ -34,11 +42,12 @@ export class Character extends GameObject {
     public names: string[],
     public rarity: number,
     public element: Element,
-
-    public type: number, // 未优化
+    public type: SpecialityType,
     public race: string, // 未优化
     public gender: string, // 未优化
     // public stance: number, // 未优化
+
+    // public status_data: StatusData,
 
     public leader_ability: LeaderAbility,
     public skill: Skill,

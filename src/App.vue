@@ -105,7 +105,7 @@ onMounted(() => {
     </v-app-bar>
 
     <v-main>
-      <router-view style="height: 100%"></router-view>
+      <router-view></router-view>
     </v-main>
     <img
       class="bg-magic-circle"
