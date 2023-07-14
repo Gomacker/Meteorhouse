@@ -85,6 +85,11 @@ const router = createRouter({
       component: () => import('@/views/TestCardView.vue')
     },
     {
+      path: '/test/new_gacha_list',
+      name: 'test_new_gacha_list',
+      component: () => import('@/views/test/GachaList.vue')
+    },
+    {
       path: '/test/room',
       name: 'test_room',
       component: () => import('@/views/TestRoomView.vue')

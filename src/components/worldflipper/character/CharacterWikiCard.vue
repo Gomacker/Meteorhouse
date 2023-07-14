@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Character, SpecialityType } from '@/anise/worldflipper/object'
+import { Character, Element, SpecialityType } from '@/anise/worldflipper/object'
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
 import { format_content } from '@/stores/table'
 import GameTag from '@/components/party/GameTag.vue'
+import chroma from 'chroma-js'
 
 defineProps({
   character: {
@@ -11,17 +12,18 @@ defineProps({
   }
 })
 
-const alpha = 0.85
+const alpha = 0.8
 
 const ele2color = {
-  [-1]: 'rgb(105,105,105,' + alpha + ')',
-  0: 'rgba(234,53,75,' + alpha + ')',
-  1: 'rgba(68,137,255,' + alpha + ')',
-  2: 'rgba(244,204,36,' + alpha + ')',
-  3: 'rgba(119,217,47,' + alpha + ')',
-  4: 'rgba(245,255,186,' + alpha + ')',
-  5: 'rgba(90,57,95,' + alpha + ')'
+  [Element.All]: chroma('rgb(105,105,105)').alpha(alpha),
+  [Element.Fire]: chroma('rgb(234,53,75)').alpha(alpha),
+  [Element.Water]: chroma('rgb(68,137,255)').alpha(alpha),
+  [Element.Thunder]: chroma('rgb(244,204,36)').alpha(alpha),
+  [Element.Wind]: chroma('rgb(119,217,47)').alpha(alpha),
+  [Element.Light]: chroma('rgb(245,255,186)').alpha(alpha),
+  [Element.Dark]: chroma('rgb(90,57,95)').alpha(alpha),
 }
+const background_color = chroma('rgb(248,248,248)').alpha(alpha)
 </script>
 
 <template>
@@ -64,9 +66,9 @@ const ele2color = {
           linear-gradient(
           135deg,
           ${ele2color[character.element]} 130px,
-          rgba(248,248,248, 0.825) 130px,
-          rgba(248,248,248, 0.825) calc(100% - 32px),
-          rgb(54, 255, 162, 0.85) calc(100% - 32px),
+          ${background_color} 130px,
+          ${background_color} calc(100% - 32px),
+          rgba(54, 255, 162, 0.85) calc(100% - 32px),
           rgba(200,240,200, 0.85)
           )`
         }"
