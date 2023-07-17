@@ -168,15 +168,7 @@ function get_replacements_data(element: TableElement) {
             <v-switch label="占据整行" hide-details density="compact" v-model="$props.table_element.full"/>
             <v-switch label="小标题" hide-details density="compact" v-model="$props.table_element.little_title"/>
           </div>
-          <el-form label-width="50px" size="small" label-position="left">
-            <el-form-item label="内容">
-              <el-input
-                v-model="$props.table_element.content"
-                type="textarea"
-                :autosize="{ minRows: 2 }"
-              ></el-input>
-            </el-form-item>
-          </el-form>
+          <v-textarea label="内容" density="compact" v-model="$props.table_element.content"/>
         </template>
         <template v-else-if="$props.table_element instanceof TableElementPartyUnion">
           <div style="display: flex; flex-direction: column">
@@ -368,10 +360,11 @@ function get_replacements_data(element: TableElement) {
           </el-form>
         </template>
       </div>
-      <el-divider style="margin: 4px" />
+      <v-divider style="margin: 4px" />
       <div style="display: flex; margin: 4px; justify-content: space-between">
         <div />
         <div>
+          <v-btn-group></v-btn-group>
           <el-button-group size="small">
             <el-button plain type="primary" @click="$emit('move_pre')">
               <el-icon><ArrowLeft /></el-icon>
