@@ -165,10 +165,20 @@ function get_replacements_data(element: TableElement) {
       <div>
         <template v-if="$props.table_element instanceof TableElementTextArea">
           <div style="display: grid; grid-template-columns: repeat(auto-fit, 160px)">
-            <v-switch label="占据整行" hide-details density="compact" v-model="$props.table_element.full"/>
-            <v-switch label="小标题" hide-details density="compact" v-model="$props.table_element.little_title"/>
+            <v-switch
+              label="占据整行"
+              hide-details
+              density="compact"
+              v-model="$props.table_element.full"
+            />
+            <v-switch
+              label="小标题"
+              hide-details
+              density="compact"
+              v-model="$props.table_element.little_title"
+            />
           </div>
-          <v-textarea label="内容" density="compact" v-model="$props.table_element.content"/>
+          <v-textarea label="内容" density="compact" v-model="$props.table_element.content" />
         </template>
         <template v-else-if="$props.table_element instanceof TableElementPartyUnion">
           <div style="display: flex; flex-direction: column">
@@ -364,25 +374,12 @@ function get_replacements_data(element: TableElement) {
       <div style="display: flex; margin: 4px; justify-content: space-between">
         <div />
         <div>
-          <v-btn-group></v-btn-group>
-          <el-button-group size="small">
-            <el-button plain type="primary" @click="$emit('move_pre')">
-              <el-icon><ArrowLeft /></el-icon>
-            </el-button>
-            <el-button plain type="primary" @click="$emit('move_next')">
-              <el-icon><ArrowRight /></el-icon>
-            </el-button>
-            <el-button plain type="primary" @click="$emit('insert_pre')">
-              <el-icon><Plus /></el-icon>
-            </el-button>
-            <el-popconfirm title="确认删除？" @confirm="$emit('delete')">
-              <template #reference>
-                <el-button plain type="danger">
-                  <el-icon><DeleteFilled /></el-icon>
-                </el-button>
-              </template>
-            </el-popconfirm>
-          </el-button-group>
+          <v-btn-group color="blue" variant="tonal" density="compact">
+            <v-btn icon="mdi-menu-left" @click="$emit('move_pre')"/>
+            <v-btn icon="mdi-menu-right" @click="$emit('move_next')"/>
+            <v-btn icon="mdi-plus" @click="$emit('insert_pre')"/>
+            <v-btn icon="mdi-delete" @confirm="$emit('delete')" color="red" />
+          </v-btn-group>
         </div>
       </div>
     </v-card>
