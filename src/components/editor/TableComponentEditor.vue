@@ -156,6 +156,7 @@ function get_replacements_data(element: TableElement) {
         v-model="$props.table_element.type"
         :items="component_types"
         density="compact"
+        hide-details
         style="max-width: 360px"
         label="类型"
         @update:model-value="$emit('refresh')"
@@ -163,14 +164,10 @@ function get_replacements_data(element: TableElement) {
       <v-divider style="margin: 4px" />
       <div>
         <template v-if="$props.table_element instanceof TableElementTextArea">
-          <el-form label-width="50px" size="small" inline label-position="left">
-            <el-form-item label-width="60px" label="占据整行">
-              <el-switch v-model="$props.table_element.full"></el-switch>
-            </el-form-item>
-            <el-form-item label-width="50px" label="小标题">
-              <el-switch v-model="$props.table_element.little_title"></el-switch>
-            </el-form-item>
-          </el-form>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, 160px)">
+            <v-switch label="占据整行" hide-details density="compact" v-model="$props.table_element.full"/>
+            <v-switch label="小标题" hide-details density="compact" v-model="$props.table_element.little_title"/>
+          </div>
           <el-form label-width="50px" size="small" label-position="left">
             <el-form-item label="内容">
               <el-input
