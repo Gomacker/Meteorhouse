@@ -160,13 +160,6 @@ function get_replacements_data(element: TableElement) {
         label="类型"
         @update:model-value="$emit('refresh')"
       />
-      <el-form label-width="50px" size="small" label-position="left">
-        <el-form-item label="类型">
-          <el-select v-model="$props.table_element.type" @change="$emit('refresh')">
-            <el-option v-for="c in component_types" :key="c" :value="c"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
       <v-divider style="margin: 4px" />
       <div>
         <template v-if="$props.table_element instanceof TableElementTextArea">
