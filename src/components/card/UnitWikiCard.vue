@@ -23,7 +23,7 @@ function get_tags(unit: Unit) {
   let tags: string[]
   try {
     tags = JSON.parse(unit.tags)
-  }catch (e) {
+  } catch (e) {
     tags = []
   }
   return tags
@@ -84,7 +84,7 @@ const props = defineProps({
       >
         <div style="display: flex; width: 100%; margin: 16px 16px 0">
           <div style="position: absolute; z-index: 1">
-            <el-image
+            <img
               style="
                 width: 200%;
                 height: 200%;

@@ -1,5 +1,9 @@
 import axios from 'axios'
 import { reactive } from 'vue'
+import chroma from 'chroma-js'
+import { Character, Element, Equipment, SpecialityType } from '@/anise/worldflipper/object'
+import { defineStore } from 'pinia'
+import { plainToClass, plainToInstance } from 'class-transformer'
 
 export class Manager {
   public readonly unit_data: Map<number, Unit>
@@ -34,20 +38,20 @@ export class Manager {
   }
 }
 
-const gender2zh: any = {
+export const gender2zh: any = {
   Female: '女性',
   Male: '男性',
   Unknown: '不明',
   Ririi: '莉莉'
 }
 export const type2zh: any = {
-  0: '剑士',
-  1: '格斗',
-  2: '射击',
-  3: '辅助',
-  4: '特殊'
+  [SpecialityType.Knight]: '剑士',
+  [SpecialityType.Fighter]: '格斗',
+  [SpecialityType.Ranged]: '射击',
+  [SpecialityType.Supporter]: '辅助',
+  [SpecialityType.Special]: '特殊'
 }
-const race2zh: any = {
+export const race2zh: any = {
   Human: '人',
   Beast: '兽',
   Mystery: '妖',
@@ -60,31 +64,31 @@ const race2zh: any = {
   Undead: '不死'
 }
 export const ele2color = {
-  [-1]: 'rgb(68,68,68)',
-  0: 'rgb(234,53,75)',
-  1: 'rgb(68,137,255)',
-  2: 'rgb(244,204,36)',
-  3: 'rgb(119,217,47)',
-  4: 'rgb(244,255,186)',
-  5: 'rgb(90,57,95)'
+  [Element.All]: chroma('rgb(68,68,68)'),
+  [Element.Fire]: chroma('rgb(234,53,75)'),
+  [Element.Water]: chroma('rgb(68,137,255)'),
+  [Element.Thunder]: chroma('rgb(244,204,36)'),
+  [Element.Wind]: chroma('rgb(119,217,47)'),
+  [Element.Light]: chroma('rgb(244,255,186)'),
+  [Element.Dark]: chroma('rgb(90,57,95)')
 }
 export const ele2name = {
-  [-1]: '无属性',
-  0: '火属性',
-  1: '水属性',
-  2: '雷属性',
-  3: '风属性',
-  4: '光属性',
-  5: '暗属性'
+  [Element.All]: '无属性',
+  [Element.Fire]: '火属性',
+  [Element.Water]: '水属性',
+  [Element.Thunder]: '雷属性',
+  [Element.Wind]: '风属性',
+  [Element.Light]: '光属性',
+  [Element.Dark]: '暗属性'
 }
-export const ele_id2ele: any = {
-  [-1]: 'none',
-  0: 'fire',
-  1: 'water',
-  2: 'thunder',
-  3: 'wind',
-  4: 'light',
-  5: 'dark'
+export const ele_id2ele = {
+  [Element.All]: 'none',
+  [Element.Fire]: 'fire',
+  [Element.Water]: 'water',
+  [Element.Thunder]: 'thunder',
+  [Element.Wind]: 'wind',
+  [Element.Light]: 'light',
+  [Element.Dark]: 'dark'
 }
 
 export async function get_party(party_id: string) {
@@ -679,19 +683,11 @@ export class PartyRelease {
 
 export const manager = reactive(new Manager())
 
-export function init() {
-  axios
-    .post('/api/v1/data/unit/', {})
-    .then((res) => {
-      manager.load({ unit: res.data })
-    })
-    .catch(() => {})
-  axios
-    .post('/api/v1/data/armament/', {})
-    .then((res) => {
-      manager.load({ armament: res.data })
-    })
-    .catch(() => {})
+
+export async function init() {
+  const unit_rsp = await axios.post('/api/v1/data/unit/')
+  const armament_rsp = await axios.post('/api/v1/data/armament/')
+  manager.load({ unit: unit_rsp.data, armament: armament_rsp.data })
 }
 
-init()
+init().then()

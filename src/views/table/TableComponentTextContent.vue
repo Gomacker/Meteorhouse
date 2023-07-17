@@ -242,13 +242,17 @@ export default {
   color: inherit;
   font-family: Arial, '黑体', serif;
 }
+.table-text.highlight {
+  color: orangered;
+  -webkit-text-fill-color: orangered;
+}
 .highlight {
   color: rgb(255, 159, 28);
   -webkit-text-fill-color: rgb(255, 159, 28);
 }
 .novice {
-  color: rgb(46, 196, 182);
-  -webkit-text-fill-color: rgb(46, 196, 182);
+  color: #58ffb7;
+  -webkit-text-fill-color: #58ffb7;
 }
 .del {
   text-decoration: line-through;

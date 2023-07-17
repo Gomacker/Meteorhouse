@@ -1,4 +1,5 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 
 <template>
   <div style="width: 750px; zoom: 1; background-color: #0f0">
@@ -17,9 +18,9 @@
             background: linear-gradient(to bottom, #dfebf7, #f3dcff, #dfebf7);
           "
         >
-          <el-image
+          <v-img
             src="/static/worldflipper/st/banner/world_flipper-1609036650079981568-img1.png"
-            fit="cover"
+            :cover="true"
             style="width: 100%; height: 100%; border-radius: 6px"
           />
         </div>

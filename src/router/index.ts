@@ -80,14 +80,14 @@ const router = createRouter({
       component: () => import('@/views/editor/EventEditorView.vue')
     },
     {
+      path: '/gacha',
+      name: 'test_gacha_list',
+      component: () => import('@/views/test/GachaList.vue')
+    },
+    {
       path: '/card/test',
       name: 'card_test',
       component: () => import('@/views/TestCardView.vue')
-    },
-    {
-      path: '/test/new_gacha_list',
-      name: 'test_new_gacha_list',
-      component: () => import('@/views/test/GachaList.vue')
     },
     {
       path: '/test/room',

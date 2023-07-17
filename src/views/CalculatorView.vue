@@ -363,7 +363,7 @@ function get_skill_weight(union: Union) {
             </div>
             <template v-if="party instanceof PartyRelease">
               <div
-                class="party-body"
+                class="party-body elevation-5"
                 style="background: white; margin: 20px"
                 :style="{ border: `6px solid ${border_color}` }"
               >

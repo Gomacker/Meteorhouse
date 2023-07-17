@@ -16,30 +16,22 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5174,
     proxy: {
+      '/api/v2': 'http://127.0.0.1:10317',
       '/api': {
         // target: 'http://127.0.0.1:10317/api/',
-        // target: 'http://test.meteorhouse.wiki:10317/api/',
-        // target: 'http://test.meteorhouse.wiki/api/',
         target: 'https://meteorhouse.wiki/api/',
-        // target: 'http://test.meteorhouse.wiki/api/v1/',
-        // target: 'https://alpha0317.meteorhouse.wiki/api/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
-      // '/assets': {
-      //   // target: 'http://127.0.0.1:10317/assets/',
-      //   // target: 'http://test.meteorhouse.wiki/assets/',
-      //   target: 'httFp://meteorhouse.wiki/assets/',
-      //   // target: 'https://alpha0317.meteorhouse.wiki/assets/',
+      //'/api/v2': {
+      //   target: 'http://127.0.0.1:10317',
+      //   // target: 'https://meteorhouse.wiki/api/',
       //   changeOrigin: true,
-      //   rewrite: path => path.replace(/^\/assets/, '')
+      //   rewrite: (path) => path.replace(/^\/api\/v2/, '')
       // },
       '/static': {
-        // target: 'http://127.0.0.1:10317/static/',
-        // target: 'http://test.meteorhouse.wiki:10317/static/',
-        // target: 'http://test.meteorhouse.wiki/assets/',
+        // target: 'http://localhost:10317/static/',
         target: 'https://meteorhouse.wiki/static/',
-        // target: 'https://alpha0317.meteorhouse.wiki/assets/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/static/, '')
       }

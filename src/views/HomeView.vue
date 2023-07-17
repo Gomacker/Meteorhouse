@@ -8,11 +8,13 @@ import { manager } from '../stores/manager'
 import {useRouter} from "vue-router";
 import CharacterWikiCard from "@/components/worldflipper/character/CharacterWikiCard.vue";
 import UnitWikiCard from "@/components/card/UnitWikiCard.vue";
+import { useWorldflipperDataStore } from "@/stores/worldflipper";
 
 const show_mainpage = ref([0])
 const c = computed(() => Character.from_legacy(manager.unit_data.get(1)))
 const e = computed(() => new Equipment(1, 'item/equipment/general/chapter_1_orb'))
 
+const worldflipper = useWorldflipperDataStore()
 const router = useRouter()
 </script>
 
@@ -22,7 +24,7 @@ const router = useRouter()
 <!--      <div>{{ manager.unit_data.get(1) }}</div>-->
 <!--      <div>{{ Character.from_legacy(manager.unit_data.get(1)) }}</div>-->
 <!--    </div>-->
-    <CharacterWikiCard style="width: 100%" :character="c" />
+    <CharacterWikiCard style="width: 100%" :character="worldflipper.characters.get('111021')" />
     <UnitWikiCard style="width: 100%" :unit="manager.unit_data.get(1)" />
     <div
       style="

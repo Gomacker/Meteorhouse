@@ -16,11 +16,11 @@ import PartyCardEliya from '@/components/party/PartyCardEliya.vue'
 import { ArrowLeft, ArrowRight, DeleteFilled, Plus } from '@element-plus/icons-vue'
 
 defineEmits<{
-  refresh: void
-  move_pre: void
-  move_next: void
-  insert_pre: void
-  delete: void
+  refresh: any
+  move_pre: any
+  move_next: any
+  insert_pre: any
+  delete: any
 }>()
 defineProps<{
   table_element: TableElement
@@ -65,7 +65,7 @@ function get_replacements_data(element: TableElement) {
       $props.table_element instanceof TableElementSubTitle
     "
   >
-    <el-card
+    <v-card
       style="
         width: 99.5%;
         margin: 0.25%;
@@ -144,14 +144,22 @@ function get_replacements_data(element: TableElement) {
           </el-button-group>
         </div>
       </div>
-    </el-card>
+    </v-card>
   </template>
   <template v-else>
-    <el-card
+    <v-card
       class="table-component-card"
       :class="$props.table_element.full_row ? ['full'] : undefined"
       body-style="padding: 8px;"
     >
+      <v-select
+        v-model="$props.table_element.type"
+        :items="component_types"
+        density="compact"
+        style="max-width: 360px"
+        label="类型"
+        @update:model-value="$emit('refresh')"
+      />
       <el-form label-width="50px" size="small" label-position="left">
         <el-form-item label="类型">
           <el-select v-model="$props.table_element.type" @change="$emit('refresh')">
@@ -159,7 +167,7 @@ function get_replacements_data(element: TableElement) {
           </el-select>
         </el-form-item>
       </el-form>
-      <el-divider style="margin: 4px" />
+      <v-divider style="margin: 4px" />
       <div>
         <template v-if="$props.table_element instanceof TableElementTextArea">
           <el-form label-width="50px" size="small" inline label-position="left">
@@ -239,8 +247,20 @@ function get_replacements_data(element: TableElement) {
         </template>
         <template v-else-if="$props.table_element instanceof TableElementParty2">
           <div style="display: flex">
-            <v-switch v-model="$props.table_element.show_name" density="compact" hide-details :inline="true" label="显示名称"/>
-            <v-switch v-model="$props.table_element.show_awaken" density="compact" hide-details :inline="true" label="显示觉醒"/>
+            <v-switch
+              v-model="$props.table_element.show_name"
+              density="compact"
+              hide-details
+              :inline="true"
+              label="显示名称"
+            />
+            <v-switch
+              v-model="$props.table_element.show_awaken"
+              density="compact"
+              hide-details
+              :inline="true"
+              label="显示觉醒"
+            />
           </div>
           <v-text-field
             label="标题"
@@ -255,13 +275,13 @@ function get_replacements_data(element: TableElement) {
             v-model="$props.table_element.subtitle"
           ></v-text-field>
           <el-form label-width="50px" size="small" label-position="left">
-              <v-textarea
-                v-model="$props.table_element.party_data"
-                hide-details
-                label="队伍"
-                style="font-family: Consolas, serif; background: rgb(54,54,54); color: white"
-                :autosize="{ minRows: 2, maxRows: 6 }"
-              ></v-textarea>
+            <v-textarea
+              v-model="$props.table_element.party_data"
+              hide-details
+              label="队伍"
+              style="font-family: Consolas, serif; background: rgb(54, 54, 54); color: white"
+              :autosize="{ minRows: 2, maxRows: 6 }"
+            ></v-textarea>
           </el-form>
           <div style="display: flex; justify-content: center">
             <PartyCardEliya
@@ -382,7 +402,7 @@ function get_replacements_data(element: TableElement) {
           </el-button-group>
         </div>
       </div>
-    </el-card>
+    </v-card>
   </template>
 </template>
 
@@ -395,6 +415,7 @@ function get_replacements_data(element: TableElement) {
   width: 49.5%;
   box-shadow: none;
   margin: 0.25%;
+  padding: 8px;
   //background-color: rgba(255 255 255 / 0.65);
   background: linear-gradient(to bottom, var(--sub-color) 4px, rgba(255 255 255 / 0.65) 4px);
 }

@@ -60,7 +60,7 @@ const props = defineProps({
     >
       <div style="display: flex; flex-direction: column">
         <div style="font-size: 22px">RANK {{ props.rank }} {{ props.name }}</div>
-        <el-divider style="margin: 4px"></el-divider>
+        <v-divider style="margin: 4px"></v-divider>
         <div style="font-size: 16px">
             {{ props.comment }}
         </div>

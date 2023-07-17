@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { Character, Element, SpecialityType } from '@/anise/worldflipper/object'
+import { Character, Element } from '@/anise/worldflipper/object'
+import { gender2zh, race2zh, type2zh } from '@/stores/manager'
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
 import { format_content } from '@/stores/table'
 import GameTag from '@/components/party/GameTag.vue'
 import chroma from 'chroma-js'
+import { computed } from 'vue'
 
-defineProps({
+const props = defineProps({
   character: {
     type: Character,
     required: true
@@ -21,9 +23,21 @@ const ele2color = {
   [Element.Thunder]: chroma('rgb(244,204,36)').alpha(alpha),
   [Element.Wind]: chroma('rgb(119,217,47)').alpha(alpha),
   [Element.Light]: chroma('rgb(245,255,186)').alpha(alpha),
-  [Element.Dark]: chroma('rgb(90,57,95)').alpha(alpha),
+  [Element.Dark]: chroma('rgb(90,57,95)').alpha(alpha)
 }
 const background_color = chroma('rgb(248,248,248)').alpha(alpha)
+
+const status = computed(() => props.character?.get_status(props.character?.nature_max_level))
+const status_max = computed(() => props.character?.get_status(100))
+
+const translated_race = computed(() =>
+  props.character?.race
+    .split(',')
+    .map((value) => race2zh[value])
+    .join(' / ')
+)
+const translated_gender = computed(() => gender2zh[props.character?.gender])
+const translated_type = computed(() => type2zh[props.character?.type])
 </script>
 
 <template>
@@ -91,10 +105,10 @@ const background_color = chroma('rgb(248,248,248)').alpha(alpha)
           <div style="display: flex; flex-wrap: wrap; width: 100%; justify-content: space-between">
             <div style="padding: 8px 16px; font-size: 20px">
               <p style="font-size: 20px; font-family: '华文细黑', serif; font-weight: 600">
-                {{ character.names[0] }}
+                {{ character.names[1] }}
               </p>
               <p style="font-size: 34px; font-family: '华文细黑', serif; font-weight: 600">
-                {{ character.names[1] }}
+                {{ character.names[0] }}
               </p>
               <p style="font-size: 18px; font-family: '华文细黑', serif; margin-top: 2px">
                 {{ character.names[2] }}
@@ -115,25 +129,25 @@ const background_color = chroma('rgb(248,248,248)').alpha(alpha)
               >
                 <div class="span-f">
                   <div class="span-tag">HP</div>
-                  <!--                    {{ props.unit.status['mhp'] }}-->
-                  <!--                    <span style="color: crimson">({{ props.unit.status['mmhp'] }})</span>-->
+                  {{ status[0] }}
+                  <span style="color: crimson">({{ status_max[0] }})</span>
                 </div>
                 <div class="span-f">
                   <div class="span-tag">ATK</div>
-                  <!--                    {{ props.unit.status['atk'] }}-->
-                  <!--                    <span style="color: crimson">({{ props.unit.status['matk'] }})</span>-->
+                  {{ status[1] }}
+                  <span style="color: crimson">({{ status_max[1] }})</span>
                 </div>
                 <div class="span-f">
                   <div class="span-tag">类型</div>
-                  {{ SpecialityType[character.type] }}
+                  {{ translated_type }}
                 </div>
                 <div class="span-f">
                   <div class="span-tag">种族</div>
-                  {{ character.race }}
+                  {{ translated_race }}
                 </div>
                 <div class="span-f">
                   <div class="span-tag">性别</div>
-                  {{ character.gender }}
+                  {{ translated_gender }}
                 </div>
                 <div class="span-f">
                   <div class="span-tag">CV</div>
