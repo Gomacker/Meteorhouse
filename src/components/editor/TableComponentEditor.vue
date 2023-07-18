@@ -73,7 +73,7 @@ function get_replacements_data(element: TableElement) {
       class="elevation-6"
       body-style="padding: 0"
     >
-      <v-card-item>
+      <div style="display: flex; margin: 4px; align-items: center; justify-content: space-between">
         <v-select
           v-model="$props.table_element.type"
           :items="['Row', 'SubTitle']"
@@ -83,7 +83,13 @@ function get_replacements_data(element: TableElement) {
           label="类型"
           @update:model-value="$emit('refresh')"
         />
-      </v-card-item>
+        <v-btn-group color="blue" variant="tonal" density="compact">
+          <v-btn icon="mdi-menu-left" @click="$emit('move_pre')" />
+          <v-btn icon="mdi-menu-right" @click="$emit('move_next')" />
+          <v-btn icon="mdi-plus" @click="$emit('insert_pre')" />
+          <v-btn icon="mdi-close" @click="$emit('delete')" color="red" />
+        </v-btn-group>
+      </div>
       <v-divider style="margin: 4px" />
       <div
         v-if="$props.table_element instanceof TableElementRow"
@@ -109,38 +115,18 @@ function get_replacements_data(element: TableElement) {
         </v-btn>
       </div>
       <div style="margin: 4px" v-else>
-        <el-form label-width="50px" size="small" label-position="left">
-          <el-form-item label="图标">
-            <el-input v-model="$props.table_element.element"></el-input>
-          </el-form-item>
-          <el-form-item label="内容">
-            <el-input v-model="$props.table_element.content"></el-input>
-          </el-form-item>
-        </el-form>
-      </div>
-      <el-divider style="margin: 4px" />
-      <div style="display: flex; margin: 4px; justify-content: space-between">
-        <div />
-        <div>
-          <el-button-group size="small">
-            <el-button type="primary" @click="$emit('move_pre')">
-              <el-icon><ArrowLeft /></el-icon>
-            </el-button>
-            <el-button type="primary" @click="$emit('move_next')">
-              <el-icon><ArrowRight /></el-icon>
-            </el-button>
-            <el-button type="primary" @click="$emit('insert_pre')">
-              <el-icon><Plus /></el-icon>
-            </el-button>
-            <el-popconfirm title="确认删除？" @confirm="$emit('delete')">
-              <template #reference>
-                <el-button type="danger">
-                  <el-icon><DeleteFilled /></el-icon>
-                </el-button>
-              </template>
-            </el-popconfirm>
-          </el-button-group>
-        </div>
+        <v-text-field
+          label="图标"
+          v-model="$props.table_element.element"
+          density="compact"
+          hide-details
+        />
+        <v-text-field
+          label="内容"
+          v-model="$props.table_element.content"
+          density="compact"
+          hide-details
+        />
       </div>
     </v-card>
   </template>
@@ -151,15 +137,23 @@ function get_replacements_data(element: TableElement) {
       :class="$props.table_element.full_row ? ['full'] : undefined"
       body-style="padding: 8px;"
     >
-      <v-select
-        v-model="$props.table_element.type"
-        :items="component_types"
-        density="compact"
-        hide-details
-        style="max-width: 360px"
-        label="类型"
-        @update:model-value="$emit('refresh')"
-      />
+      <div style="display: flex; margin: 4px; align-items: center; justify-content: space-between">
+        <v-select
+          v-model="$props.table_element.type"
+          :items="component_types"
+          density="compact"
+          hide-details
+          style="max-width: 360px"
+          label="类型"
+          @update:model-value="$emit('refresh')"
+        />
+        <v-btn-group color="blue" variant="tonal" density="compact">
+          <v-btn icon="mdi-menu-left" @click="$emit('move_pre')" />
+          <v-btn icon="mdi-menu-right" @click="$emit('move_next')" />
+          <v-btn icon="mdi-plus" @click="$emit('insert_pre')" />
+          <v-btn icon="mdi-close" @click="$emit('delete')" color="red" />
+        </v-btn-group>
+      </div>
       <v-divider style="margin: 4px" />
       <div>
         <template v-if="$props.table_element instanceof TableElementTextArea">
@@ -202,7 +196,6 @@ function get_replacements_data(element: TableElement) {
                   />
                 </div>
                 <v-card>
-
                   <v-textarea
                     v-model="$props.table_element.party_data"
                     hide-details
@@ -331,18 +324,6 @@ function get_replacements_data(element: TableElement) {
             </el-form-item>
           </el-form>
         </template>
-      </div>
-      <v-divider style="margin: 4px" />
-      <div style="display: flex; margin: 4px; justify-content: space-between">
-        <div />
-        <div>
-          <v-btn-group color="blue" variant="tonal" density="compact">
-            <v-btn icon="mdi-menu-left" @click="$emit('move_pre')" />
-            <v-btn icon="mdi-menu-right" @click="$emit('move_next')" />
-            <v-btn icon="mdi-plus" @click="$emit('insert_pre')" />
-            <v-btn icon="mdi-delete" @click="$emit('delete')" color="red" />
-          </v-btn-group>
-        </div>
       </div>
     </v-card>
   </template>
