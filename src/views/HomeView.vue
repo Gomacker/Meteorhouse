@@ -20,10 +20,6 @@ const router = useRouter()
 
 <template>
   <div style="overflow: auto; display: flex; flex-direction: column; justify-content: center;">
-<!--    <div v-if="manager.unit_data.size">-->
-<!--      <div>{{ manager.unit_data.get(1) }}</div>-->
-<!--      <div>{{ Character.from_legacy(manager.unit_data.get(1)) }}</div>-->
-<!--    </div>-->
     <CharacterWikiCard style="width: 100%" :character="worldflipper.characters.get('111021')" />
     <UnitWikiCard style="width: 100%" :unit="manager.unit_data.get(1)" />
     <div

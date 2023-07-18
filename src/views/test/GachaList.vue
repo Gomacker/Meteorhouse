@@ -50,7 +50,7 @@ event_list.value.push(
     }
   },
   {
-    time: moment('2023/7/27'),
+    time: moment('2023/8/9'),
     time_legacy: moment('2021/10/12'),
     description: '[icon:new]土俑嘉年华\n　\n[icon:desc_dark]有利 竞分活动',
     quest: {
@@ -59,7 +59,7 @@ event_list.value.push(
     }
   },
   {
-    time: moment('2023/8/9'),
+    time: moment('2023/7/26'),
     time_legacy: moment('2021/10/12'),
     description: '为你奏响的镇魂歌\n　\n[icon:desc_dark]有利 降临讨伐',
     quest: {
