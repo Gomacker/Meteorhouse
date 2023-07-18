@@ -298,31 +298,25 @@ function get_replacements_data(element: TableElement) {
           </div>
         </template>
         <template v-else-if="$props.table_element instanceof TableElementHtml">
-          <el-form label-width="50px" size="small" label-position="left">
-            <el-form-item label="内容">
-              <el-input
-                v-model="$props.table_element.content"
-                type="textarea"
-                :autosize="{ minRows: 4 }"
-              ></el-input>
-            </el-form-item>
-          </el-form>
+          <v-textarea
+            label="内容"
+            v-model="$props.table_element.content"
+            style="font-family: Consolas, serif; background: rgb(54, 54, 54); color: white"
+            :rows="20"
+          />
         </template>
         <template v-else-if="$props.table_element instanceof TableElementWikiCard">
-          <el-form label-width="50px" size="small" label-position="left">
-            <el-form-item label="Lite">
-              <el-switch v-model="$props.table_element.lite"></el-switch>
-            </el-form-item>
-            <el-form-item label="类型">
-              <el-radio-group v-model="$props.table_element.object_type">
-                <el-radio label="Unit">角色</el-radio>
-                <el-radio label="Armament">武器</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="ID">
-              <el-input-number v-model="$props.table_element.object_id"></el-input-number>
-            </el-form-item>
-          </el-form>
+          <v-switch
+            label="Lite"
+            v-model="$props.table_element.lite"
+            hide-details
+            density="compact"
+          />
+          <v-radio-group density="compact" :inline="true">
+            <v-radio label="角色" value="Unit"/>
+            <v-radio label="武器" value="Armament"/>
+          </v-radio-group>
+          <v-text-field label="ID" v-model="$props.table_element.object_id" />
         </template>
       </div>
     </v-card>
@@ -339,7 +333,6 @@ function get_replacements_data(element: TableElement) {
   box-shadow: none;
   margin: 0.25%;
   padding: 8px;
-  //background-color: rgba(255 255 255 / 0.65);
   background: linear-gradient(to bottom, var(--sub-color) 4px, rgba(255 255 255 / 0.65) 4px);
 }
 .table-component-card.full {
