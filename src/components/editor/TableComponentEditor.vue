@@ -183,56 +183,30 @@ function get_replacements_data(element: TableElement) {
         <template v-else-if="$props.table_element instanceof TableElementPartyUnion">
           <div style="display: flex; flex-direction: column">
             <div>
-              <el-form label-width="50px" size="small" label-position="left">
-                <el-form-item label="标签">
-                  <el-input v-model="$props.table_element.label"></el-input>
-                </el-form-item>
-                <el-form-item label="标题">
-                  <el-input v-model="$props.table_element.title"></el-input>
-                </el-form-item>
-              </el-form>
+              <v-text-field label="标签" v-model="$props.table_element.label" density="compact"/>
+              <v-text-field label="标题" v-model="$props.table_element.title" density="compact"/>
             </div>
             <div style="display: flex">
               <div style="width: 49%; margin: 0 1% 0 0">
-                <el-form label-width="50px" size="small" inline label-position="left">
-                  <el-form-item label-width="60px" label="显示名称">
-                    <el-switch v-model="$props.table_element.show_name"></el-switch>
-                  </el-form-item>
-                  <el-form-item label-width="60px" label="显示觉醒">
-                    <el-switch v-model="$props.table_element.show_awaken"></el-switch>
-                  </el-form-item>
-                </el-form>
-                <el-form label-width="50px" size="small" label-position="left">
-                  <el-form-item label="队伍">
-                    <el-input
-                      v-model="$props.table_element.party_data"
-                      style="font-family: Consolas, serif"
-                      input-style="background: rgba(0 0 0 / 0.5); color: white"
-                      type="textarea"
-                      :autosize="{ minRows: 2, maxRows: 6 }"
-                    ></el-input>
-                  </el-form-item>
-                </el-form>
-                <div style="display: flex; justify-content: center">
-                  <PartyCardEliya
-                    :party="$props.table_element.party"
-                    :replacements="get_replacements_data($props.table_element)"
-                    :show_name="$props.table_element.show_name"
-                    :show_awaken="$props.table_element.show_awaken"
-                    always_show_replacements
-                  />
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, 160px)">
+                  <v-switch label="显示名称" density="compact" hide-details v-model="$props.table_element.show_name" />
+                  <v-switch label="显示觉醒" density="compact" hide-details v-model="$props.table_element.show_awaken" />
                 </div>
+                <v-card>
+                  <v-textarea label="队伍" style="font-family: Consolas, serif" v-model="$props.table_element.party_data" variant="solo-filled" hide-details />
+                  <div style="display: flex; justify-content: center">
+                    <PartyCardEliya
+                      :party="$props.table_element.party"
+                      :replacements="get_replacements_data($props.table_element)"
+                      :show_name="$props.table_element.show_name"
+                      :show_awaken="$props.table_element.show_awaken"
+                      always_show_replacements
+                    />
+                  </div>
+                </v-card>
               </div>
               <div style="width: 49%; margin: 0 0 0 1%">
-                <el-form label-width="50px" size="small" label-position="left">
-                  <el-form-item label="内容">
-                    <el-input
-                      v-model="$props.table_element.content"
-                      type="textarea"
-                      :autosize="{ minRows: 2 }"
-                    ></el-input>
-                  </el-form-item>
-                </el-form>
+                <v-textarea v-model="$props.table_element.content" label="内容" density="compact" hide-details />
               </div>
             </div>
           </div>
@@ -243,14 +217,12 @@ function get_replacements_data(element: TableElement) {
               v-model="$props.table_element.show_name"
               density="compact"
               hide-details
-              :inline="true"
               label="显示名称"
             />
             <v-switch
               v-model="$props.table_element.show_awaken"
               density="compact"
               hide-details
-              :inline="true"
               label="显示觉醒"
             />
           </div>
@@ -378,7 +350,7 @@ function get_replacements_data(element: TableElement) {
             <v-btn icon="mdi-menu-left" @click="$emit('move_pre')"/>
             <v-btn icon="mdi-menu-right" @click="$emit('move_next')"/>
             <v-btn icon="mdi-plus" @click="$emit('insert_pre')"/>
-            <v-btn icon="mdi-delete" @confirm="$emit('delete')" color="red" />
+            <v-btn icon="mdi-delete" @click="$emit('delete')" color="red" />
           </v-btn-group>
         </div>
       </div>
