@@ -312,9 +312,13 @@ function get_replacements_data(element: TableElement) {
             hide-details
             density="compact"
           />
-          <v-radio-group density="compact" :inline="true">
-            <v-radio label="角色" value="Unit"/>
-            <v-radio label="武器" value="Armament"/>
+          <v-radio-group
+            v-model="$props.table_element.object_type"
+            density="compact"
+            :inline="true"
+          >
+            <v-radio label="角色" value="Unit" />
+            <v-radio label="武器" value="Armament" />
           </v-radio-group>
           <v-text-field label="ID" v-model="$props.table_element.object_id" />
         </template>
