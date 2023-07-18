@@ -66,27 +66,25 @@ function get_replacements_data(element: TableElement) {
     "
   >
     <v-card
-      style="
-        width: 99.5%;
-        margin: 0.25%;
-        /*background-color: var(--sub-background-color); !*rgba(0 127 255 / 0.1)*!*/
-      "
+      style="width: 99.5%; margin: 0.25%"
       :style="{
-        'background-color':
-          $props.table_element instanceof TableElementRow
-            ? 'var(--sub-background-color)'
-            : 'var(--sub-color)'
+        background: $props.table_element instanceof TableElementRow ? '#fff' : '#ddd'
       }"
-      body-style="padding: 0;"
+      class="elevation-6"
+      body-style="padding: 0"
     >
-      <el-form style="padding: 4px" label-width="50px" label-position="left">
-        <el-form-item label="类型" style="margin-bottom: 0">
-          <el-select v-model="$props.table_element.type" @change="$emit('refresh')">
-            <el-option v-for="c in ['Row', 'SubTitle']" :key="c" :value="c"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <el-divider style="margin: 4px" />
+      <v-card-item>
+        <v-select
+          v-model="$props.table_element.type"
+          :items="['Row', 'SubTitle']"
+          density="compact"
+          hide-details
+          style="max-width: 360px"
+          label="类型"
+          @update:model-value="$emit('refresh')"
+        />
+      </v-card-item>
+      <v-divider style="margin: 4px" />
       <div
         v-if="$props.table_element instanceof TableElementRow"
         style="display: flex; flex-direction: row; flex-wrap: wrap"
@@ -101,14 +99,14 @@ function get_replacements_data(element: TableElement) {
           @insert_pre="$props.table_element.insert_textarea(index)"
           @delete="$props.table_element.delete(index)"
         />
-        <el-button
-          round
-          type="primary"
+        <v-btn
           @click="$props.table_element.insert_textarea($props.table_element.elements.length)"
           style="width: 49.5%; margin: 4px"
+          rounded
+          color="blue"
         >
           ➕添加组件
-        </el-button>
+        </v-btn>
       </div>
       <div style="margin: 4px" v-else>
         <el-form label-width="50px" size="small" label-position="left">
@@ -149,6 +147,7 @@ function get_replacements_data(element: TableElement) {
   <template v-else>
     <v-card
       class="table-component-card"
+      style="background: #eee"
       :class="$props.table_element.full_row ? ['full'] : undefined"
       body-style="padding: 8px;"
     >
@@ -183,17 +182,33 @@ function get_replacements_data(element: TableElement) {
         <template v-else-if="$props.table_element instanceof TableElementPartyUnion">
           <div style="display: flex; flex-direction: column">
             <div>
-              <v-text-field label="标签" v-model="$props.table_element.label" density="compact"/>
-              <v-text-field label="标题" v-model="$props.table_element.title" density="compact"/>
+              <v-text-field label="标签" v-model="$props.table_element.label" density="compact" />
+              <v-text-field label="标题" v-model="$props.table_element.title" density="compact" />
             </div>
             <div style="display: flex">
               <div style="width: 49%; margin: 0 1% 0 0">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, 160px)">
-                  <v-switch label="显示名称" density="compact" hide-details v-model="$props.table_element.show_name" />
-                  <v-switch label="显示觉醒" density="compact" hide-details v-model="$props.table_element.show_awaken" />
+                  <v-switch
+                    label="显示名称"
+                    density="compact"
+                    hide-details
+                    v-model="$props.table_element.show_name"
+                  />
+                  <v-switch
+                    label="显示觉醒"
+                    density="compact"
+                    hide-details
+                    v-model="$props.table_element.show_awaken"
+                  />
                 </div>
                 <v-card>
-                  <v-textarea label="队伍" style="font-family: Consolas, serif" v-model="$props.table_element.party_data" variant="solo-filled" hide-details />
+
+                  <v-textarea
+                    v-model="$props.table_element.party_data"
+                    hide-details
+                    label="队伍"
+                    style="font-family: Consolas, serif; background: rgb(54, 54, 54); color: white"
+                  />
                   <div style="display: flex; justify-content: center">
                     <PartyCardEliya
                       :party="$props.table_element.party"
@@ -206,7 +221,12 @@ function get_replacements_data(element: TableElement) {
                 </v-card>
               </div>
               <div style="width: 49%; margin: 0 0 0 1%">
-                <v-textarea v-model="$props.table_element.content" label="内容" density="compact" hide-details />
+                <v-textarea
+                  v-model="$props.table_element.content"
+                  label="内容"
+                  density="compact"
+                  hide-details
+                />
               </div>
             </div>
           </div>
@@ -238,15 +258,12 @@ function get_replacements_data(element: TableElement) {
             hide-details
             v-model="$props.table_element.subtitle"
           ></v-text-field>
-          <el-form label-width="50px" size="small" label-position="left">
-            <v-textarea
-              v-model="$props.table_element.party_data"
-              hide-details
-              label="队伍"
-              style="font-family: Consolas, serif; background: rgb(54, 54, 54); color: white"
-              :autosize="{ minRows: 2, maxRows: 6 }"
-            ></v-textarea>
-          </el-form>
+          <v-textarea
+            v-model="$props.table_element.party_data"
+            hide-details
+            label="队伍"
+            style="font-family: Consolas, serif; background: rgb(54, 54, 54); color: white"
+          />
           <div style="display: flex; justify-content: center">
             <PartyCardEliya
               :party="$props.table_element.party"
@@ -298,14 +315,6 @@ function get_replacements_data(element: TableElement) {
             </el-form-item>
           </el-form>
         </template>
-        <template v-else-if="$props.table_element.type === 'EventCard'">
-          <el-form label-width="50px" size="small" label-position="left">
-            <el-form-item label="事件ID">
-              <el-input></el-input>
-              <el-select></el-select>
-            </el-form-item>
-          </el-form>
-        </template>
         <template v-else-if="$props.table_element instanceof TableElementWikiCard">
           <el-form label-width="50px" size="small" label-position="left">
             <el-form-item label="Lite">
@@ -322,34 +331,15 @@ function get_replacements_data(element: TableElement) {
             </el-form-item>
           </el-form>
         </template>
-        <template v-else-if="$props.table_element.type === 'ObjectMap'">
-          <el-form label-width="50px" size="small" label-position="left">
-            <el-form-item label="属性">
-              <el-select></el-select>
-            </el-form-item>
-            <el-form-item label="属性">
-              <el-switch></el-switch>
-            </el-form-item>
-            <el-form-item label="类型">
-              <el-radio-group>
-                <el-radio label="Unit">角色</el-radio>
-                <el-radio label="Armament">武器</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="ID List">
-              <el-input type="textarea" :autosize="{ minRows: 2 }"></el-input>
-            </el-form-item>
-          </el-form>
-        </template>
       </div>
       <v-divider style="margin: 4px" />
       <div style="display: flex; margin: 4px; justify-content: space-between">
         <div />
         <div>
           <v-btn-group color="blue" variant="tonal" density="compact">
-            <v-btn icon="mdi-menu-left" @click="$emit('move_pre')"/>
-            <v-btn icon="mdi-menu-right" @click="$emit('move_next')"/>
-            <v-btn icon="mdi-plus" @click="$emit('insert_pre')"/>
+            <v-btn icon="mdi-menu-left" @click="$emit('move_pre')" />
+            <v-btn icon="mdi-menu-right" @click="$emit('move_next')" />
+            <v-btn icon="mdi-plus" @click="$emit('insert_pre')" />
             <v-btn icon="mdi-delete" @click="$emit('delete')" color="red" />
           </v-btn-group>
         </div>
