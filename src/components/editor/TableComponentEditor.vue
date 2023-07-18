@@ -13,7 +13,6 @@ import {
   TableElementTextArea
 } from '@/stores/table'
 import PartyCardEliya from '@/components/party/PartyCardEliya.vue'
-import { ArrowLeft, ArrowRight, DeleteFilled, Plus } from '@element-plus/icons-vue'
 
 defineEmits<{
   refresh: any
@@ -66,7 +65,7 @@ function get_replacements_data(element: TableElement) {
     "
   >
     <v-card
-      style="width: 99.5%; margin: 0.25%"
+      style="width: 99.5%; margin: 1% 0.25%; border: 1px black solid"
       :style="{
         background: $props.table_element instanceof TableElementRow ? '#fff' : '#ddd'
       }"
@@ -268,25 +267,26 @@ function get_replacements_data(element: TableElement) {
           </div>
         </template>
         <template v-else-if="$props.table_element instanceof TableElementParty">
-          <el-form label-width="50px" size="small" inline label-position="left">
-            <el-form-item label-width="60px" label="显示名称">
-              <el-switch v-model="$props.table_element.show_name"></el-switch>
-            </el-form-item>
-            <el-form-item label-width="60px" label="显示觉醒">
-              <el-switch v-model="$props.table_element.show_awaken"></el-switch>
-            </el-form-item>
-          </el-form>
-          <el-form label-width="50px" size="small" label-position="left">
-            <el-form-item label="队伍">
-              <el-input
-                v-model="$props.table_element.party_data"
-                style="font-family: Consolas, serif"
-                input-style="background: rgba(0 0 0 / 0.5); color: white"
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 6 }"
-              ></el-input>
-            </el-form-item>
-          </el-form>
+          <div style="display: flex">
+            <v-switch
+              v-model="$props.table_element.show_name"
+              density="compact"
+              hide-details
+              label="显示名称"
+            />
+            <v-switch
+              v-model="$props.table_element.show_awaken"
+              density="compact"
+              hide-details
+              label="显示觉醒"
+            />
+          </div>
+          <v-textarea
+            v-model="$props.table_element.party_data"
+            hide-details
+            label="队伍"
+            style="font-family: Consolas, serif; background: rgb(54, 54, 54); color: white"
+          />
           <div style="display: flex; justify-content: center">
             <PartyCardEliya
               :party="$props.table_element.party"
