@@ -21,6 +21,10 @@ import { ElMessage } from 'element-plus'
 import { sum } from 'lodash-es'
 import EmptyPicOrigin from '@/components/objects/EmptyPicOrigin.vue'
 import GameTag from '@/components/party/GameTag.vue'
+import { useWorldflipperDataStore } from '@/stores/worldflipper'
+import type { Character } from '@/anise/worldflipper/object'
+import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
+import CalculatorPanel from '@/views/calculator/CalculatorPanel.vue'
 
 const user = useUserStore()
 
@@ -34,7 +38,7 @@ const selected_position = ref<{
   position: undefined
 })
 
-const showed_list = ref<Array<Unit | Armament | undefined>>(
+const showed_list = ref<Array<Character | Unit | Armament | undefined>>(
   new Array<Unit | Armament | undefined>()
 )
 const filter_default = {
@@ -147,10 +151,11 @@ const url_formats = [
   /(https:\/\/)?tieba\.baidu\.com\/p\/\S+(?=\/\?)?/,
   /(https:\/\/)?www\.gamer\.cn\/sjtswy\/article\/\S+(?=\/\?)?/
 ]
-
+const worldflipper = useWorldflipperDataStore()
 function update_show_list() {
   if (selected_type.value === 'Unit') {
-    showed_list.value = Array.from(manager.unit_data)
+    // showed_list.value = Array.from(manager.unit_data)
+    showed_list.value = Array.from(worldflipper.characters)
       .map((item) => item[1])
       .filter((u) => list_filter(u))
   } else if (selected_type.value === 'Armament') {
@@ -244,7 +249,7 @@ function select_party(union: string, position: number) {
   }
 }
 
-function select_object(obj: Unit | Armament | null) {
+function select_object(obj: Character | Unit | Armament | null) {
   if (selected_position.value.union != undefined && selected_position.value.position != undefined) {
     if (
       party.value.party.set_by_position(
@@ -542,7 +547,7 @@ function get_skill_weight(union: Union) {
                 <div>{{ '技能条长' }} {{ get_skill_weight(party.party.union(i)) }}</div>
                 <div>
                   <div
-                      class="elevation-3"
+                    class="elevation-3"
                     style="
                       background-color: deepskyblue;
                       height: 16px;
@@ -733,6 +738,7 @@ function get_skill_weight(union: Union) {
         </v-window-item>
       </v-window>
     </div>
+
     <v-btn
       :icon="hidden_menu ? 'mdi-arrow-collapse-up' : 'mdi-arrow-collapse-down'"
       color="blue"
@@ -742,6 +748,7 @@ function get_skill_weight(union: Union) {
       @click="hidden_menu = !hidden_menu"
     >
     </v-btn>
+
     <div
       style="position: fixed; left: 16px; z-index: 5; transition: bottom 0.3s ease"
       :style="{
@@ -776,6 +783,11 @@ function get_skill_weight(union: Union) {
         </v-btn>
       </v-btn-group>
     </div>
+    <CalculatorPanel
+      style="position: fixed; bottom: 0; height: 50%; width: 100%; border-radius: 12px 12px 0 0"
+      :characters="worldflipper.characters"
+      v-model="selected_obj"
+    />
     <div
       style="
         display: flex;
@@ -825,6 +837,16 @@ function get_skill_weight(union: Union) {
               v-for="element in showed_list.filter((x) => x instanceof Unit)"
               :key="element"
             >
+              <CharacterIcon
+                v-ripple
+                v-if="element instanceof Character"
+                class="wfo"
+                :class="selected_obj === element ? ['selected'] : []"
+                :style="{ '--element-color': ele2color[element.element] }"
+                @click="select_object(element)"
+                :unit="element"
+                :size="90"
+              />
               <UnitPicOrigin
                 v-ripple
                 v-if="element instanceof Unit"
