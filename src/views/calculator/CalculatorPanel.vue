@@ -65,6 +65,7 @@ function isSelected(obj: Character | Equipment | null | undefined) {
     <v-expansion-panels>
       <v-expansion-panel>
         <v-expansion-panel-title ripple>
+          <v-icon icon="mdi-filter"/>
           筛选条件
         </v-expansion-panel-title>
         <v-expansion-panel-text>

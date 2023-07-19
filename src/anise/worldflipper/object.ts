@@ -198,8 +198,14 @@ export class Equipment extends GameObject {
   constructor(
     public id: string,
     resource_id: string,
+    public names: string[],
     public rarity: number,
-    public element: Element
+    public element: Element,
+    public status_data: string,
+    public abilities: string[],
+    public description: string,
+    public obtain: string,
+    public tags: string[],
   ) {
     super(resource_id)
   }
