@@ -2,9 +2,11 @@
 import { Armament, Unit } from '@/stores/manager'
 import UnitWikiCard from '@/components/card/UnitWikiCard.vue'
 import ArmamentWikiCard from '@/components/card/ArmamentWikiCard.vue'
+import CharacterWikiCard from '@/components/worldflipper/character/CharacterWikiCard.vue'
+import { Character } from '@/anise/worldflipper/object'
 
 defineProps<{
-  obj: Unit | Armament | undefined
+  obj: Unit | Armament | Character | undefined
 }>()
 </script>
 
@@ -23,7 +25,17 @@ defineProps<{
         v-else-if="obj instanceof Armament"
         :armament="obj"
       />
-      <div style="text-align: center; width: 100%" v-else>选择一个角色 / 装备</div>
+
+      <CharacterWikiCard
+        style="width: 100%; border-radius: 0"
+        class="wiki-card"
+        v-else-if="obj instanceof Character"
+        :character="obj"
+      />
+      <div style="text-align: center; width: 100%" v-else>
+        选择一个角色 / 装备
+        {{ obj }}
+      </div>
     </div>
   </div>
 </template>

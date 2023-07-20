@@ -1,0 +1,75 @@
+[
+  {
+    "time": "2023-07-09T16:00:00.000Z",
+    "time_legacy": null,
+    "description": "[icon:new]凉宫春日的跳跃\n　\n[icon:desc_fire]有利 降临讨伐",
+    "quest": { "id": "advent_event/advent_scollab_event_banner", "table_id": "event_suzumiya" }
+  },
+  {
+    "time": "2023-08-08T16:00:00.000Z",
+    "time_legacy": "2021-10-11T16:00:00.000Z",
+    "description": "[icon:new]土俑嘉年华\n　\n[icon:desc_dark]有利 竞分活动",
+    "quest": { "id": "haniwa_carnival/haniwa_carnival_03", "table_id": "" }
+  },
+  {
+    "time": "2023-07-25T16:00:00.000Z",
+    "time_legacy": "2021-10-11T16:00:00.000Z",
+    "description": "为你奏响的镇魂歌\n　\n[icon:desc_dark]有利 降临讨伐",
+    "quest": { "id": "advent_event/event_advent_hw20", "table_id": "" }
+  },
+  {
+    "time": "2023-08-08T16:00:00.000Z",
+    "time_legacy": "2021-11-10T16:00:00.000Z",
+    "description": "祈愿吧，光之继承者们。\n　\n[icon:desc_light]有利 剧情活动",
+    "quest": { "id": "world_story_event/anv_story_01/prequel", "table_id": "" }
+  },
+  {
+    "time": "2023-08-16T16:00:00.000Z",
+    "time_legacy": "2021-11-10T16:00:00.000Z",
+    "description": "[icon:new]赤之女王\n　\n[icon:desc_water]有利 领主特选",
+    "quest": { "id": "boss_battle_31_empress_01", "table_id": "" }
+  },
+  {
+    "time_legacy": "2021-11-26T16:00:00.000Z",
+    "description": "[icon:new]前进吧，暗之梦旅人们。\n　\n[icon:desc_dark]有利 剧情活动",
+    "quest": { "id": "world_story_event/anv2/anv2", "table_id": "" }
+  },
+  {
+    "time_legacy": "2021-11-26T16:00:00.000Z",
+    "description": "[icon:new]战阵之宴",
+    "quest": { "id": "raid_event/raid_event_banner_01_001", "table_id": "" }
+  },
+  {
+    "time_legacy": "2021-12-16T16:00:00.000Z",
+    "description": "[icon:new]聖夜の暴れん坊\n　\n[icon:desc_fire]有利 降临讨伐",
+    "quest": { "id": "advent_event/event_advent_xm21", "table_id": "" }
+  },
+  {
+    "time_legacy": "2021-12-16T16:00:00.000Z",
+    "description": "[icon:new]土俑嘉年华\n　\n[icon:desc_thunder]有利 竞分活动",
+    "quest": { "id": "haniwa_carnival/haniwa_carnival_04", "table_id": "" }
+  },
+  {
+    "time_legacy": "2021-12-30T16:00:00.000Z",
+    "description": "赤之女王\n　\n[icon:desc_water]有利 领主特选",
+    "quest": { "id": "boss_battle_31_empress_01", "table_id": "" }
+  },
+  {
+    "time_legacy": "2022-01-10T16:00:00.000Z",
+    "description": "共誓黎明\n　\n[icon:desc_water]有利 剧情活动",
+    "quest": { "id": "world_story_event/desert_bonds_01/prequel", "table_id": "event_gslm" }
+  },
+  {
+    "time_legacy": "2022-01-15T16:00:00.000Z",
+    "description": "异界漂泊谭\n　\n[icon:desc_water]有利 降临讨伐",
+    "quest": { "id": "advent_event/advent_Rcollab_event_banner", "table_id": "" }
+  },
+  {
+    "time_legacy": "2022-01-23T16:00:00.000Z",
+    "description": "摇曳的迷宫 崩坏域\n深渊之兽\n[highlight]常驻化[end]",
+    "quest": {
+      "id": "challenge_dungeon_event/challenge_dungeon_banner_campaign_01",
+      "table_id": "abs"
+    }
+  }
+]

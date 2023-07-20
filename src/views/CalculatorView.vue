@@ -20,16 +20,16 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import { sum } from 'lodash-es'
 import EmptyPicOrigin from '@/components/objects/EmptyPicOrigin.vue'
-import GameTag from '@/components/party/GameTag.vue'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
-import type { Character } from '@/anise/worldflipper/object'
+import { Character, Equipment } from '@/anise/worldflipper/object'
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
 import CalculatorPanel from '@/views/calculator/CalculatorPanel.vue'
 
 const user = useUserStore()
 
-const selected_obj: Ref<Unit | Armament | null | undefined> = ref(undefined)
-const memo_obj: Ref<Unit | Armament | null | undefined> = ref(undefined)
+type WorldflipperObject = Unit | Armament | Character | Equipment | null | undefined
+const selected_obj = ref<WorldflipperObject>(undefined)
+const memo_obj = ref<WorldflipperObject>(undefined)
 const selected_position = ref<{
   union: string | undefined
   position: number | undefined
@@ -41,6 +41,7 @@ const selected_position = ref<{
 const showed_list = ref<Array<Character | Unit | Armament | undefined>>(
   new Array<Unit | Armament | undefined>()
 )
+
 const filter_default = {
   text: '',
   element: [-1, 0, 1, 2, 3, 4, 5],
@@ -784,8 +785,16 @@ function get_skill_weight(union: Union) {
       </v-btn-group>
     </div>
     <CalculatorPanel
-      style="position: fixed; bottom: 0; height: 50%; width: 100%; border-radius: 12px 12px 0 0"
+      style="
+        position: fixed;
+        z-index: 10;
+        bottom: 0;
+        height: 50%;
+        width: 100%;
+        border-radius: 12px 12px 0 0;
+      "
       :characters="worldflipper.characters"
+      :equipments="worldflipper.equipments"
       v-model="selected_obj"
     />
     <div

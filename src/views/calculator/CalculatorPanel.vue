@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
-import { Character, Equipment } from '@/anise/worldflipper/object'
-import { ref } from 'vue'
+import { Character, Element, Equipment, SpecialityType } from '@/anise/worldflipper/object'
+import { reactive, ref } from 'vue'
 import { ele2color } from '@/stores/manager'
+import EquipmentIcon from '@/components/worldflipper/equipment/EquipmentIcon.vue'
 
 const props = defineProps<{
   characters: Map<string, Character>
+  equipments: Map<string, Equipment>
   modelValue: Character | Equipment | null | undefined
 }>()
 
 const emit = defineEmits(['update:modelValue'])
 const inputValue = ref(props.modelValue)
+
+const characters = ref(props.characters)
+const equipments = ref(props.equipments)
 
 const updateValue = (obj: Character | Equipment | null | undefined) => {
   inputValue.value = obj
@@ -20,6 +25,55 @@ const updateValue = (obj: Character | Equipment | null | undefined) => {
 function isSelected(obj: Character | Equipment | null | undefined) {
   return props.modelValue?.resource_id === obj?.resource_id
 }
+
+const type = ref<'Character' | 'Equipment'>('Character')
+
+class Filter {
+  text: string = ''
+  element: Set<Element> = new Set<Element>()
+  rarity: Set<number> = new Set<number>()
+  type: Set<SpecialityType> = new Set<SpecialityType>()
+  race: Array<string> = []
+
+  constructor() {
+    this.init()
+  }
+
+  init() {
+    this.text = ''
+    this.element = new Set([
+      Element.All,
+      Element.Fire,
+      Element.Water,
+      Element.Thunder,
+      Element.Wind,
+      Element.Light,
+      Element.Dark
+    ])
+    this.rarity = new Set([1, 2, 3, 4, 5])
+    this.type = new Set([
+      SpecialityType.Knight,
+      SpecialityType.Fighter,
+      SpecialityType.Ranged,
+      SpecialityType.Supporter,
+      SpecialityType.Special
+    ])
+    this.race = [
+      'Human',
+      'Beast',
+      'Mystery',
+      'Element',
+      'Dragon',
+      'Machine',
+      'Devil',
+      'Plants',
+      'Aquatic',
+      'Untead'
+    ]
+  }
+}
+
+const filter = reactive(new Filter())
 </script>
 
 <template>
@@ -36,8 +90,12 @@ function isSelected(obj: Character | Equipment | null | undefined) {
   >
     <div style="display: flex; justify-content: space-between">
       <div style="display: grid; grid-template-columns: repeat(2, auto); grid-gap: 8px">
-        <v-btn color="primary">角色</v-btn>
-        <v-btn>装备</v-btn>
+        <v-btn :color="type === 'Character' ? 'primary' : 'white'" @click="type = 'Character'">
+          角色
+        </v-btn>
+        <v-btn :color="type === 'Equipment' ? 'primary' : 'white'" @click="type = 'Equipment'">
+          装备
+        </v-btn>
       </div>
     </div>
     <div
@@ -50,22 +108,37 @@ function isSelected(obj: Character | Equipment | null | undefined) {
       "
       class="wfo-list"
     >
-      <CharacterIcon
-        v-ripple
-        class="wfo"
-        v-for="c in characters"
-        :class="isSelected(c[1]) ? ['selected'] : []"
-        :key="c[0]"
-        :character="c[1]"
-        :size="90"
-        :style="{ '--element-color': ele2color[c[1].element] }"
-        @click="isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])"
-      />
+      <template v-if="type === 'Character'">
+        <CharacterIcon
+          v-ripple
+          class="wfo"
+          v-for="c in characters"
+          :class="isSelected(c[1]) ? ['selected'] : []"
+          :key="c[0]"
+          :character="c[1]"
+          :size="90"
+          :style="{ '--element-color': ele2color[c[1].element] }"
+          @click="isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])"
+        />
+      </template>
+      <template v-if="type === 'Equipment'">
+        <EquipmentIcon
+          v-ripple
+          class="wfo"
+          v-for="e in equipments"
+          :class="isSelected(e[1]) ? ['selected'] : []"
+          :key="e[0]"
+          :equipment="e[1]"
+          :size="90"
+          :style="{ '--element-color': ele2color[e[1].element] }"
+          @click="isSelected(e[1]) ? updateValue(undefined) : updateValue(e[1])"
+        />
+      </template>
     </div>
     <v-expansion-panels>
       <v-expansion-panel>
         <v-expansion-panel-title ripple>
-          <v-icon icon="mdi-filter"/>
+          <v-icon icon="mdi-filter" />
           筛选条件
         </v-expansion-panel-title>
         <v-expansion-panel-text>

@@ -25,6 +25,11 @@ const router = createRouter({
       component: () => import('@/views/PartySearcherView.vue')
     },
     {
+      path: '/events',
+      name: 'events',
+      component: () => import('@/views/EventsView.vue')
+    },
+    {
       path: '/calendar',
       name: 'calendar',
       component: () => import('@/views/CalendarView.vue')

@@ -74,6 +74,13 @@ onMounted(() => {
             @click="$router.push('/calendar')"
           />
           <v-list-item
+            prepend-icon="mdi-calendar"
+            color="purple"
+            title="Events2"
+            value="calendar"
+            @click="$router.push('/events')"
+          />
+          <v-list-item
             prepend-icon="mdi-table"
             color="blue"
             title="一图流"
