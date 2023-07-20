@@ -147,7 +147,7 @@ onMounted(() => {
     </v-main>
     <img
       class="bg-magic-circle"
-      src="@/assets/bg_magic_circle.png"
+      src="../assets/bg_magic_circle.png"
       alt=""
       oncontextmenu="return false;"
       draggable="false"

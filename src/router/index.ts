@@ -110,16 +110,6 @@ const router = createRouter({
       component: () => import('@/views/LoginView.vue')
     },
     {
-      path: '/pure/test',
-      name: 'pure_test',
-      component: () => import('@/views/pure/TestView.vue')
-    },
-    {
-      path: '/pure/partySearcher',
-      name: 'pure_party_searcher',
-      component: () => import('@/views/pure/PartySearcherView.vue')
-    },
-    {
       path: '/card/unit',
       name: 'card_unit',
       component: () => import('@/views/card/UnitCardView.vue')
