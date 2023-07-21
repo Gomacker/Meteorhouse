@@ -15,23 +15,11 @@ import * as directives from 'vuetify/directives'
 import './assets/main.css'
 
 import App from '@/App.vue'
-// import App from '@/DefaultMode.vue'
-// import AppPure from '@/PureMode.vue'
-// import AppCard from '@/CardMode.vue'
 
 const vuetify = createVuetify({
   components,
   directives
 })
-
-// let currentApp
-
-// const cardRegex = /^\/card/
-// const pureRegex = /^\/pure/
-
-// if (cardRegex.test(location.pathname)) currentApp = AppCard
-// else if (pureRegex.test(location.pathname)) currentApp = AppPure
-// else currentApp = App
 
 const app = createApp(App)
 const pinia = createPinia()
