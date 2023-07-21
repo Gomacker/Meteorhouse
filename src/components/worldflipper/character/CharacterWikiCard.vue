@@ -41,7 +41,7 @@ const translated_type = computed(() => type2zh[props.character?.type])
 </script>
 
 <template>
-  <v-card
+  <div
     style="
       width: 960px;
       background: url(/static/worldflipper/ui/background_cut_official.png);
@@ -243,10 +243,9 @@ const translated_type = computed(() => type2zh[props.character?.type])
           </div>
           <div style="padding: 16px; font-size: 16px">获取方式：{{ character.obtain }}</div>
         </div>
-        {{ character }}
       </div>
     </div>
-  </v-card>
+  </div>
 </template>
 
 <style scoped>

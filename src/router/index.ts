@@ -17,7 +17,7 @@ const router = createRouter({
     {
       path: '/partyEditor',
       name: 'partyEditor',
-      component: () => import('@/views/CalculatorView.vue')
+      component: () => import('@/views/calculator/CalculatorView.vue')
     },
     {
       path: '/partySearcher',

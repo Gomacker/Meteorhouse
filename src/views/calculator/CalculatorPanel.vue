@@ -78,14 +78,13 @@ const filter = reactive(new Filter())
 
 <template>
   <v-card
-    :elevation="24"
+    :elevation="6"
     style="
       background: rgba(0 0 0 / 0.4);
       backdrop-filter: blur(2px);
       user-select: none;
       display: flex;
       flex-direction: column;
-      padding: 8px;
     "
   >
     <div style="display: flex; justify-content: space-between">
