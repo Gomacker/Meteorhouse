@@ -3,6 +3,9 @@ import { Character, Equipment } from '@/anise/worldflipper/object'
 import axios from 'axios'
 import { plainToInstance } from 'class-transformer'
 
+
+export type WorldflipperObject = Character | Equipment | null | undefined
+
 export const useWorldflipperDataStore = defineStore('worldflipperData', {
   state(): {
     version: string | undefined

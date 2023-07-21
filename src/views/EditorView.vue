@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; justify-content: center; align-items: center">
+  <div style="display: flex; justify-content: center; align-items: center; height: 100%">
     <div style="display: grid; grid-template-columns: repeat(4, auto)">
       <v-card class="editor-select active" @click="$router.push('/editor/character')">
         <p style="font-size: 28px; font-weight: 600">角色</p>

@@ -37,9 +37,10 @@ onMounted(() => {
       color="green-lighten-4"
       location="top"
       style="top: 72px"
+      close-on-content-click
     >
       <v-icon icon="mdi-check-circle-outline" color="green" />
-      已更新数据到最新：worldflipper
+      已更新数据：worldflipper
     </v-snackbar>
     <v-navigation-drawer width="200" v-model="sidebar_hidden" temporary="">
       <div style="display: flex; flex-direction: column; height: 100%">

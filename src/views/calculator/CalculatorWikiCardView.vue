@@ -30,7 +30,7 @@ defineProps<{
         style="width: 100%; border-radius: 0"
         class="wiki-card"
         v-else-if="obj instanceof Character"
-        :character="obj"
+        :obj="obj"
       />
       <div style="text-align: center; width: 100%" v-else>
         选择一个角色 / 装备

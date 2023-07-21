@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import CalculatorPanel from '@/views/calculator/CalculatorPanel.vue'
-import { useWorldflipperDataStore } from '@/stores/worldflipper'
+import { useWorldflipperDataStore, WorldflipperObject } from '@/stores/worldflipper'
 import { ref, watch } from 'vue'
 import { Character, Equipment } from '@/anise/worldflipper/object'
 import CharacterWikiCard from '@/components/worldflipper/character/CharacterWikiCard.vue'
 import EquipmentIcon from '@/components/worldflipper/equipment/EquipmentIcon.vue'
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
+import CalculatorModuleNotAvailable from '@/views/calculator/modules/CalculatorModuleNotAvailable.vue'
+import CalculatorModuleWikiCard from '@/views/calculator/modules/CalculatorModuleWikiCard.vue'
 
 const worldflipper = useWorldflipperDataStore()
-type WorldflipperObject = Character | Equipment | null | undefined
+
 type EditorModule = 'Calculator' | 'WikiCard' | 'Editor' | 'Upload' | 'Resource'
 const selected_module = ref<EditorModule>('WikiCard')
 const selected_object = ref<WorldflipperObject>(undefined)
@@ -31,26 +33,21 @@ const panel_closed = ref<boolean>(false)
         <v-tab value="Resources">资源站</v-tab>
       </v-tabs>
       <v-window style="height: 100%" v-model="selected_module">
-        <v-window-item value="Calculator">Calculator</v-window-item>
-        <v-window-item value="WikiCard" style="height: 100%">
-          <div style="overflow-y: auto; height: 100%">
-            <div style="display: flex; min-height: 100%">
-              <CharacterWikiCard
-                v-if="memory_object instanceof Character"
-                :character="memory_object"
-                style="width: 100%"
-              />
-              <EquipmentIcon
-                v-else-if="memory_object instanceof Equipment"
-                :equipment="memory_object"
-                style="width: 100%"
-              />
-            </div>
-          </div>
+        <v-window-item value="Calculator">
+          <CalculatorModuleNotAvailable />
         </v-window-item>
-        <v-window-item value="Editor">Editor</v-window-item>
-        <v-window-item value="Upload">Upload</v-window-item>
-        <v-window-item value="Resources">Resources</v-window-item>
+        <v-window-item value="WikiCard" style="height: 100%">
+          <CalculatorModuleWikiCard :obj="memory_object" />
+        </v-window-item>
+        <v-window-item value="Editor">
+          <CalculatorModuleNotAvailable />
+        </v-window-item>
+        <v-window-item value="Upload">
+          <CalculatorModuleNotAvailable />
+        </v-window-item>
+        <v-window-item value="Resources">
+          <CalculatorModuleNotAvailable />
+        </v-window-item>
       </v-window>
     </div>
     <v-btn
@@ -93,6 +90,7 @@ const panel_closed = ref<boolean>(false)
   height: 0;
   padding: 0 8px;
 }
+/*
 @media (max-width: 1080px) {
   .panel {
     position: fixed;
@@ -103,9 +101,6 @@ const panel_closed = ref<boolean>(false)
     width: 25%;
     z-index: 10;
   }
-  .panel.closed {
-    width: 0;
-    padding: 8px 0;
-  }
 }
+*/
 </style>
