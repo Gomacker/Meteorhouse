@@ -3,7 +3,7 @@ import {Equipment, Element} from "@/anise/worldflipper/object";
 import { computed } from "vue";
 
 const props = defineProps({
-  equipment: Equipment,
+  obj: Equipment,
   size: {
     type: Number,
     default: 240,
@@ -16,15 +16,15 @@ const frame_width = computed(() => (props.size * 14) / 240)
 // const element_size = computed(() => (props.size * 44) / 240)
 const background_size = computed(() => props.size - frame_width.value * 2)
 
-const url = computed(() => `/static/${props.equipment?.__type_id}/${props.equipment?.resource_id}.png`)
+const url = computed(() => `/static/${props.obj?.__type_id}/${props.obj?.resource_id}.png`)
 
 </script>
 
 <template>
   <div
-      v-if="props.equipment instanceof Equipment"
+      v-if="props.obj instanceof Equipment"
       style="display: inline-block; width: fit-content; vertical-align: bottom"
-      :title="`${props.equipment.id}: ${props.equipment.resource_id}`"
+      :title="`${props.obj.id}: ${props.obj.resource_id}`"
   >
     <svg
         style="display: block"
@@ -34,7 +34,7 @@ const url = computed(() => `/static/${props.equipment?.__type_id}/${props.equipm
     >
       <g>
         <image
-            v-if="props.equipment.resource_id"
+            v-if="props.obj.resource_id"
             :href="url"
             id="pic"
             style="image-rendering: pixelated"
@@ -52,8 +52,8 @@ const url = computed(() => `/static/${props.equipment?.__type_id}/${props.equipm
             x="0"
         />
         <image
-            v-if="props.equipment.rarity"
-            :href="`/static/worldflipper/ui/star_in_frame/star${props.equipment.rarity}inf.png`"
+            v-if="props.obj.rarity"
+            :href="`/static/worldflipper/ui/star_in_frame/star${props.obj.rarity}inf.png`"
             id="star"
             :height="props.size"
             :width="props.size"

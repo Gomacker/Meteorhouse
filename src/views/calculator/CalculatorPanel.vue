@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
-import { Character, Element, Equipment, SpecialityType } from '@/anise/worldflipper/object'
-import { reactive, ref } from 'vue'
-import { ele2color } from '@/stores/manager'
-import EquipmentIcon from '@/components/worldflipper/equipment/EquipmentIcon.vue'
+import CharacterIcon from "@/components/worldflipper/character/CharacterIcon.vue";
+import { Character, Element, Equipment, SpecialityType } from "@/anise/worldflipper/object";
+import { reactive, ref } from "vue";
+import { ele2color } from "@/stores/manager";
+import EquipmentIcon from "@/components/worldflipper/equipment/EquipmentIcon.vue";
+import type { WorldflipperObject } from "@/stores/worldflipper";
 
 const props = defineProps<{
   characters: Map<string, Character>
@@ -16,6 +17,9 @@ const inputValue = ref(props.modelValue)
 
 const characters = ref(props.characters)
 const equipments = ref(props.equipments)
+
+// console.log(Object.fromEntries(characters.value.entries()));
+// console.log(characters.value);
 
 const updateValue = (obj: Character | Equipment | null | undefined) => {
   inputValue.value = obj
@@ -71,6 +75,32 @@ class Filter {
       'Untead'
     ]
   }
+
+  filter(object: WorldflipperObject): boolean {
+    if (object instanceof Character) {
+      const text_filter = !this.text ||
+        object.leader_ability.name.includes(this.text) ||
+        object.leader_ability.description.includes(this.text) ||
+        object.skill.name.includes(this.text) ||
+        object.skill.description.includes(this.text) ||
+        (object.abilities[0] && object.abilities[0].includes(this.text)) ||
+        (object.abilities[1] && object.abilities[1].includes(this.text)) ||
+        (object.abilities[2] && object.abilities[2].includes(this.text)) ||
+        (object.abilities[3] && object.abilities[3].includes(this.text)) ||
+        (object.abilities[4] && object.abilities[4].includes(this.text)) ||
+        (object.abilities[5] && object.abilities[5].includes(this.text)) ||
+        object.description.includes(this.text) ||
+        object.obtain.includes(this.text)
+      return text_filter
+    } else
+    if (object instanceof Equipment) {
+      return true
+    }else return false
+  }
+
+  sort(obj1: WorldflipperObject, obj2: WorldflipperObject): number {
+    return obj1 && obj2 ? obj2.rarity - obj1.rarity : 0
+  }
 }
 
 const filter = reactive(new Filter())
@@ -87,6 +117,8 @@ const filter = reactive(new Filter())
       flex-direction: column;
     "
   >
+    <div>
+    </div>
     <div style="display: flex; justify-content: space-between">
       <div style="display: grid; grid-template-columns: repeat(2, auto); grid-gap: 8px">
         <v-btn :color="type === 'Character' ? 'primary' : 'white'" @click="type = 'Character'">
@@ -100,7 +132,8 @@ const filter = reactive(new Filter())
     <div
       style="
         display: grid;
-        grid-template-columns: repeat(auto-fit, 98px);
+        grid-template-columns: repeat(auto-fit, 90px);
+        grid-template-rows: repeat(auto-fit, 90px);
         justify-content: center;
         overflow-y: scroll;
         border-radius: 4px;
@@ -111,11 +144,11 @@ const filter = reactive(new Filter())
         <CharacterIcon
           v-ripple
           class="wfo"
-          v-for="c in characters"
+          v-for="c in [...characters.entries()].filter(value => filter.filter(value[1])).sort((a, b) => filter.sort(a[1], b[1]))"
           :class="isSelected(c[1]) ? ['selected'] : []"
           :key="c[0]"
           :obj="c[1]"
-          :size="90"
+          :size="82"
           :style="{ '--element-color': ele2color[c[1].element] }"
           @click="isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])"
         />
@@ -124,11 +157,11 @@ const filter = reactive(new Filter())
         <EquipmentIcon
           v-ripple
           class="wfo"
-          v-for="e in equipments"
+          v-for="e in [...equipments.entries()].filter(value => filter.filter(value[1])).sort((a, b) => filter.sort(a[1], b[1]))"
           :class="isSelected(e[1]) ? ['selected'] : []"
           :key="e[0]"
-          :equipment="e[1]"
-          :size="90"
+          :obj="e[1]"
+          :size="82"
           :style="{ '--element-color': ele2color[e[1].element] }"
           @click="isSelected(e[1]) ? updateValue(undefined) : updateValue(e[1])"
         />
@@ -141,6 +174,7 @@ const filter = reactive(new Filter())
           筛选条件
         </v-expansion-panel-title>
         <v-expansion-panel-text>
+          <v-text-field label="搜索" v-model="filter.text" density="compact"/>
           <v-btn>aa</v-btn>
         </v-expansion-panel-text>
       </v-expansion-panel>

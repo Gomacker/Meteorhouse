@@ -227,11 +227,11 @@ const translated_type = computed(() => type2zh[props.obj?.type])
               </div>
               <div v-if="obj.abilities[4]" class="span-ability">
                 <div style="color: rgb(47, 195, 183); font-size: 20px">❺</div>
-                <div style="margin: 0 8px; opacity: 0.55" v-html="obj.abilities[4]" />
+                <div style="margin: 0 8px; opacity: 0.55" v-html="format_content(obj.abilities[4])" />
               </div>
               <div v-if="obj.abilities[5]" class="span-ability">
                 <div style="color: rgb(47, 195, 183); font-size: 20px">❻</div>
-                <div style="margin: 0 8px; opacity: 0.55" v-html="obj.abilities[5]" />
+                <div style="margin: 0 8px; opacity: 0.55" v-html="format_content(obj.abilities[5])" />
               </div>
             </div>
           </div>
