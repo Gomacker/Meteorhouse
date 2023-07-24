@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import CharacterIcon from "@/components/worldflipper/character/CharacterIcon.vue";
-import { Character, Element, Equipment, SpecialityType } from "@/anise/worldflipper/object";
-import { reactive, ref } from "vue";
-import { ele2color } from "@/stores/manager";
-import EquipmentIcon from "@/components/worldflipper/equipment/EquipmentIcon.vue";
-import type { WorldflipperObject } from "@/stores/worldflipper";
+import EmptyIcon from '@/components/worldflipper/EmptyIcon.vue'
+import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
+import EquipmentIcon from '@/components/worldflipper/equipment/EquipmentIcon.vue'
+import { Character, Element, Equipment, SpecialityType } from '@/anise/worldflipper/object'
+import { reactive, ref } from 'vue'
+import { ele2color } from '@/stores/manager'
+import type { WorldflipperObject } from '@/stores/worldflipper'
 
 const props = defineProps<{
   characters: Map<string, Character>
@@ -27,25 +28,19 @@ const updateValue = (obj: Character | Equipment | null | undefined) => {
 }
 
 function isSelected(obj: Character | Equipment | null | undefined) {
-  return props.modelValue?.resource_id === obj?.resource_id
+  return props.modelValue === obj
 }
 
 const type = ref<'Character' | 'Equipment'>('Character')
 
 class Filter {
   text: string = ''
-  element: Set<Element> = new Set<Element>()
-  rarity: Set<number> = new Set<number>()
-  type: Set<SpecialityType> = new Set<SpecialityType>()
+  element: Array<Element> = []
+  rarity: Array<number> = []
+  type: Array<SpecialityType> = []
   race: Array<string> = []
-
-  constructor() {
-    this.init()
-  }
-
-  init() {
-    this.text = ''
-    this.element = new Set([
+  defaults = {
+    element: () => [
       Element.All,
       Element.Fire,
       Element.Water,
@@ -53,16 +48,16 @@ class Filter {
       Element.Wind,
       Element.Light,
       Element.Dark
-    ])
-    this.rarity = new Set([1, 2, 3, 4, 5])
-    this.type = new Set([
+    ],
+    rarity: () => [1, 2, 3, 4, 5],
+    type: () => [
       SpecialityType.Knight,
       SpecialityType.Fighter,
       SpecialityType.Ranged,
       SpecialityType.Supporter,
       SpecialityType.Special
-    ])
-    this.race = [
+    ],
+    race: () => [
       'Human',
       'Beast',
       'Mystery',
@@ -76,9 +71,22 @@ class Filter {
     ]
   }
 
+  constructor() {
+    this.init()
+  }
+
+  init() {
+    this.text = ''
+    this.element = this.defaults.element()
+    this.rarity = this.defaults.rarity()
+    this.type = this.defaults.type()
+    this.race = this.defaults.race()
+  }
+
   filter(object: WorldflipperObject): boolean {
     if (object instanceof Character) {
-      const text_filter = !this.text ||
+      const text_filter =
+        !this.text ||
         object.leader_ability.name.includes(this.text) ||
         object.leader_ability.description.includes(this.text) ||
         object.skill.name.includes(this.text) ||
@@ -91,11 +99,14 @@ class Filter {
         (object.abilities[5] && object.abilities[5].includes(this.text)) ||
         object.description.includes(this.text) ||
         object.obtain.includes(this.text)
-      return text_filter
-    } else
-    if (object instanceof Equipment) {
-      return true
-    }else return false
+      const element_filter = this.element.indexOf(object.element) > -1
+      const race_filter = object.race.split(',').some((val) => this.race.includes(val))
+      return [text_filter, element_filter, race_filter].every((value) => value)
+    } else if (object instanceof Equipment) {
+      const text_filter = true
+      const element_filter = this.element.indexOf(object.element) > -1
+      return [text_filter, element_filter].every(value => value)
+    } else return false
   }
 
   sort(obj1: WorldflipperObject, obj2: WorldflipperObject): number {
@@ -117,8 +128,7 @@ const filter = reactive(new Filter())
       flex-direction: column;
     "
   >
-    <div>
-    </div>
+    <div></div>
     <div style="display: flex; justify-content: space-between">
       <div style="display: grid; grid-template-columns: repeat(2, auto); grid-gap: 8px">
         <v-btn :color="type === 'Character' ? 'primary' : 'white'" @click="type = 'Character'">
@@ -140,11 +150,21 @@ const filter = reactive(new Filter())
       "
       class="wfo-list"
     >
+      <EmptyIcon
+        v-ripple
+        class="wfo"
+        :class="isSelected(null) ? ['selected'] : []"
+        :size="82"
+        :style="{ '--element-color': ele2color[Element.All] }"
+        @click="isSelected(null) ? updateValue(undefined) : updateValue(null)"
+      />
       <template v-if="type === 'Character'">
         <CharacterIcon
           v-ripple
           class="wfo"
-          v-for="c in [...characters.entries()].filter(value => filter.filter(value[1])).sort((a, b) => filter.sort(a[1], b[1]))"
+          v-for="c in [...characters.entries()]
+            .filter((value) => filter.filter(value[1]))
+            .sort((a, b) => filter.sort(a[1], b[1]))"
           :class="isSelected(c[1]) ? ['selected'] : []"
           :key="c[0]"
           :obj="c[1]"
@@ -157,7 +177,9 @@ const filter = reactive(new Filter())
         <EquipmentIcon
           v-ripple
           class="wfo"
-          v-for="e in [...equipments.entries()].filter(value => filter.filter(value[1])).sort((a, b) => filter.sort(a[1], b[1]))"
+          v-for="e in [...equipments.entries()]
+            .filter((value) => filter.filter(value[1]))
+            .sort((a, b) => filter.sort(a[1], b[1]))"
           :class="isSelected(e[1]) ? ['selected'] : []"
           :key="e[0]"
           :obj="e[1]"
@@ -174,8 +196,49 @@ const filter = reactive(new Filter())
           筛选条件
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <v-text-field label="搜索" v-model="filter.text" density="compact"/>
-          <v-btn>aa</v-btn>
+          <v-text-field label="搜索" v-model="filter.text" density="compact" />
+          <div style="margin: 4px">
+            <span style="margin: 4px; display: inline-block; width: 50px">属性</span>
+            <v-btn
+              size="small"
+              @click="
+                () => {
+                  if (filter.element.length === filter.defaults.element().length)
+                    filter.element = []
+                  else filter.element = filter.defaults.element()
+                }
+              "
+            >
+              {{ filter.element.length !== filter.defaults.element().length ? '全部' : '清空' }}
+            </v-btn>
+            <v-btn-toggle
+              color="light-blue-accent-1"
+              v-model="filter.element"
+              multiple=""
+              style="margin-left: 8px; height: 28px"
+            >
+              <v-btn
+                v-for="(ele, id_) in {
+                  [Element.All]: 'none',
+                  [Element.Fire]: 'fire',
+                  [Element.Water]: 'water',
+                  [Element.Thunder]: 'thunder',
+                  [Element.Wind]: 'wind',
+                  [Element.Light]: 'light',
+                  [Element.Dark]: 'dark'
+                }"
+                size="small"
+                :key="id_"
+                :value="parseInt(String(id_))"
+              >
+                <img
+                  style="width: 16px; height: 16px; filter: drop-shadow(0 0 2px rgba(0 0 0 / 0.6))"
+                  :src="`/static/worldflipper/icon/${ele}.png`"
+                  alt=""
+                />
+              </v-btn>
+            </v-btn-toggle>
+          </div>
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
