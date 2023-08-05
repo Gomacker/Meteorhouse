@@ -9,7 +9,10 @@ defineProps<{
 
 <template>
   <div>
-
+    <v-card>
+      {{ obj }}
+      <v-img v-if="obj" :src="`/static/${obj.__type_id}/full/base/${obj.resource_id}.png`"/>
+    </v-card>
   </div>
 </template>
 

@@ -8,6 +8,7 @@ import EquipmentIcon from '@/components/worldflipper/equipment/EquipmentIcon.vue
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
 import CalculatorModuleNotAvailable from '@/views/calculator/modules/CalculatorModuleNotAvailable.vue'
 import CalculatorModuleWikiCard from '@/views/calculator/modules/CalculatorModuleWikiCard.vue'
+import CalculatorModuleResource from "@/views/calculator/modules/CalculatorModuleResource.vue";
 
 const worldflipper = useWorldflipperDataStore()
 
@@ -46,7 +47,7 @@ const panel_closed = ref<boolean>(false)
           <CalculatorModuleNotAvailable />
         </v-window-item>
         <v-window-item value="Resources">
-          <CalculatorModuleNotAvailable />
+          <CalculatorModuleResource :obj="memory_object" />
         </v-window-item>
       </v-window>
     </div>

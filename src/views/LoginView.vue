@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
@@ -26,27 +25,35 @@ function login() {
     .then((r) => {
       console.log(r.data)
       if (r.data['result'] === 'success') {
-        ElMessage.success('成功')
+        // ElMessage.success('成功')
         const user = useUserStore()
         if (user.token) {
           user.login(r.data['username'], user.token)
         }
         router.push('/')
       } else {
-        ElMessage.error('失败')
+        // ElMessage.error('失败')
       }
     })
     .catch(() => {
-      ElMessage.error('失败(失败)')
+      // ElMessage.error('失败(失败)')
     })
 }
 </script>
 <template>
-  <div style="display: flex; flex-direction: column; justify-content: center; align-items: center">
-    <v-card elevation="12">
-      {{ user.token }}
-    </v-card>
-    <v-card elevation="12" min-width="320px">
+  <div
+    style="
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    "
+  >
+    <v-card elevation="12" min-width="360px">
+      <v-card-text style="font-size: 20px; font-weight: 600; background: #afafaf">
+        Login
+      </v-card-text>
       <v-card-text>
         <v-form>
           <v-text-field

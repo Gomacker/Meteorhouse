@@ -18,7 +18,7 @@
         <p>0 个一图流</p>
       </v-card>
       <v-card class="editor-select"> 账号绑定</v-card>
-      <v-card class="editor-select active" @click="$router.push('/editor/request')"> 审核 </v-card>
+      <v-card class="editor-select"> 审核 </v-card>
       <v-card class="editor-select active" @click="$router.push('/editor/nickname')">
         <p style="font-size: 28px; font-weight: 600">昵称表</p>
         <p>0 个昵称表</p>

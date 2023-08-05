@@ -15,8 +15,9 @@
       </p>
       <p>Meteorhouse Version：<span style="color: coral">v1.0-pre6</span></p>
       <p>
-        Author：@Kranca / Gomacker
+        Author：
         <a href="https://space.bilibili.com/11466987" target="_blank">
+          @Kranca / Gomacker
           <img
             style="width: 16px; vertical-align: middle"
             src="https://www.bilibili.com/favicon.ico"
@@ -25,8 +26,9 @@
         </a>
       </p>
       <p>
-        攻略发布：@芙洛斯Official
+        攻略发布：
         <a href="https://space.bilibili.com/229627861" target="_blank">
+          @芙洛斯Official
           <img
             style="width: 16px; vertical-align: middle"
             src="https://www.bilibili.com/favicon.ico"
@@ -35,8 +37,9 @@
         </a>
       </p>
       <p>
-        问题反馈：烤肠社芙芙屋
+        问题反馈：
         <a href="https://jq.qq.com/?_wv=1027&amp;k=3rmVdxmZ" target="_blank">
+          烤肠社芙芙屋
           <img
             style="width: 16px; vertical-align: middle"
             src="https://im.qq.com/favicon.ico"
@@ -72,22 +75,37 @@
         <p>@真帆</p>
       </div>
     </v-card>
-    <div>
-      <p><a target="_blank" href="https://kook.top/HEVjfY">Kook频道</a></p>
-      <p><a target="_blank" href="https://github.com/Gomacker/Anisebot">Anisebot</a></p>
-      <iframe
-        v-if="true"
-        src="https://afdian.net/leaflet?slug=Gomacker"
-        width="320"
-        scrolling="no"
-        height="200"
-        style="
-          border: none;
-          border-radius: 16px;
-          margin: 4px;
-          box-shadow: 0 0 16px rgba(0, 0, 0, 0.4);
-        "
-      />
+    <div style="display: grid; grid-gap: 8px; grid-template-columns: repeat(4, 130px)">
+      <v-card v-ripple style="border-radius: 8px; background: white" :elevation="4">
+        <a
+          style="display: flex; align-items: center; padding: 8px"
+          target="_blank"
+          href="https://kook.top/HEVjfY"
+        >
+          <img style="width: 32px; height: 32px" src="https://www.kookapp.cn/favicon.ico" alt="" />
+          <span style="margin-left: 8px">Kook频道</span>
+        </a>
+      </v-card>
+      <v-card v-ripple style="border-radius: 8px; background: white" :elevation="4">
+        <a
+          style="display: flex; align-items: center; padding: 8px"
+          target="_blank"
+          href="https://github.com/Gomacker/Anisebot"
+        >
+          <img style="width: 32px; height: 32px" src="https://www.github.com/favicon.ico" alt="" />
+          <span style="margin-left: 8px">Anisebot</span>
+        </a>
+      </v-card>
+      <v-card v-ripple style="border-radius: 8px; background: white" :elevation="4">
+        <a
+          style="display: flex; align-items: center; padding: 8px"
+          target="_blank"
+          href="https://afdian.net/a/Gomacker"
+        >
+          <img style="width: 32px; height: 32px" src="https://afdian.net/favicon.ico" alt="" />
+          <span style="margin-left: 8px">爱发电</span>
+        </a>
+      </v-card>
     </div>
     <div style="display: flex; justify-content: space-evenly">
       <div>

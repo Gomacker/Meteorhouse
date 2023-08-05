@@ -26,11 +26,11 @@ export const useWorldflipperDataStore = defineStore('worldflipperData', {
       return false
     },
     async check_update() {
-      const rsp = await axios.post('/api/v2/data_version/')
+      const rsp = await axios.post('/api/v2/worldflipper/version')
       return rsp.status == 200 && rsp.data['version'] === this.version
     },
     async update() {
-      const rsp = await axios.post('/api/v2/data/')
+      const rsp = await axios.post('/api/v2/worldflipper/data')
       if (rsp.status == 200) {
         this.__characters = rsp.data['character']
         this.__equipments = rsp.data['equipment']

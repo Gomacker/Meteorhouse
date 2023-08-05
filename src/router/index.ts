@@ -55,24 +55,9 @@ const router = createRouter({
       component: () => import('@/views/EditorView.vue')
     },
     {
-      path: '/editor/character',
-      name: 'character_editor',
-      component: () => import('@/views/editor/CharacterEditorView.vue')
-    },
-    {
-      path: '/editor/equipment',
-      name: 'equipment_editor',
-      component: () => import('@/views/editor/EquipmentEditorView.vue')
-    },
-    {
       path: '/editor/table',
       name: 'table_editor',
       component: () => import('@/views/editor/TableEditorView.vue')
-    },
-    {
-      path: '/editor/request',
-      name: 'request_editor',
-      component: () => import('@/views/editor/RequestEditorView.vue')
     },
     {
       path: '/editor/nickname',

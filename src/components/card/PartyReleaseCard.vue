@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { PartyRelease } from '@/stores/manager'
 import PartyCard from '@/components/party/PartyCardEliya.vue'
-import ClipboardA from 'clipboard'
-import { ElMessage } from 'element-plus'
+import Clipboard from 'clipboard'
 import { ref } from 'vue'
 
 const props = defineProps({
@@ -24,19 +23,20 @@ const props = defineProps({
 })
 
 function copy_release_id(id_: string) {
-  const cb = new ClipboardA('#copy-id-' + id_)
-  cb.on('success', () => {
-    ElMessage.success('复制成功')
-    cb.destroy()
-  })
+  const cb = new Clipboard('#copy-id-' + id_)
+  // cb.on('success', () => {
+  //   ElMessage.success('复制成功')
+  //   cb.destroy()
+  // })
 }
 
 function copy_party(id_: string) {
-  const cb = new ClipboardA('#copy-' + id_)
-  cb.on('success', () => {
-    ElMessage.success('复制成功')
-    cb.destroy()
-  })
+  const cb = new Clipboard('#copy-' + id_)
+
+  // cb.on('success', () => {
+  //   ElMessage.success('复制成功')
+  //   cb.destroy()
+  // })
 }
 
 const show_dialog = ref(false)

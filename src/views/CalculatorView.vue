@@ -18,7 +18,6 @@ import CalculatorWikiCardView from '@/views/calculator/CalculatorWikiCardView.vu
 import { useUserStore } from '@/stores/user'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { sum } from 'lodash-es'
 import EmptyPicOrigin from '@/components/objects/EmptyPicOrigin.vue'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import { Character, Equipment } from '@/anise/worldflipper/object'

@@ -28,7 +28,7 @@ const router = useRouter()
       height: 100%;
     "
   >
-<!--    <CharacterWikiCard style="width: 100%" :character="worldflipper.characters.get('111021')" />-->
+    <!--    <CharacterWikiCard style="width: 100%" :character="worldflipper.characters.get('111021')" />-->
     <div
       style="
         display: grid;

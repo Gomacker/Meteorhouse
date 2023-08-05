@@ -3,8 +3,6 @@ import { createPinia } from 'pinia'
 import piniaPersist from 'pinia-plugin-persist'
 
 import router from './router'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
 
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
@@ -26,7 +24,6 @@ const pinia = createPinia()
 pinia.use(piniaPersist)
 app.use(pinia)
 app.use(router)
-app.use(ElementPlus)
 app.use(vuetify)
 
 app.mount('#app')

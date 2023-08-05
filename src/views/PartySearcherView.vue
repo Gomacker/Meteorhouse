@@ -109,9 +109,6 @@ onMounted(() => {
               <PartyReleaseCard style="margin: 4px" :party_release="PartyRelease.loads(party[1])" />
             </template>
           </template>
-          <template v-else>
-            <el-empty />
-          </template>
         </div>
       </div>
     </v-card>
