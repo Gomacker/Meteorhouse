@@ -28,14 +28,13 @@ const router = useRouter()
       height: 100%;
     "
   >
-    <!--    <CharacterWikiCard style="width: 100%" :character="worldflipper.characters.get('111021')" />-->
     <div
       style="
         display: grid;
         grid-template-columns: repeat(auto-fit, 180px);
         justify-content: center;
         margin: 8px;
-        grid-gap: 2%;
+        grid-gap: 16px;
       "
     >
       <v-card elevation="6" @click="router.push('/partyEditor')" class="main-page-button">
@@ -52,12 +51,12 @@ const router = useRouter()
       </v-card>
       <a href="https://github.com/Gomacker/Anisebot" target="_blank">
         <v-card v-ripple elevation="6" class="main-page-button">
-          <p style="font-size: 18px">开源Bot</p>
+          <p style="font-size: 18px">Bot</p>
           <p><v-icon size="42" icon="mdi-github" /></p>
         </v-card>
       </a>
     </div>
-    <v-expansion-panels v-if="false" v-model="show_mainpage">
+    <v-expansion-panels v-model="show_mainpage">
       <v-expansion-panel title=" ">
         <v-expansion-panel-text>
           <div
@@ -91,7 +90,6 @@ const router = useRouter()
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
-    <PartySearcherView v-if="false"></PartySearcherView>
   </div>
 </template>
 

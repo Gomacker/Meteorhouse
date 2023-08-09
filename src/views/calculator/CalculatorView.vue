@@ -2,13 +2,9 @@
 import CalculatorPanel from '@/views/calculator/CalculatorPanel.vue'
 import { useWorldflipperDataStore, WorldflipperObject } from '@/stores/worldflipper'
 import { ref, watch } from 'vue'
-import { Character, Equipment } from '@/anise/worldflipper/object'
-import CharacterWikiCard from '@/components/worldflipper/character/CharacterWikiCard.vue'
-import EquipmentIcon from '@/components/worldflipper/equipment/EquipmentIcon.vue'
-import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
 import CalculatorModuleNotAvailable from '@/views/calculator/modules/CalculatorModuleNotAvailable.vue'
 import CalculatorModuleWikiCard from '@/views/calculator/modules/CalculatorModuleWikiCard.vue'
-import CalculatorModuleResource from "@/views/calculator/modules/CalculatorModuleResource.vue";
+import CalculatorModuleResource from '@/views/calculator/modules/CalculatorModuleResource.vue'
 
 const worldflipper = useWorldflipperDataStore()
 
@@ -27,11 +23,14 @@ const panel_closed = ref<boolean>(false)
   <div style="height: 100%; width: 100%; overflow-y: hidden">
     <div style="display: flex; flex-direction: column; height: 100%">
       <v-tabs v-model="selected_module" bg-color="blue-lighten-1" align-tabs="center">
-        <v-tab value="Calculator">计算器</v-tab>
-        <v-tab value="WikiCard">资料卡</v-tab>
-        <v-tab value="Editor">编队</v-tab>
-        <v-tab value="Upload" @click="panel_closed = true">上传器</v-tab>
-        <v-tab value="Resources">资源站</v-tab>
+        <v-tab value="Calculator"><v-icon icon="mdi-calculator" />计算</v-tab>
+        <v-tab value="WikiCard"><v-icon icon="mdi-card-account-details" />资料</v-tab>
+        <v-tab value="Editor"><v-icon icon="mdi-table-edit" />编队</v-tab>
+        <v-tab value="Upload" @click="panel_closed = true">
+          <v-icon icon="mdi-upload" />
+          上传
+        </v-tab>
+        <v-tab value="Resources"><v-icon icon="mdi-package-variant-closed" />资源</v-tab>
       </v-tabs>
       <v-window style="height: 100%" v-model="selected_module">
         <v-window-item value="Calculator">
@@ -46,7 +45,7 @@ const panel_closed = ref<boolean>(false)
         <v-window-item value="Upload">
           <CalculatorModuleNotAvailable />
         </v-window-item>
-        <v-window-item value="Resources">
+        <v-window-item value="Resources" style="height: 100%">
           <CalculatorModuleResource :obj="memory_object" />
         </v-window-item>
       </v-window>
