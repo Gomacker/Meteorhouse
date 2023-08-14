@@ -105,7 +105,7 @@ class Filter {
     } else if (object instanceof Equipment) {
       const text_filter = true
       const element_filter = this.element.indexOf(object.element) > -1
-      return [text_filter, element_filter].every(value => value)
+      return [text_filter, element_filter].every((value) => value)
     } else return false
   }
 
@@ -126,9 +126,9 @@ const filter = reactive(new Filter())
       user-select: none;
       display: flex;
       flex-direction: column;
+      align-items: center;
     "
   >
-    <div></div>
     <div style="display: flex; justify-content: space-between">
       <div style="display: grid; grid-template-columns: repeat(2, auto); grid-gap: 8px">
         <v-btn :color="type === 'Character' ? 'primary' : 'white'" @click="type = 'Character'">
@@ -142,6 +142,8 @@ const filter = reactive(new Filter())
     <div
       style="
         display: grid;
+        max-width: 1280px;
+        width: 100%;
         grid-template-columns: repeat(auto-fit, 90px);
         grid-template-rows: repeat(auto-fit, 90px);
         justify-content: center;
@@ -261,7 +263,7 @@ const filter = reactive(new Filter())
 .wfo:hover {
   z-index: 1;
   filter: drop-shadow(0 0 16px var(--element-color));
-  scale: 1.025;
+  scale: 1.1;
 }
 
 .wfo.selected {

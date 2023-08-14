@@ -108,6 +108,11 @@ onMounted(() => {
           <v-spacer />
           <v-divider />
           <v-list>
+            <v-list-item>
+              <v-textarea :model-value="user.token" hide-details />
+            </v-list-item>
+          </v-list>
+          <v-list>
             <v-list-item> 已登录 {{ user.username }} </v-list-item>
           </v-list>
         </template>

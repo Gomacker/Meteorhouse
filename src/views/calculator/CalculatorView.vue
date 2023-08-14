@@ -5,11 +5,12 @@ import { ref, watch } from 'vue'
 import CalculatorModuleNotAvailable from '@/views/calculator/modules/CalculatorModuleNotAvailable.vue'
 import CalculatorModuleWikiCard from '@/views/calculator/modules/CalculatorModuleWikiCard.vue'
 import CalculatorModuleResource from '@/views/calculator/modules/CalculatorModuleResource.vue'
+import CalculatorModuleParty from "@/views/calculator/modules/CalculatorModuleParty.vue";
 
 const worldflipper = useWorldflipperDataStore()
 
 type EditorModule = 'Calculator' | 'WikiCard' | 'Editor' | 'Upload' | 'Resource'
-const selected_module = ref<EditorModule>('WikiCard')
+const selected_module = ref<EditorModule>('Editor')
 const selected_object = ref<WorldflipperObject>(undefined)
 const memory_object = ref<WorldflipperObject>(undefined)
 watch(selected_object, (value) => {
@@ -23,14 +24,26 @@ const panel_closed = ref<boolean>(false)
   <div style="height: 100%; width: 100%; overflow-y: hidden">
     <div style="display: flex; flex-direction: column; height: 100%">
       <v-tabs v-model="selected_module" bg-color="blue-lighten-1" align-tabs="center">
-        <v-tab value="Calculator"><v-icon icon="mdi-calculator" />计算</v-tab>
-        <v-tab value="WikiCard"><v-icon icon="mdi-card-account-details" />资料</v-tab>
-        <v-tab value="Editor"><v-icon icon="mdi-table-edit" />编队</v-tab>
+        <v-tab value="Calculator">
+          <v-icon icon="mdi-calculator" />
+          计算
+        </v-tab>
+        <v-tab value="WikiCard">
+          <v-icon icon="mdi-card-account-details" />
+          资料
+        </v-tab>
+        <v-tab value="Editor">
+          <v-icon icon="mdi-table-edit" />
+          编队
+        </v-tab>
         <v-tab value="Upload" @click="panel_closed = true">
           <v-icon icon="mdi-upload" />
           上传
         </v-tab>
-        <v-tab value="Resources"><v-icon icon="mdi-package-variant-closed" />资源</v-tab>
+        <v-tab value="Resources">
+          <v-icon icon="mdi-package-variant-closed" />
+          资源
+        </v-tab>
       </v-tabs>
       <v-window style="height: 100%" v-model="selected_module">
         <v-window-item value="Calculator">
@@ -40,7 +53,7 @@ const panel_closed = ref<boolean>(false)
           <CalculatorModuleWikiCard :obj="memory_object" />
         </v-window-item>
         <v-window-item value="Editor">
-          <CalculatorModuleNotAvailable />
+          <CalculatorModuleParty />
         </v-window-item>
         <v-window-item value="Upload">
           <CalculatorModuleNotAvailable />

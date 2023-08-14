@@ -2,6 +2,7 @@
 import type { WorldflipperObject } from '@/stores/worldflipper'
 import { ele2color } from '@/stores/manager'
 import { computed } from 'vue'
+import { Element } from '@/anise/worldflipper/object'
 
 const props = defineProps<{
   obj?: WorldflipperObject
@@ -9,13 +10,16 @@ const props = defineProps<{
 const color = computed(() =>
   props.obj ? ele2color[props.obj?.element].alpha(0.8).hex() : ele2color[-1].hex()
 )
+const font_color = computed(() =>
+  props.obj?.element === Element.Light ? 'rgb(136,136,136)' : 'white'
+)
 </script>
 
 <template>
   <div
     style="
       display: grid;
-      grid-template-columns: repeat(2, minmax(256px, 512px));
+      grid-template-columns: repeat(2, 512px);
       grid-gap: 16px;
       align-content: center;
       justify-content: center;
@@ -24,13 +28,11 @@ const color = computed(() =>
       height: 100%;
     "
   >
-    <v-card style="width: 512px; height: 512px; border-radius: 8px">
+    <v-card class="resource-card">
       <v-toolbar density="compact" :color="color">
-        <v-toolbar-title class="title__">
-          觉醒前
-        </v-toolbar-title>
+        <v-toolbar-title class="title__" :style="{ color: font_color }"> 觉醒前 </v-toolbar-title>
         <v-toolbar-items style="color: white">
-          <v-btn icon="mdi-copliad"/>
+          <v-btn icon="mdi-copliad" />
         </v-toolbar-items>
       </v-toolbar>
       <v-img
@@ -39,11 +41,9 @@ const color = computed(() =>
         :src="`/static/${obj.__type_id}/full_resized/base/${obj.resource_id}.png`"
       />
     </v-card>
-    <v-card style="width: 512px; height: 512px; border-radius: 8px">
+    <v-card class="resource-card">
       <v-toolbar density="compact" :color="color">
-        <v-toolbar-title class="title__">
-          觉醒后
-        </v-toolbar-title>
+        <v-toolbar-title class="title__" :style="{ color: font_color }"> 觉醒后 </v-toolbar-title>
       </v-toolbar>
       <v-img
         v-if="obj"
@@ -51,11 +51,9 @@ const color = computed(() =>
         :src="`/static/${obj.__type_id}/full_resized/awakened/${obj.resource_id}.png`"
       />
     </v-card>
-    <v-card style="width: 512px; height: 512px; border-radius: 8px">
+    <v-card class="resource-card">
       <v-toolbar density="compact" :color="color">
-        <v-toolbar-title class="title__">
-          SPECIAL
-        </v-toolbar-title>
+        <v-toolbar-title class="title__" :style="{ color: font_color }"> SPECIAL </v-toolbar-title>
       </v-toolbar>
       <div
         style="
@@ -75,11 +73,9 @@ const color = computed(() =>
         />
       </div>
     </v-card>
-    <v-card style="width: 512px; height: 512px; border-radius: 8px">
+    <v-card class="resource-card">
       <v-toolbar density="compact" :color="color">
-        <v-toolbar-title class="title__">
-          WALK
-        </v-toolbar-title>
+        <v-toolbar-title class="title__" :style="{ color: font_color }"> WALK </v-toolbar-title>
       </v-toolbar>
       <div
         style="
@@ -111,5 +107,10 @@ const color = computed(() =>
 }
 .v-toolbar {
   transition: background-color 0.2s ease;
+}
+.resource-card {
+  width: 512px;
+  height: 512px;
+  border-radius: 8px;
 }
 </style>

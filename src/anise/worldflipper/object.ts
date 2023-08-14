@@ -110,6 +110,10 @@ export class Character extends GameObject {
     )
   }
 
+  res(res_group: string): string {
+    return `/static/${this.__type_id}/${res_group}/${this.resource_id}.png`
+  }
+
   get nature_max_level(): number {
     return Math.floor(Character.LEVEL_CAP[String(this.rarity)][0])
   }
@@ -205,66 +209,8 @@ export class Equipment extends GameObject {
     public abilities: string[],
     public description: string,
     public obtain: string,
-    public tags: string[],
+    public tags: string[]
   ) {
     super(resource_id)
   }
 }
-// class YourClass {
-//   rarity: number;
-//   LEVEL_CAP: Record<string, number[]> = {}; // you need to define it by yourself
-//   EVOLUTION_STATUS: Record<string, number[]> = {}; // you need to define it by yourself
-//
-//   get nature_max_level(): number {
-//     return Math.floor(this.LEVEL_CAP[String(this.rarity)][0]);
-//   }
-//
-//   get_cap_count(level: number): number {
-//     let nml = this.nature_max_level;
-//     return level <= nml ? 0 : Math.ceil((level - nml) / this.LEVEL_CAP[String(this.rarity)][2]);
-//   }
-//
-//   get cap_rate(): number {
-//     return this.LEVEL_CAP[String(this.rarity)][3] / 100.0;
-//   }
-//
-//   _calculate_status(start: number, end: number, level_start: number, level_end: number, level: number, evolution: number): number {
-//     let value = Math.ceil(start + ((end - start) / (level_end - level_start)) * (level - level_start));
-//     value = Math.ceil(value * (1 + (this.get_cap_count(level) * this.cap_rate)));
-//     value = value + Math.floor(evolution);
-//     return value;
-//   }
-//
-//   status_data(): Record<string, number[]> {
-//     // You need to implement this function
-//     return {};
-//   }
-//
-//   get_status(level: number): [number, number] {
-//     let status_data = this.status_data();
-//     let mhp = 0;
-//     let atk = 0;
-//     level = Math.max(0, Math.min(100, level));
-//
-//     if (level >= 80 && level <= 100) {
-//       let sd1 = status_data['80'].map(x => Math.floor(x));
-//       let sd2 = status_data['100'].map(x => Math.floor(x));
-//       mhp = this._calculate_status(sd1[0], sd2[0], 80, 100, level, Math.floor(this.EVOLUTION_STATUS[String(this.rarity)][1]));
-//       atk = this._calculate_status(sd1[1], sd2[1], 80, 100, level, Math.floor(this.EVOLUTION_STATUS[String(this.rarity)][0]));
-//     } else if (level >= 10 && level < 80) {
-//       let sd1 = status_data['10'].map(x => Math.floor(x));
-//       let sd2 = status_data['80'].map(x => Math.floor(x));
-//       let evolutionStatusRarity1 = level >= this.nature_max_level ? Math.floor(this.EVOLUTION_STATUS[String(this.rarity)][1]) : 0;
-//       let evolutionStatusRarity0 = level >= this.nature_max_level ? Math.floor(this.EVOLUTION_STATUS[String(this.rarity)][0]) : 0;
-//       mhp = this._calculate_status(sd1[0], sd2[0], 10, 80, level, evolutionStatusRarity1);
-//       atk = this._calculate_status(sd1[1], sd2[1], 10, 80, level, evolutionStatusRarity0);
-//     } else if (level >= 1 && level < 10) {
-//       let sd1 = status_data['1'].map(x => Math.floor(x));
-//       let sd2 = status_data['10'].map(x => Math.floor(x));
-//       mhp = this._calculate_status(sd1[0], sd2[0], 1, 10, level, 0);
-//       atk = this._calculate_status(sd1[1], sd2[1], 1, 10, level, 0);
-//     }
-//
-//     return [mhp, atk];
-//   }
-// }

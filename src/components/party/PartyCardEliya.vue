@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import {
-  Unit,
-  Armament,
-  PartyRelease,
-  PartyParamManaboard2,
-  Union,
-  PartyParam,
-  manager, ele_id2ele
-} from '@/stores/manager'
-import UnitLiteCard from '@/components/card/UnitLiteCard.vue'
+import type { PartyRelease } from "@/anise/worldflipper/party";
+import { Element } from "@/anise/worldflipper/object";
+import UnionComponent from "@/components/party/eliya/UnionComponent.vue";
+// import {
+//   Unit,
+//   Armament,
+//   PartyRelease,
+//   PartyParamManaboard2,
+//   PartyParam,
+//   manager, ele_id2ele
+// } from '@/stores/manager'
 
 const props = defineProps<{
   party: PartyRelease
@@ -24,18 +25,20 @@ const props = defineProps<{
 const replacement_size = 26
 const show_replacements = ref(false)
 
-function get_pic_url(obj: Unit | Armament | undefined, awakened_or_soul = false) {
-  return obj ? obj.pic_url(awakened_or_soul) : '/static/worldflipper/unit/blank.png'
-}
+// function get_pic_url(obj: WorldflipperObject, awakened_or_soul = false) {
+//   return obj ? obj.pic_url(awakened_or_soul) : '/static/worldflipper/unit/blank.png'
+// }
 </script>
 <template>
   <div
     class="party"
-    style="display: flex"
     @mouseenter="show_replacements = true"
     @mouseleave="show_replacements = false"
   >
-    <template v-if="props.party">
+    <UnionComponent v-model="$props.party.party.union1" is_leader />
+    <UnionComponent v-model="$props.party.party.union2" />
+    <UnionComponent v-model="$props.party.party.union3" />
+    <template v-if="false">
       <div class="union" :key="union" v-for="union in [1, 2, 3]">
         <div style="z-index: 6; filter: drop-shadow(0 0 2px black)" v-if="props.always_show_replacements || show_replacements">
           <div
@@ -131,7 +134,7 @@ function get_pic_url(obj: Unit | Armament | undefined, awakened_or_soul = false)
           class="wfo-slot main"
           :class="[
             props.party.party.union(union).main instanceof Unit
-              ? `ele-${ele_id2ele[props.party.party.union(union).main?.element]}`
+              ? `ele-${Element[props.party.party.union(union).main?.element]}`
               : ''
           ]"
         >
@@ -170,14 +173,14 @@ function get_pic_url(obj: Unit | Armament | undefined, awakened_or_soul = false)
           <div style="text-align: center">
             {{
               props.show_name
-                ? props.party.party.union(union).main instanceof Unit
+                ? props.party.party.union(union).main instanceof Character
                   ? props.party.party.union(union).main['name_zh']
                   : union === 1
+                    ? '队长'
+                    : '主要角色'
+                : union === 1
                   ? '队长'
                   : '主要角色'
-                : union === 1
-                ? '队长'
-                : '主要角色'
             }}
           </div>
         </div>
@@ -225,7 +228,7 @@ function get_pic_url(obj: Unit | Armament | undefined, awakened_or_soul = false)
                   const m =
                     props.party._params.get('manaboard2')[`union${union}unison`][
                       `manaboard${i + 3}`
-                    ]
+                      ]
                   return typeof m === 'number' ? m : '-'
                 })()
               }}

@@ -1,18 +1,9 @@
 <script setup lang="ts">
-import PartySearcherView from '@/views/PartySearcherView.vue'
-import { computed, ref } from 'vue'
-import { Character, Element, Equipment } from '@/anise/worldflipper/object'
-import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
-import EquipmentIcon from '@/components/worldflipper/equipment/EquipmentIcon.vue'
-import { manager } from '../stores/manager'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import CharacterWikiCard from '@/components/worldflipper/character/CharacterWikiCard.vue'
-import UnitWikiCard from '@/components/card/UnitWikiCard.vue'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 
 const show_mainpage = ref([0])
-const c = computed(() => Character.from_legacy(manager.unit_data.get(1)))
-const e = computed(() => new Equipment(1, 'item/equipment/general/chapter_1_orb'))
 
 const worldflipper = useWorldflipperDataStore()
 const router = useRouter()
@@ -56,7 +47,7 @@ const router = useRouter()
         </v-card>
       </a>
     </div>
-    <v-expansion-panels v-model="show_mainpage">
+    <v-expansion-panels v-if="false" v-model="show_mainpage">
       <v-expansion-panel title=" ">
         <v-expansion-panel-text>
           <div
