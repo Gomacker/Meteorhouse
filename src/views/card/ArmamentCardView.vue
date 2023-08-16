@@ -1,37 +1,35 @@
 <template>
-  <template v-if="typeof id_list.wf_id === 'number'">
-    <ArmamentWikiCard id="main-card" :armament="manager.armament_data.get(id_list.wf_id)" />
+  <template v-if="obj">
+    <EquipmentWikiCard id="main-card" :obj="obj" />
   </template>
   <template v-else> 缺少ID </template>
 </template>
 
 <script lang="ts">
-import ArmamentWikiCard from '@/components/card/ArmamentWikiCard.vue'
-import { manager } from '@/stores/manager'
 import { useRoute } from 'vue-router'
-import { reactive } from 'vue'
+import { ref } from "vue";
+import { useWorldflipperDataStore } from "@/stores/worldflipper";
+import EquipmentWikiCard from "@/components/worldflipper/equipment/EquipmentWikiCard.vue";
 
-let id_list: { wf_id: number | undefined } = reactive({
-  wf_id: undefined
-})
+let wf_id = ref<string | undefined>()
+const worldflipper = useWorldflipperDataStore()
 export default {
   name: 'ArmamentCardView',
   computed: {
-    manager() {
-      return manager
+    obj() {
+      return worldflipper.equipments.get(wf_id.value || '0')
     }
   },
   data() {
     return {
-      id_list: id_list
+      wf_id: wf_id
     }
   },
-  components: { ArmamentWikiCard },
+  components: { EquipmentWikiCard },
   mounted() {
     const route = useRoute()
-    id_list.wf_id =
-      typeof route.query['wf_id'] === 'string' ? parseInt(route.query['wf_id']) : undefined
-    console.log(id_list.wf_id)
+    wf_id.value = typeof route.query['wf_id'] === 'string' ? route.query['wf_id'] : undefined
+    console.log(wf_id)
   }
 }
 </script>

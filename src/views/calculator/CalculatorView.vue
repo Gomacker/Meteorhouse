@@ -1,23 +1,39 @@
 <script setup lang="ts">
 import CalculatorPanel from '@/views/calculator/CalculatorPanel.vue'
-import { useWorldflipperDataStore, WorldflipperObject } from '@/stores/worldflipper'
-import { ref, watch } from 'vue'
+import { useWorldflipperDataStore } from '@/stores/worldflipper'
+import type { WorldflipperObject } from '@/stores/worldflipper'
+import { reactive, ref, watch } from 'vue'
 import CalculatorModuleNotAvailable from '@/views/calculator/modules/CalculatorModuleNotAvailable.vue'
 import CalculatorModuleWikiCard from '@/views/calculator/modules/CalculatorModuleWikiCard.vue'
 import CalculatorModuleResource from '@/views/calculator/modules/CalculatorModuleResource.vue'
-import CalculatorModuleParty from "@/views/calculator/modules/CalculatorModuleParty.vue";
+import CalculatorModuleParty from '@/views/calculator/modules/CalculatorModuleParty.vue'
+import { Party, PartyEditor, PartyPosition, PartyRelease } from '@/anise/worldflipper/party'
 
 const worldflipper = useWorldflipperDataStore()
 
 type EditorModule = 'Calculator' | 'WikiCard' | 'Editor' | 'Upload' | 'Resource'
 const selected_module = ref<EditorModule>('Editor')
-const selected_object = ref<WorldflipperObject>(undefined)
+
 const memory_object = ref<WorldflipperObject>(undefined)
-watch(selected_object, (value) => {
-  if (value) memory_object.value = value
-})
 
 const panel_closed = ref<boolean>(false)
+
+const party = PartyRelease.load({
+  party: {
+    union1: [121003, 223013, 5020024, 4050019],
+    union2: [121007, 111021, 5090020, 5090020],
+    union3: [121004, 331011, 5060025, 5090020]
+  },
+  params: {}
+})
+
+const party_editor = reactive<PartyEditor>(new PartyEditor(party))
+
+watch(party_editor, (value) => {
+  if (value.selected_object instanceof PartyPosition && party)
+    memory_object.value = value.selected_object.get(party.party)
+  else if (value.selected_object) memory_object.value = value.selected_object as WorldflipperObject
+})
 </script>
 
 <template>
@@ -53,7 +69,10 @@ const panel_closed = ref<boolean>(false)
           <CalculatorModuleWikiCard :obj="memory_object" />
         </v-window-item>
         <v-window-item value="Editor">
-          <CalculatorModuleParty />
+          <CalculatorModuleParty
+            :party="party_editor.party as PartyRelease || PartyRelease.empty()"
+            :party_editor="party_editor instanceof PartyEditor ? party_editor : undefined"
+          />
         </v-window-item>
         <v-window-item value="Upload">
           <CalculatorModuleNotAvailable />
@@ -83,7 +102,8 @@ const panel_closed = ref<boolean>(false)
       :class="panel_closed ? ['closed'] : []"
       :characters="worldflipper.characters"
       :equipments="worldflipper.equipments"
-      v-model="selected_object"
+      v-model="party_editor"
+
     />
   </div>
 </template>
@@ -103,17 +123,4 @@ const panel_closed = ref<boolean>(false)
   height: 0;
   padding: 0 8px;
 }
-/*
-@media (max-width: 1080px) {
-  .panel {
-    position: fixed;
-    height: calc(100% - 64px);
-    right: 0;
-    bottom: 0;
-    min-width: 255px;
-    width: 25%;
-    z-index: 10;
-  }
-}
-*/
 </style>

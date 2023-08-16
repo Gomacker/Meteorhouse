@@ -6,29 +6,24 @@ import { Character, Element, Equipment, SpecialityType } from '@/anise/worldflip
 import { reactive, ref } from 'vue'
 import { ele2color } from '@/stores/manager'
 import type { WorldflipperObject } from '@/stores/worldflipper'
+import type { PartyEditor } from '@/anise/worldflipper/party'
 
 const props = defineProps<{
   characters: Map<string, Character>
   equipments: Map<string, Equipment>
-  modelValue: Character | Equipment | null | undefined
+  modelValue: PartyEditor
 }>()
-
-const emit = defineEmits(['update:modelValue'])
-const inputValue = ref(props.modelValue)
-
+defineEmits(['update:modelValue']);
 const characters = ref(props.characters)
 const equipments = ref(props.equipments)
 
-// console.log(Object.fromEntries(characters.value.entries()));
-// console.log(characters.value);
-
 const updateValue = (obj: Character | Equipment | null | undefined) => {
-  inputValue.value = obj
-  emit('update:modelValue', inputValue.value)
+  props.modelValue.select(obj)
 }
 
 function isSelected(obj: Character | Equipment | null | undefined) {
-  return props.modelValue === obj
+  // return props.modelValue === obj
+  return props.modelValue.selected_object === obj
 }
 
 const type = ref<'Character' | 'Equipment'>('Character')

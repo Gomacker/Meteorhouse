@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { PartyRelease } from '@/stores/manager'
+// import { PartyRelease } from '@/stores/manager'
 import PartyCard from '@/components/party/PartyCardEliya.vue'
 import Clipboard from 'clipboard'
 import { ref } from 'vue'
+import { PartyRelease } from "@/anise/worldflipper/party";
 
 const props = defineProps({
   party_release: {
@@ -73,7 +74,7 @@ const show_dialog = ref(false)
             @click="
               () => {
                 if (props.party_release instanceof PartyRelease) {
-                  copy_release_id(props.party_release.id)
+                  copy_release_id(props.party_release.id || '')
                 }
               }
             "
@@ -131,12 +132,12 @@ const show_dialog = ref(false)
             variant="flat"
             color="warning"
             size="small"
-            :data-clipboard-text="JSON.stringify(props.party_release?.data())"
+            :data-clipboard-text="JSON.stringify(props.party_release?.dump())"
             :id="'copy-' + props.party_release?.id"
             @click="
               () => {
                 if (props.party_release instanceof PartyRelease) {
-                  copy_party(props.party_release.id)
+                  copy_party(props.party_release.id || '')
                 }
               }
             "

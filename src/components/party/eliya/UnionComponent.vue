@@ -1,72 +1,100 @@
 <script setup lang="ts">
-import { Union } from '@/anise/worldflipper/party'
-import type { WorldflipperObject } from '@/stores/worldflipper'
+import { PartyEditor, PartyPosition, Union } from '@/anise/worldflipper/party'
 import { Character, Element } from '@/anise/worldflipper/object'
-import { useWorldflipperDataStore } from "@/stores/worldflipper";
+import { computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   modelValue: Union
-  selected_obj?: WorldflipperObject
   show_name?: boolean
+  show_awaken?: boolean
   is_leader?: boolean
+  union_index: number
+  party_editor?: PartyEditor
 }>()
-defineEmits(['update:modelValue'])
+const mainName = computed(() => {
+  if (props.show_name)
+    if (props.modelValue.main instanceof Character) return props.modelValue.main.names[0]
+  return props.is_leader ? '队长' : '主要角色'
+})
+const unisonName = computed(() => {
+  if (props.show_name)
+    if (props.modelValue.unison instanceof Character) return props.modelValue.unison.names[0]
+  return '辅助角色'
+})
 </script>
 
 <template>
   <div class="union">
     <div
+      v-ripple="!!party_editor"
       class="wfo-slot main"
       :class="[
-        modelValue.main
-          ? `ele-${Element[modelValue.main.element].toLowerCase()}`
-          : undefined
+        modelValue.main ? `ele-${Element[modelValue.main.element].toLowerCase()}` : undefined,
+        party_editor?.verifyPosition(union_index, 0) ? 'selected' : undefined
       ]"
-      @click="
-        () => {
-          const new_union = modelValue
-          const l = Array.from(useWorldflipperDataStore().characters.values())
-          const c = l[Math.floor(Math.random() * l.length)] as Character
-          new_union.main = c
-          $emit('update:modelValue', new_union)
-        }
-      "
+      @click="party_editor?.select(new PartyPosition(union_index, 0))"
     >
-      <v-img :src="modelValue.main ? modelValue.main.res('square212x/base') : '/static/worldflipper/unit/blank.png'" />
+      <v-img
+        :src="
+          modelValue.main
+            ? modelValue.main.res(show_awaken ? 'square212x/awakened' : 'square212x/base')
+            : '/static/worldflipper/unit/blank.png'
+        "
+        @dragstart.prevent
+      />
       <div style="text-align: center">
-        {{
-          (() => {
-            if (show_name) if (modelValue.main instanceof Character) return modelValue.main.names[0]
-            return is_leader ? '队长' : '主要角色'
-          })()
-        }}
+        {{ mainName }}
       </div>
     </div>
-    <div class="wfo-slot armament">
-      <v-img :src="'/static/worldflipper/unit/blank.png'" />
+    <div
+      v-ripple="!!party_editor"
+      class="wfo-slot armament"
+      :class="[party_editor?.verifyPosition(union_index, 2) ? 'selected' : undefined]"
+      @click="party_editor?.select(new PartyPosition(union_index, 2))"
+    >
+      <v-img
+        :src="
+          modelValue.equipment
+            ? modelValue.equipment.res('normal')
+            : '/static/worldflipper/unit/blank.png'
+        "
+        @dragstart.prevent
+      />
       <div style="text-align: center">装备</div>
     </div>
     <div
+      v-ripple="!!party_editor"
       class="wfo-slot unison"
       :class="[
-        modelValue.unison
-          ? `ele-${Element[modelValue.unison.element].toLowerCase()}`
-          : undefined
+        modelValue.unison ? `ele-${Element[modelValue.unison.element].toLowerCase()}` : undefined,
+        party_editor?.verifyPosition(union_index, 1) ? 'selected' : undefined
       ]"
+      @click="party_editor?.select(new PartyPosition(union_index, 1))"
     >
-      <v-img src="/static/worldflipper/unit/blank.png" />
+      <v-img
+        :src="
+          modelValue.unison
+            ? modelValue.unison.res(show_awaken ? 'square212x/awakened' : 'square212x/base')
+            : '/static/worldflipper/unit/blank.png'
+        "
+        @dragstart.prevent
+      />
       <div style="text-align: center">
-        {{
-          (() => {
-            if (show_name)
-              if (modelValue.unison instanceof Character) return modelValue.unison.names[0]
-            return '辅助角色'
-          })()
-        }}
+        {{ unisonName }}
       </div>
     </div>
-    <div class="wfo-slot core">
-      <v-img src="/static/worldflipper/unit/blank.png" />
+    <div
+      v-ripple="!!party_editor"
+      class="wfo-slot core"
+      :class="[
+        party_editor?.verifyPosition(union_index, 3) ? 'selected' : undefined
+      ]"
+      @click="party_editor?.select(new PartyPosition(union_index, 3))"
+    >
+      <v-img
+        :src="modelValue.core ? modelValue.core.res('soul') : '/static/worldflipper/unit/blank.png'"
+        @dragstart.prevent
+      />
       <div style="text-align: center">魂珠</div>
     </div>
   </div>
@@ -150,6 +178,11 @@ defineEmits(['update:modelValue'])
   //box-shadow: 0 0 2px black;
   /*cursor: pointer;*/
   cursor: auto;
+  transition: border 0.3s ease;
+}
+
+.wfo-slot.selected {
+  border: rgb(var(--v-theme-primary)) 3px solid;
 }
 
 .main {

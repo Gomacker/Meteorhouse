@@ -105,6 +105,14 @@ const router = createRouter({
       component: () => import('@/views/card/ArmamentCardView.vue')
     },
     {
+      path: '/card/character',
+      component: () => import('@/views/card/UnitCardView.vue')
+    },
+    {
+      path: '/card/equipment',
+      component: () => import('@/views/card/ArmamentCardView.vue')
+    },
+    {
       path: '/card/table',
       name: 'card_table',
       component: () => import('@/views/card/TableCardView.vue')

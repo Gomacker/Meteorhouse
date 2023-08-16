@@ -134,7 +134,7 @@ onMounted(() => {
           ),
           linear-gradient(120deg, rgba(132, 250, 176, 0.6) 0%, rgba(143, 211, 244, 0.6) 100%);
         background-blend-mode: overlay, normal;
-        backdrop-filter: blur(2px);
+        backdrop-filter: blur(5px);
       "
       :order="-1"
     >
@@ -151,33 +151,37 @@ onMounted(() => {
     <v-main>
       <router-view></router-view>
     </v-main>
-    <img
-      class="bg-magic-circle"
-      src="../assets/worldflipper/bg_magic_circle.png"
-      alt=""
-      oncontextmenu="return false;"
-      draggable="false"
-      style="z-index: -1"
-    />
+    <div class="bg-magic-circle-wrapper" oncontextmenu="return false;" style="z-index: -1">
+      <div class="bg-magic-circle" />
+    </div>
   </v-app>
 </template>
 
 <style scoped>
-.bg-magic-circle {
-  position: fixed;
+.bg-magic-circle-wrapper {
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 18%));
   z-index: 0;
-  animation: rotation 16s linear infinite;
-  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 6%));
-  user-select: none;
+  position: fixed;
   right: -400px;
-  bottom: -400px;
+  top: -291px;
+}
+.bg-magic-circle {
+  background: white;
+  --mask: url(../assets/worldflipper/bg_magic_circle.png);
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+
+  width: 992px;
+  height: 992px;
+  animation: rotation 16s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  user-select: none;
 }
 @keyframes rotation {
   0% {
-    transform: rotate(0deg);
+    transform: rotate(36deg);
   }
   100% {
-    transform: rotate(360deg);
+    transform: rotate(396deg);
   }
 }
 .fold-button {

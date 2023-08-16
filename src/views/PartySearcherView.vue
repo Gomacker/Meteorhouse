@@ -2,8 +2,9 @@
 import PartyReleaseCard from '@/components/card/PartyReleaseCard.vue'
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
-import { PartyRelease } from '@/stores/manager'
+// import { PartyRelease } from '@/stores/manager'
 import { useRoute } from 'vue-router'
+import { PartyRelease } from "@/anise/worldflipper/party";
 
 const page_party_list = ref(new Map())
 
@@ -54,11 +55,11 @@ onMounted(() => {
   const route = useRoute()
   const query = route.query
   console.log(query)
-  if (Object.hasOwn(query, 'q')) {
+  if (query.hasOwnProperty('q')) {
     search_content.value = String(query.q)
     search_content_applied.value = search_content.value
   }
-  if (Object.hasOwn(query, 'page')) {
+  if (query.hasOwnProperty('page')) {
     const page = parseInt(String(query.page))
     if (page) current_page.value = page
   }
@@ -105,8 +106,7 @@ onMounted(() => {
         <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: center; flex-wrap: wrap">
           <template v-if="page_party_list.size">
             <template v-for="party in page_party_list" :key="party[0]">
-<!--              <PartyReleaseCard @click="$router.push(`/pr/${party[0]}`)" style="margin: 4px" :party_release="PartyRelease.loads(party[1])" />-->
-              <PartyReleaseCard style="margin: 4px" :party_release="PartyRelease.loads(party[1])" />
+              <PartyReleaseCard style="margin: 4px" :party_release="PartyRelease.load(party[1])" />
             </template>
           </template>
         </div>

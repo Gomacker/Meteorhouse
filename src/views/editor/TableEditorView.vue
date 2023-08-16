@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { Table, TableElement } from '@/stores/table'
 import SummaryTableCard from '@/components/card/SummaryTableCard.vue'
-import { ElMessage } from 'element-plus'
+// import { ElMessage } from 'element-plus'
 
 const table_list = ref({})
 const combine_view = ref(false)

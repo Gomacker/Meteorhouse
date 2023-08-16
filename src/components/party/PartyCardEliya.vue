@@ -1,27 +1,21 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { PartyRelease } from "@/anise/worldflipper/party";
-import { Element } from "@/anise/worldflipper/object";
-import UnionComponent from "@/components/party/eliya/UnionComponent.vue";
-// import {
-//   Unit,
-//   Armament,
-//   PartyRelease,
-//   PartyParamManaboard2,
-//   PartyParam,
-//   manager, ele_id2ele
-// } from '@/stores/manager'
+import type { PartyRelease } from '@/anise/worldflipper/party'
+import { Element } from '@/anise/worldflipper/object'
+import UnionComponent from '@/components/party/eliya/UnionComponent.vue'
+import type { WorldflipperObject } from '@/stores/worldflipper'
+import { PartyEditor, PartyPosition } from "@/anise/worldflipper/party";
+
 
 const props = defineProps<{
   party: PartyRelease
   always_show_replacements?: boolean
   show_name?: boolean
   show_awaken?: boolean
-  popover?: boolean
   replacements?: object
+  editable?: boolean
+  party_editor?: PartyEditor
 }>()
-// const allow_mb2_lv = [0, 1, 2, 3, 4, 5]
-// const replacement_size = '36px'
 const replacement_size = 26
 const show_replacements = ref(false)
 
@@ -30,17 +24,36 @@ const show_replacements = ref(false)
 // }
 </script>
 <template>
-  <div
-    class="party"
-    @mouseenter="show_replacements = true"
-    @mouseleave="show_replacements = false"
-  >
-    <UnionComponent v-model="$props.party.party.union1" is_leader />
-    <UnionComponent v-model="$props.party.party.union2" />
-    <UnionComponent v-model="$props.party.party.union3" />
+  <div class="party" @mouseenter="show_replacements = true" @mouseleave="show_replacements = false">
+    <UnionComponent
+      v-model="$props.party.party.union1"
+      is_leader
+      :show_name="show_name"
+      :show_awaken="show_awaken"
+      :party_editor="party_editor"
+      :union_index="1"
+
+    />
+    <UnionComponent
+      v-model="$props.party.party.union2"
+      :show_name="show_name"
+      :show_awaken="show_awaken"
+      :party_editor="party_editor"
+      :union_index="2"
+    />
+    <UnionComponent
+      v-model="$props.party.party.union3"
+      :show_name="show_name"
+      :show_awaken="show_awaken"
+      :party_editor="party_editor"
+      :union_index="3"
+    />
     <template v-if="false">
       <div class="union" :key="union" v-for="union in [1, 2, 3]">
-        <div style="z-index: 6; filter: drop-shadow(0 0 2px black)" v-if="props.always_show_replacements || show_replacements">
+        <div
+          style="z-index: 6; filter: drop-shadow(0 0 2px black)"
+          v-if="props.always_show_replacements || show_replacements"
+        >
           <div
             v-if="
               props.replacements &&
@@ -176,11 +189,11 @@ const show_replacements = ref(false)
                 ? props.party.party.union(union).main instanceof Character
                   ? props.party.party.union(union).main['name_zh']
                   : union === 1
-                    ? '队长'
-                    : '主要角色'
-                : union === 1
                   ? '队长'
                   : '主要角色'
+                : union === 1
+                ? '队长'
+                : '主要角色'
             }}
           </div>
         </div>
@@ -228,7 +241,7 @@ const show_replacements = ref(false)
                   const m =
                     props.party._params.get('manaboard2')[`union${union}unison`][
                       `manaboard${i + 3}`
-                      ]
+                    ]
                   return typeof m === 'number' ? m : '-'
                 })()
               }}
