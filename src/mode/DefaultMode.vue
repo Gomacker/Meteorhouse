@@ -167,7 +167,7 @@ onMounted(() => {
 }
 .bg-magic-circle {
   background: white;
-  --mask: url(assets/worldflipper/bg_magic_circle.png);
+  --mask: url(../assets/worldflipper/bg_magic_circle.png);
   -webkit-mask: var(--mask);
   mask: var(--mask);
 
