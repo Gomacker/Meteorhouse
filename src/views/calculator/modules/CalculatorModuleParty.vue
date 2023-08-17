@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PartyCardEliya from '@/components/party/PartyCardEliya.vue'
+import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
 import { ele2color } from '@/stores/manager'
 import { Element } from '@/anise/worldflipper/object'
 import { Party, PartyEditor, PartyRelease, Union } from '@/anise/worldflipper/party'

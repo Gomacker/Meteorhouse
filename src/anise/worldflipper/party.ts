@@ -75,6 +75,10 @@ export class PartyPosition {
     }
     return undefined
   }
+
+  equals(position: PartyPosition) {
+    return this.unionIndex === position.unionIndex && this.positionIndex === position.positionIndex
+  }
 }
 
 export class Party {
@@ -221,7 +225,7 @@ export class PartyEditor {
 
   select(obj: WorldflipperObject | PartyPosition) {
     if (obj instanceof PartyPosition) {
-      if (this.verifyPosition(obj.unionIndex, obj.positionIndex)) this.selected_object = undefined
+      if (this.verifyPosition(new PartyPosition(obj.unionIndex, obj.positionIndex))) this.selected_object = undefined
       else {
         if (this.selected_object instanceof PartyPosition) {
           if (
@@ -236,7 +240,7 @@ export class PartyEditor {
           ) {
             this.exchangePosition(this.selected_object, obj)
             this.selected_object = undefined
-          }
+          } else this.selected_object = obj
         } else if (this.selected_object || this.selected_object === null) {
           if (this.party.party.set(obj, this.selected_object)) this.selected_object = undefined
           else this.selected_object = new PartyPosition(obj.unionIndex, obj.positionIndex)
@@ -258,11 +262,49 @@ export class PartyEditor {
     p.set(position1, obj2)
   }
 
-  verifyPosition(union_index: number, position_index: number): boolean {
+  verifyPosition(position: PartyPosition): boolean {
     return (
       this.selected_object instanceof PartyPosition &&
-      this.selected_object.unionIndex === union_index &&
-      this.selected_object.positionIndex === position_index
+      this.selected_object.unionIndex === position.unionIndex &&
+      this.selected_object.positionIndex === position.positionIndex
     )
+  }
+
+  hasRepeat() {
+    const characterRepeat = [
+      this.party.party.union1.main?.id,
+      this.party.party.union2.main?.id,
+      this.party.party.union3.main?.id,
+      this.party.party.union1.unison?.id,
+      this.party.party.union2.unison?.id,
+      this.party.party.union3.unison?.id
+    ]
+    const indexes = [
+      new PartyPosition(1, 0),
+      new PartyPosition(2, 0),
+      new PartyPosition(3, 0),
+      new PartyPosition(1, 1),
+      new PartyPosition(2, 1),
+      new PartyPosition(3, 1)
+    ]
+    interface TempRepeater {
+      cache: WorldflipperObject[]
+      repeat: Set<PartyPosition>
+    }
+    const repeater = indexes.reduce(
+      (acc: TempRepeater, val, index) => {
+        const v = this.party.party.get(val)
+        if (v !== undefined) {
+          if (acc.cache.includes(v)) {
+            acc.repeat.add(val)
+            acc.repeat.add(indexes[acc.cache.indexOf(v)])
+          }
+        }
+        acc.cache.push(v)
+        return acc
+      },
+      { cache: [], repeat: new Set<PartyPosition>() }
+    )
+    return repeater.repeat
   }
 }

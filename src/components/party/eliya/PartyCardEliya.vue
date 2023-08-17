@@ -321,31 +321,31 @@ export default {
 }
 
 .ele-none::before {
-  background-image: url('/static/worldflipper/icon/none.png');
+  background-image: url('/worldflipper/icon/none.png');
 }
 
 .ele-fire::before {
-  background-image: url('/static/worldflipper/icon/fire.png');
+  background-image: url('/worldflipper/icon/fire.png');
 }
 
 .ele-water::before {
-  background-image: url('/static/worldflipper/icon/water.png');
+  background-image: url('/worldflipper/icon/water.png');
 }
 
 .ele-thunder::before {
-  background-image: url('/static/worldflipper/icon/thunder.png');
+  background-image: url('/worldflipper/icon/thunder.png');
 }
 
 .ele-wind::before {
-  background-image: url('/static/worldflipper/icon/wind.png');
+  background-image: url('/worldflipper/icon/wind.png');
 }
 
 .ele-light::before {
-  background-image: url('/static/worldflipper/icon/light.png');
+  background-image: url('/worldflipper/icon/light.png');
 }
 
 .ele-dark::before {
-  background-image: url('/static/worldflipper/icon/dark.png');
+  background-image: url('/worldflipper/icon/dark.png');
 }
 
 .wfo-slot.main::before,

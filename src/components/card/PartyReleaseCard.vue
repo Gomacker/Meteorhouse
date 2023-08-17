@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // import { PartyRelease } from '@/stores/manager'
-import PartyCard from '@/components/party/PartyCardEliya.vue'
+import PartyCard from '@/components/party/eliya/PartyCardEliya.vue'
 import Clipboard from 'clipboard'
 import { ref } from 'vue'
 import { PartyRelease } from "@/anise/worldflipper/party";

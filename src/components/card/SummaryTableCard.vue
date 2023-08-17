@@ -11,7 +11,7 @@ import {
   TableElementTextArea,
   TableElementWikiCard
 } from '@/stores/table'
-import PartyCardEliya from '@/components/party/PartyCardEliya.vue'
+import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
 import { Armament, get_party, Unit } from '@/stores/manager'
 import TableComponentTextContent from '@/views/table/TableComponentTextContent.vue'
 import UnitLiteCard from '@/components/card/UnitLiteCard.vue'

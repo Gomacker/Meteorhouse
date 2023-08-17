@@ -8,7 +8,7 @@ const props = defineProps<{
   show_name?: boolean
   show_awaken?: boolean
   is_leader?: boolean
-  union_index: number
+  union_index?: number
   party_editor?: PartyEditor
 }>()
 const mainName = computed(() => {
@@ -30,7 +30,7 @@ const unisonName = computed(() => {
       class="wfo-slot main"
       :class="[
         modelValue.main ? `ele-${Element[modelValue.main.element].toLowerCase()}` : undefined,
-        party_editor?.verifyPosition(union_index, 0) ? 'selected' : undefined
+        party_editor?.verifyPosition(new PartyPosition(union_index, 0)) ? 'selected' : undefined
       ]"
       @click="party_editor?.select(new PartyPosition(union_index, 0))"
     >
@@ -49,7 +49,7 @@ const unisonName = computed(() => {
     <div
       v-ripple="!!party_editor"
       class="wfo-slot armament"
-      :class="[party_editor?.verifyPosition(union_index, 2) ? 'selected' : undefined]"
+      :class="[party_editor?.verifyPosition(new PartyPosition(union_index, 2)) ? 'selected' : undefined]"
       @click="party_editor?.select(new PartyPosition(union_index, 2))"
     >
       <v-img
@@ -67,7 +67,7 @@ const unisonName = computed(() => {
       class="wfo-slot unison"
       :class="[
         modelValue.unison ? `ele-${Element[modelValue.unison.element].toLowerCase()}` : undefined,
-        party_editor?.verifyPosition(union_index, 1) ? 'selected' : undefined
+        party_editor?.verifyPosition(new PartyPosition(union_index, 1)) ? 'selected' : undefined
       ]"
       @click="party_editor?.select(new PartyPosition(union_index, 1))"
     >
@@ -87,7 +87,7 @@ const unisonName = computed(() => {
       v-ripple="!!party_editor"
       class="wfo-slot core"
       :class="[
-        party_editor?.verifyPosition(union_index, 3) ? 'selected' : undefined
+        party_editor?.verifyPosition(new PartyPosition(union_index, 3)) ? 'selected' : undefined
       ]"
       @click="party_editor?.select(new PartyPosition(union_index, 3))"
     >

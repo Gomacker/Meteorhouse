@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import TableComponentTextContent from "@/views/table/TableComponentTextContent.vue";
-import PartyCardEliya from "@/components/party/PartyCardEliya.vue";
+import PartyCardEliya from "@/components/party/eliya/PartyCardEliya.vue";
 import {TableElement, TableElementParty2} from "@/stores/table";
 
 

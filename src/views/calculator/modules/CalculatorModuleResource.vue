@@ -21,19 +21,16 @@ const font_color = computed(() =>
       display: grid;
       grid-template-columns: repeat(2, 512px);
       grid-gap: 16px;
-      align-content: center;
       justify-content: center;
-      justify-items: center;
+      margin-top: 16px;
       width: 100%;
       height: 100%;
+      overflow-y: auto;
     "
   >
     <v-card class="resource-card">
       <v-toolbar density="compact" :color="color">
         <v-toolbar-title class="title__" :style="{ color: font_color }"> 觉醒前 </v-toolbar-title>
-        <v-toolbar-items style="color: white">
-          <v-btn icon="mdi-copliad" />
-        </v-toolbar-items>
       </v-toolbar>
       <v-img
         v-if="obj"

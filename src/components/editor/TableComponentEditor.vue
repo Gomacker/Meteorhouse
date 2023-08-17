@@ -12,7 +12,7 @@ import {
   TableElementSubTitle,
   TableElementTextArea
 } from '@/stores/table'
-import PartyCardEliya from '@/components/party/PartyCardEliya.vue'
+import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
 
 defineEmits<{
   refresh: any

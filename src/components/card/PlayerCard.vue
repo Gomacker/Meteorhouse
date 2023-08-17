@@ -1,31 +1,21 @@
 <script setup lang="ts">
-import { manager, Unit } from '@/stores/manager'
-import UnitPicOrigin from '@/components/objects/unit/UnitPicOrigin.vue'
+import { useWorldflipperDataStore } from "@/stores/worldflipper";
+import CharacterIcon from "@/components/worldflipper/character/CharacterIcon.vue";
+import { computed } from "vue";
 
-const props = defineProps({
-    player_id: {
-        type: Number,
-        default: 0
-    },
-    name: {
-        type: String,
-        default: ''
-    },
-    rank:  {
-        type: Number,
-        default: 0
-    },
-    leader_show_awaken: Boolean,
-    comment: {
-        type: String,
-        default: ''
-    },
-    // degree: Degree,
-    leader_character_id: {
-        type: Number,
-        default: 0
-    },
-})
+interface PlayerCard {
+  player_id: number
+  rank: number
+  name: string
+  comment: string
+  leader_show_awaken: boolean
+  leader_character_id: string
+}
+
+const props = defineProps<PlayerCard>()
+
+const worldflipper = useWorldflipperDataStore()
+const character = computed(() => worldflipper.characters.get(props.leader_character_id))
 </script>
 
 <template>
@@ -43,12 +33,11 @@ const props = defineProps({
       background-position-y: 100%;
     "
   >
-    <UnitPicOrigin
+    <CharacterIcon
       :size="120"
-      v-if="typeof props.leader_character_id == 'number' && manager.unit_data.get(props.leader_character_id) instanceof Unit"
-      :unit="manager.unit_data.get(props.leader_character_id)"
+      :obj="character"
       :awakened="leader_show_awaken"
-    ></UnitPicOrigin>
+    />
     <div
       style="
         padding: 4px 12px;
@@ -59,13 +48,13 @@ const props = defineProps({
       "
     >
       <div style="display: flex; flex-direction: column">
-        <div style="font-size: 22px">RANK {{ props.rank }} {{ props.name }}</div>
+        <div style="font-size: 22px">RANK {{ rank }} {{ name }}</div>
         <v-divider style="margin: 4px"></v-divider>
         <div style="font-size: 16px">
-            {{ props.comment }}
+          {{ comment }}
         </div>
       </div>
-      <div style="font-size: 16px; color: gray;">ID: {{ props.player_id }}</div>
+      <div style="font-size: 16px; color: grey">ID: {{ player_id }}</div>
     </div>
   </div>
 </template>
