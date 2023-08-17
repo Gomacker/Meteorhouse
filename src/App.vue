@@ -8,11 +8,11 @@ const Mode = shallowRef(null)
 
 ;(async () => {
   if (cardRegex.test(location.pathname)) {
-    Mode.value = (await import('@/views/CardMode.vue')).default
+    Mode.value = (await import('@/CardMode.vue')).default
   } else if (pureRegex.test(location.pathname)) {
-    Mode.value = (await import('@/views/PureMode.vue')).default
+    Mode.value = (await import('@/PureMode.vue')).default
   } else {
-    Mode.value = (await import('@/views/DefaultMode.vue')).default
+    Mode.value = (await import('@/DefaultMode.vue')).default
   }
 })()
 </script>
