@@ -25,6 +25,11 @@ const router = createRouter({
       component: () => import('@/views/PartySearcherView.vue')
     },
     {
+      path: '/toolbox',
+      name: 'toolbox',
+      component: () => import('@/views/ToolboxView.vue')
+    },
+    {
       path: '/events',
       name: 'events',
       component: () => import('@/views/EventsView.vue')

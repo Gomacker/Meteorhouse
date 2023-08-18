@@ -120,6 +120,35 @@ export class Party {
   static load(data: any): Party {
     return new Party(data['union1'], data['union2'], data['union3'])
   }
+  static loadOrigin(data: any): Party {
+    const main_party_data = data['target_user_party']
+    const character_data: Array<any> = data['user_character_list']
+    const union1 = new Union(
+      main_party_data['character_ids'][0],
+      main_party_data['unison_character_ids'][0],
+      main_party_data['equipments'][0]['equipment_id'],
+      character_data.filter(
+        (value) => value['character_id'] === main_party_data['character_ids'][0]
+      )[0]['ability_soul_slot_1']
+    )
+    const union2 = new Union(
+      main_party_data['character_ids'][1],
+      main_party_data['unison_character_ids'][1],
+      main_party_data['equipments'][1]['equipment_id'],
+      character_data.filter(
+        (value) => value['character_id'] === main_party_data['character_ids'][1]
+      )[0]['ability_soul_slot_1']
+    )
+    const union3 = new Union(
+      main_party_data['character_ids'][2],
+      main_party_data['unison_character_ids'][2],
+      main_party_data['equipments'][2]['equipment_id'],
+      character_data.filter(
+        (value) => value['character_id'] === main_party_data['character_ids'][2]
+      )[0]['ability_soul_slot_1']
+    )
+    return new Party(union1, union2, union3)
+  }
   dump(): any {
     return {
       union1: this.union1.dump(),
@@ -225,7 +254,8 @@ export class PartyEditor {
 
   select(obj: WorldflipperObject | PartyPosition) {
     if (obj instanceof PartyPosition) {
-      if (this.verifyPosition(new PartyPosition(obj.unionIndex, obj.positionIndex))) this.selected_object = undefined
+      if (this.verifyPosition(new PartyPosition(obj.unionIndex, obj.positionIndex)))
+        this.selected_object = undefined
       else {
         if (this.selected_object instanceof PartyPosition) {
           if (
