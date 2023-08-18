@@ -25,6 +25,7 @@ const last_login_string = computed(() => {
   const timeDifference = now.getTime() - date.getTime()
 
   const minutes = Math.floor(timeDifference / (1000 * 60))
+  const seconds = Math.floor(minutes * 60)
   const hours = Math.floor(minutes / 60)
   const days = Math.floor(hours / 24)
 
@@ -34,6 +35,8 @@ const last_login_string = computed(() => {
     return `${hours}小时前`
   } else if (minutes > 0) {
     return `${minutes}分钟前`
+  } else if (seconds > 0) {
+    return `${minutes}秒前`
   } else {
     return '--'
   }
