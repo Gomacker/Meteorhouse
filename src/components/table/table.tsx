@@ -1,9 +1,6 @@
 import chroma from 'chroma-js'
-import { Armament, manager, PartyRelease, Unit } from '@/stores/manager'
-import TableComponentTextContent from '@/components/table/elements/TableComponentTextContent.vue'
-import EmptyIcon from '@/components/worldflipper/EmptyIcon.vue'
 import type { JSX } from 'vue/jsx-runtime'
-import { defineComponent } from "vue";
+import { TableElementContainer } from "@/components/table/elements/BasicElements";
 
 class TableProperty {
   public title: string
@@ -125,20 +122,6 @@ class ElementManager {
 export const elementManager = new ElementManager()
 export default elementManager
 
-// export class TableElementAny extends TableElement {
-//   private readonly d: any
-//   constructor(type: string, data: any) {
-//     super(type)
-//     this.d = data
-//   }
-//   data(): object {
-//     return {
-//       type: this.type,
-//       data: this.d
-//     }
-//   }
-// }
-
 // export class TableElementRow extends TableElement {
 //   public readonly elements: TableElement[]
 //   constructor(data: any) {
@@ -177,26 +160,6 @@ export default elementManager
 //   }
 //   delete(index: number) {
 //     this.elements.splice(index, 1)
-//   }
-// }
-
-// export class TableElementSubTitle extends TableElement {
-//   public readonly content: string
-//   public readonly element: string
-//   constructor(data: any) {
-//     super('SubTitle')
-//     this.content = typeof data['content'] === 'string' ? data['content'] : ''
-//     this.element = typeof data['element'] === 'string' ? data['element'] : ''
-//     // console.log(data)
-//   }
-//   data(): object {
-//     return {
-//       type: this.type,
-//       data: {
-//         content: this.content,
-//         element: this.element
-//       }
-//     }
 //   }
 // }
 
@@ -310,55 +273,6 @@ export default elementManager
 //   }
 // }
 
-// export class TableElementTextArea extends TableElement {
-//   public content: string
-//   public little_title: boolean
-//   public full: boolean
-//
-//   constructor(data: any) {
-//     // super('TextArea')
-//     super('TextRegion')
-//     this.content = typeof data['content'] === 'string' ? data['content'] : ''
-//     this.little_title = typeof data['little_title'] === 'boolean' ? data['little_title'] : false
-//     this.full = typeof data['full'] === 'boolean' ? data['full'] : false
-//   }
-//
-//   get isFull(): any {
-//     return this.full
-//   }
-//
-//   data(): object {
-//     return {
-//       type: this.type, // for legacy
-//       // type: this.type,
-//       data: {
-//         content: this.content,
-//         full: this.full,
-//         little_title: this.little_title
-//       }
-//     }
-//   }
-//   html() {
-//     const component = defineComponent({
-//       components: {EmptyIcon},
-//       setup() {
-//         return () => (
-//
-//           <div>
-//             <EmptyIcon />
-//           </div>
-//         )
-//       }
-//     })
-//     return (
-//       <div>
-//         <EmptyIcon />
-//         <TableComponentTextContent content={this.content} />
-//       </div>
-//     )
-//   }
-// }
-
 // export class TableElementWikiCard extends TableElement {
 //   public object_type: 'Unit' | 'Armament'
 //   public object_id: number
@@ -430,7 +344,7 @@ export class Table {
       this.content[index + 1] = this.content.splice(index, 1, this.content[index + 1])[0]
   }
   insert_row(index: number) {
-    this.content.splice(index, 0, new TableElementContainer())
+    this.content.splice(index, 0, new TableElementContainer({}))
   }
   delete(index: number) {
     this.content.splice(index, 1)

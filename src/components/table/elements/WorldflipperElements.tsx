@@ -6,7 +6,6 @@ import { PartyRelease } from "@/anise/worldflipper/party";
 
 export class TableElementParty extends TableElement {
   readonly __type: string = 'Party'
-  // private __data: any;
   private _party: any;
   public title: string;
   public subtitle: string
@@ -21,9 +20,6 @@ export class TableElementParty extends TableElement {
   get party() {
     return PartyRelease.load(this._party)
   }
-  // protected _data(): object {
-  //   return {}
-  // }
   html(): JSX.Element {
     return h(TableComponentParty, {element: this})
   }
