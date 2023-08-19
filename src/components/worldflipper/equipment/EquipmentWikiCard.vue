@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Equipment, Element } from "@/anise/worldflipper/object";
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
-import { format_content } from '@/stores/table'
+import { format_content } from '@/components/table/table'
 import GameTag from '@/components/party/GameTag.vue'
 import chroma from 'chroma-js'
 import { computed } from 'vue'

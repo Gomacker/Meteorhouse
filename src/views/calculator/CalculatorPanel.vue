@@ -22,7 +22,6 @@ const updateValue = (obj: Character | Equipment | null | undefined) => {
 }
 
 function isSelected(obj: Character | Equipment | null | undefined) {
-  // return props.modelValue === obj
   return props.modelValue.selected_object === obj
 }
 

@@ -11,7 +11,6 @@ axios.post('/api/timeline_data/').then((r) => {
 
 <template>
   <div style="height: fit-content">
-<!--    <v-textarea :model-value="JSON.stringify(event_list, null, 2)"></v-textarea>-->
     <v-card-text>
       <p>//TODO fix 图源权限爆了</p>
       <p>//TODO fix 大部分没有结束时间导致无法判断范围</p>

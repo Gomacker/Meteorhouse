@@ -5,13 +5,13 @@ import {
   TableElementParty2,
   TableElementPartyUnion,
   TableElementWikiCard
-} from '@/stores/table'
+} from '@/components/table/table'
 import {
   TableElementParty,
   TableElementRow,
   TableElementSubTitle,
   TableElementTextArea
-} from '@/stores/table'
+} from '@/components/table/table'
 import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
 
 defineEmits<{
@@ -133,7 +133,7 @@ function get_replacements_data(element: TableElement) {
     <v-card
       class="table-component-card"
       style="background: #eee"
-      :class="$props.table_element.full_row ? ['full'] : undefined"
+      :class="$props.table_element.isFull ? ['full'] : undefined"
       body-style="padding: 8px;"
     >
       <div style="display: flex; margin: 4px; align-items: center; justify-content: space-between">

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import TableComponentTextContent from "@/views/table/TableComponentTextContent.vue";
+import TableComponentTextContent from "@/components/table/elements/TableComponentTextContent.vue";
 import PartyCardEliya from "@/components/party/eliya/PartyCardEliya.vue";
-import {TableElement, TableElementParty2} from "@/stores/table";
+import {TableElement, TableElementParty2} from "@/components/table/table";
 
 
 const props = defineProps<{

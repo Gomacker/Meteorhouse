@@ -10,16 +10,16 @@ import {
   TableElementSubTitle,
   TableElementTextArea,
   TableElementWikiCard
-} from '@/stores/table'
+} from '@/components/table/table'
 import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
-import { Armament, get_party, Unit } from '@/stores/manager'
-import TableComponentTextContent from '@/views/table/TableComponentTextContent.vue'
+import { Armament, Unit } from '@/stores/manager'
+import TableComponentTextContent from '@/components/table/elements/TableComponentTextContent.vue'
 import UnitLiteCard from '@/components/card/UnitLiteCard.vue'
 import UnitWikiCard from '@/components/card/UnitWikiCard.vue'
 import ArmamentWikiCard from '@/components/card/ArmamentWikiCard.vue'
 
 const props = defineProps<{
-  table: Table | undefined
+  table: Table
   party_style?: {
     show_name?: boolean
     show_awaken?: boolean
@@ -28,9 +28,7 @@ const props = defineProps<{
 }>()
 
 function get_replacements_data(element: TableElement) {
-  // console.log(element instanceof TableElementParty)
   if (element instanceof TableElementParty) {
-    // console.log(JSON.parse(element.party_data)['params'])
     try {
       const params = JSON.parse(element.party_data)['params']
       if (params) {
@@ -45,21 +43,20 @@ function get_replacements_data(element: TableElement) {
 
 <template>
   <div
-    v-if="props.table instanceof Table"
     class="table"
     style="width: 1036px; overflow: hidden; height: fit-content"
     :style="{
-      '--main-color': props.table.property.get_color_main(1),
-      '--sub-color': props.table.property.get_color_sub(1),
-      '--main-background-color': props.table.property.get_color_main(0.8),
-      '--sub-background-color': props.table.property.get_color_sub(0.45),
-      '--little-about-color': props.table.property.get_color_sub(0.75)
+      '--main-color': table.property.get_color_main(1),
+      '--sub-color': table.property.get_color_sub(1),
+      '--main-background-color': table.property.get_color_main(0.8),
+      '--sub-background-color': table.property.get_color_sub(0.45),
+      '--little-about-color': table.property.get_color_sub(0.75)
     }"
   >
     <div class="table-header" style="background-color: white">
       <div
         style="height: 540px; display: flex; flex-direction: column; align-items: center"
-        :style="'' + props.table.property.banner"
+        :style="'' + table.property.banner"
       >
         <div
           class="title"
@@ -75,13 +72,13 @@ function get_replacements_data(element: TableElement) {
         >
           <TableComponentTextContent
             style="padding-top: 4px; padding-bottom: 6px; font-weight: 700; font-size: 64px"
-            :content="props.table.property.title"
+            :content="table.property.title"
           />
         </div>
         <div style="position: absolute; font-size: 32px; padding: 0 4px; left: 0; bottom: 0">
           <TableComponentTextContent
             style="font-weight: bolder"
-            :content="props.table.property.update_time"
+            :content="table.property.update_time"
           />
         </div>
         <div
@@ -95,14 +92,14 @@ function get_replacements_data(element: TableElement) {
             border-top-left-radius: 16px;
           "
         >
-          <TableComponentTextContent :content="props.table.property.little_about" />
+          <TableComponentTextContent :content="table.property.little_about" />
         </div>
       </div>
     </div>
-    <div :style="'' + props.table.property.background">
+    <div :style="table.property.background">
       <div style="image-rendering: auto; background: var(--sub-background-color)">
         <div class="table-container" style="display: flex; flex-direction: row; flex-wrap: wrap">
-          <template v-for="(c, key) in props.table.content" :key="key">
+          <template v-for="(c, key) in table.content" :key="key">
             <div
               v-if="c instanceof TableElementRow"
               style="
@@ -326,8 +323,8 @@ function get_replacements_data(element: TableElement) {
           style="display: flex; align-items: center; flex-direction: column"
           :style="{
             background: `linear-gradient(to bottom, transparent,
-            ${props.table.property.get_color_main(0.8)} 65%,
-            ${props.table.property.get_color_main(1)} 100%)`
+            ${table.property.get_color_main(0.8)} 65%,
+            ${table.property.get_color_main(1)} 100%)`
           }"
         >
           <v-divider
@@ -346,7 +343,7 @@ function get_replacements_data(element: TableElement) {
             "
             html_access
             :text_border="false"
-            :content="props.table.property.footer"
+            :content="table.property.footer"
           />
         </div>
       </div>

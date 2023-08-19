@@ -2,7 +2,7 @@
 import { Character, Element } from '@/anise/worldflipper/object'
 import { gender2zh, race2zh, type2zh } from '@/stores/manager'
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
-import { format_content } from '@/stores/table'
+import { format_content } from '@/components/table/table'
 import GameTag from '@/components/party/GameTag.vue'
 import chroma from 'chroma-js'
 import { computed } from 'vue'

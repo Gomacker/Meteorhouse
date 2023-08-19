@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import TableComponentTextContent from "@/views/table/TableComponentTextContent.vue";
+import TableComponentTextContent from "@/components/table/elements/TableComponentTextContent.vue";
 import QuestEventBanner, { QuestEvent } from "@/components/worldflipper/event/QuestEventBanner.vue";
 import moment from "moment";
 export interface QuestEventSet {

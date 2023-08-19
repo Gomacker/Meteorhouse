@@ -226,9 +226,9 @@ export default {
 .table-text-bordered {
   display: inline;
   word-wrap: break-word;
-  padding: 4px;
-  //margin: -4px;
-  margin: -4px -4px -2px;
+  --stroke-width: 0.136em;
+  padding: var(--stroke-width);
+  margin: calc(-1 * var(--stroke-width));
   background-color: var(--main-color);
   background-clip: text;
   -webkit-background-clip: text;

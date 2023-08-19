@@ -2,7 +2,7 @@
 import { Unit } from '@/stores/manager'
 import { ref } from 'vue'
 import UnitPicOrigin from '@/components/objects/unit/UnitPicOrigin.vue'
-import { format_content } from '@/stores/table'
+import { format_content } from '@/components/table/table'
 import GameTag from '@/components/party/GameTag.vue'
 
 const alpha = 0.85

@@ -7,7 +7,7 @@ import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import QuestEventBanner, { QuestEvent } from '@/components/worldflipper/event/QuestEventBanner.vue'
 import moment from "moment";
-import TableComponentTextContent from "@/views/table/TableComponentTextContent.vue";
+import TableComponentTextContent from "@/components/table/elements/TableComponentTextContent.vue";
 
 interface GachaEvent {
   id: string

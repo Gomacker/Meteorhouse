@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Armament } from '@/stores/manager'
 import ArmamentPicOrigin from '@/components/objects/armament/ArmamentPicOrigin.vue'
-import { format_content } from '@/stores/table'
+import { format_content } from '@/components/table/table'
 import GameTag from '@/components/party/GameTag.vue'
 
 const alpha = 0.85
@@ -102,11 +102,7 @@ const props = defineProps({
         <div style="display: flex; margin: 16px 16px 0">
           <div class="span-title">能力</div>
           <div style="display: flex; flex-direction: column">
-            <!--            <div class="span-ability" style="padding-bottom: 4px;">-->
-            <!--              <div style="margin: 0 8px; font-weight: 600; font-size: 22px;" v-html="format_content(armament['ability'])"/>-->
-            <!--            </div>-->
             <div class="span-ability" style="padding-bottom: 4px">
-              <!--          <div style="color: rgb(47, 195, 183); font-size: 20px;">❶</div>-->
               <div style="margin-left: 8px" v-html="format_content(props.armament.ability)" />
             </div>
           </div>

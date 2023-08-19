@@ -2,8 +2,8 @@
 import TableComponentEditor from '@/components/editor/TableComponentEditor.vue'
 import { ref } from 'vue'
 import axios from 'axios'
-import { Table, TableElement } from '@/stores/table'
-import SummaryTableCard from '@/components/card/SummaryTableCard.vue'
+import { Table, TableElement } from '@/components/table/table'
+import SummaryTableCard from '@/components/table/SummaryTableCard.vue'
 // import { ElMessage } from 'element-plus'
 
 const table_list = ref({})

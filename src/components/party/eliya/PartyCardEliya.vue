@@ -3,8 +3,7 @@ import { ref } from 'vue'
 import type { PartyRelease } from '@/anise/worldflipper/party'
 import { Element } from '@/anise/worldflipper/object'
 import UnionComponent from '@/components/party/eliya/UnionComponent.vue'
-import type { WorldflipperObject } from '@/stores/worldflipper'
-import { PartyEditor, PartyPosition } from "@/anise/worldflipper/party";
+import { PartyEditor } from "@/anise/worldflipper/party";
 
 
 const props = defineProps<{
@@ -19,9 +18,6 @@ const props = defineProps<{
 const replacement_size = 26
 const show_replacements = ref(false)
 
-// function get_pic_url(obj: WorldflipperObject, awakened_or_soul = false) {
-//   return obj ? obj.pic_url(awakened_or_soul) : '/static/worldflipper/unit/blank.png'
-// }
 </script>
 <template>
   <div class="party" @mouseenter="show_replacements = true" @mouseleave="show_replacements = false">

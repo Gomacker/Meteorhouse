@@ -1,0 +1,39 @@
+.table {
+  line-height: normal;
+  font-family: Arial, '黑体', '华文细黑', sans-serif;
+  --main-color: #333;
+  --sub-color: #ccc;
+  --main-background-color: rgba(51, 51, 51, 0.8);
+  --sub-background-color: rgba(204, 204, 204, 0.8);
+  --little-about-color: rgba(204, 204, 204, 0.75);
+}
+
+.table-header {
+  background: white;
+}
+
+.table-title {
+  background: var(--sub-color);
+  box-shadow: 0 0 16px var(--main-color);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-radius: 0 0 16px 16px;
+}
+
+.table-title-text {
+  padding-top: 4px;
+  padding-bottom: 6px;
+  font-weight: 700;
+  font-size: 64px;
+}
+
+.table-little-about {
+  position: absolute;
+  background: var(--little-about-color);
+  font-size: 28px;
+  padding: 8px 16px 4px;
+  right: 0;
+  bottom: 0;
+  border-top-left-radius: 16px;
+}
