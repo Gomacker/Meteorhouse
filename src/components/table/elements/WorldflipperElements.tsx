@@ -1,17 +1,31 @@
 import table, { TableElement } from '@/components/table/table'
 import type { JSX } from 'vue/jsx-runtime'
+import { h } from "vue";
+import TableComponentParty from "@/components/table/elements/TableComponentParty.vue";
+import { PartyRelease } from "@/anise/worldflipper/party";
 
 export class TableElementParty extends TableElement {
   readonly __type: string = 'Party'
+  // private __data: any;
+  private _party: any;
+  public title: string;
+  public subtitle: string
 
   constructor(data: any) {
     super()
+    // this.__data = data
+    this._party = data['party']
+    this.title = data['title'] || ''
+    this.subtitle = data['subtitle'] || ''
   }
-  protected _data(): object {
-    return {}
+  get party() {
+    return PartyRelease.load(this._party)
   }
+  // protected _data(): object {
+  //   return {}
+  // }
   html(): JSX.Element {
-    return <div>{this.__type}</div>
+    return h(TableComponentParty, {element: this})
   }
 }
 

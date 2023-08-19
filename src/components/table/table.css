@@ -37,3 +37,29 @@
   bottom: 0;
   border-top-left-radius: 16px;
 }
+.table-element-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.table-element-title {
+    background: var(--main-background-color);
+    backdrop-filter: blur(2px);
+    box-shadow: 0 0 16px black;
+    color: white;
+    font: 38px Arial, '黑体';
+    width: 100%;
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    z-index: 1;
+}
+
+.table-element-text {
+    margin: 0 6px;
+    padding: 0 6px;
+    box-sizing: content-box;
+}

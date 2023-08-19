@@ -13,7 +13,18 @@ export class TableElementContainer extends TableElement {
   }
 
   html(): JSX.Element {
-    return <div>{this.elements.map((value) => value.html())}</div>
+    return (
+      <div
+        class="table-element-container"
+        style={{
+          padding: this.elements.length === 1 && this.elements[0].__type === 'Html' ? '0' : '16px 0'
+        }}
+      >
+        {this.elements.map((value) => (
+          <div style={{width: value.isFull ? '1008px' : '504px'}}>{value.html()}</div>
+        ))}
+      </div>
+    )
   }
 }
 
@@ -30,20 +41,7 @@ export class TableElementTitle extends TableElement {
 
   html(): JSX.Element {
     return (
-      <div
-        style="
-                background: var(--main-background-color);
-                backdrop-filter: blur(2px);
-                box-shadow: 0 0 16px black;
-                color: white;
-                font: 38px Arial, '黑体';
-                width: 100%;
-                padding: 6px 16px;
-                display: flex;
-                align-items: center;
-                z-index: 1;
-              "
-      >
+      <div class="table-element-title">
         <img
           style="width: 36px; margin: 0 4px"
           src={`/static/worldflipper/icon/${this.icon}.png`}
@@ -88,7 +86,11 @@ export class TableElementText extends TableElement {
 
   html(): JSX.Element {
     return h(TableComponentTextContent, {
-      style: { margin: '0 6px', fontSize: '22px' },
+      class: 'table-element-text',
+      style: {
+        fontSize: this.little_title ? '28px' : '22px',
+        width: this.full ? '992px' : '480px'
+      },
       content: this.content
     })
   }
