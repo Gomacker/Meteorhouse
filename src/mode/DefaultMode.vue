@@ -68,6 +68,13 @@ onMounted(() => {
             @click="$router.push('/partySearcher')"
           />
           <v-list-item
+            prepend-icon="mdi-toolbox"
+            color="orange"
+            title="工具箱"
+            value="toolbox"
+            @click="$router.push('/toolbox')"
+          />
+          <v-list-item
             prepend-icon="mdi-calendar"
             color="purple"
             title="Events"

@@ -49,12 +49,18 @@ const props = defineProps({
 </script>
 <template>
   <div>
-    <template v-if="typeof props.content == 'string'">
-      {{ init_status() }}
+    <template
+      v-if="
+        (() => {
+          init_status()
+          return typeof props.content == 'string'
+        })()
+      "
+    >
       <div
         style="font-weight: inherit"
         :key="row_index"
-        class="table-row"
+        class="table-text-row"
         v-for="(row, row_index) in props.content.split('\n')"
       >
         <template :key="s_index" v-for="(s, s_index) in splitByBrackets(row)">
@@ -216,7 +222,7 @@ export default {
 </script>
 
 <style scoped>
-.table-row {
+.table-text-row {
   display: flex;
   align-items: center;
   flex-wrap: wrap;

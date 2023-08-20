@@ -6,9 +6,9 @@ const component = defineComponent({
   props: { content: Array<TableElement> },
   setup(props) {
     return () => (
-      <>
+      <div class="table-container">
         {props.content?.map(value => value.html())}
-      </>
+      </div>
     )
   }
 })

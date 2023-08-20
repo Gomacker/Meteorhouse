@@ -18,20 +18,11 @@ const memory_object = ref<WorldflipperObject>(undefined)
 
 const panel_closed = ref<boolean>(false)
 
-const party = PartyRelease.load({
-  party: {
-    union1: [121003, 223013, 5020024, 4050019],
-    union2: [121007, 111021, 5090020, 5090020],
-    union3: [121004, 331011, 5060025, 5090020]
-  },
-  params: {}
-})
-
-const party_editor = reactive<PartyEditor>(new PartyEditor(party))
+const party_editor = reactive<PartyEditor>(new PartyEditor(PartyRelease.empty()))
 
 watch(party_editor, (value) => {
-  if (value.selected_object instanceof PartyPosition && party)
-    memory_object.value = value.selected_object.get(party.party)
+  if (value.selected_object instanceof PartyPosition && value.party)
+    memory_object.value = value.party.party.get(value.selected_object) || memory_object.value
   else if (value.selected_object) memory_object.value = value.selected_object as WorldflipperObject
 })
 </script>

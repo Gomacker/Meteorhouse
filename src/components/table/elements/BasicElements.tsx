@@ -1,7 +1,8 @@
 import table, { TableElement } from '@/components/table/table'
 import type { JSX } from 'vue/jsx-runtime'
-import { h } from 'vue'
+import { h, render } from "vue";
 import TableComponentTextContent from '@/components/table/elements/TableComponentTextContent.vue'
+import TableTextContent from '@/components/table/TableTextContent'
 
 export class TableElementContainer extends TableElement {
   readonly __type: string = 'Container'
@@ -21,7 +22,7 @@ export class TableElementContainer extends TableElement {
         }}
       >
         {this.elements.map((value) => (
-          <div style={{width: value.isFull ? '1008px' : '504px'}}>{value.html()}</div>
+          <div style={{ width: value.isFull ? '1008px' : '504px' }}>{value.html()}</div>
         ))}
       </div>
     )
@@ -67,7 +68,11 @@ export class TableElementHtml extends TableElement {
   }
 
   html(): JSX.Element {
-    return <>{this.content}</>
+    return <div innerHTML={this.content}></div>
+  }
+
+  get isFull(): boolean {
+    return true
   }
 }
 
@@ -85,6 +90,16 @@ export class TableElementText extends TableElement {
   }
 
   html(): JSX.Element {
+    // return (
+    //   <TableTextContent
+    //     content={this.content}
+    //     class="table-element-text"
+    //     style={{
+    //       fontSize: this.little_title ? '28px' : '22px',
+    //       width: this.full ? '992px' : '480px'
+    //     }}
+    //   />
+    // )
     return h(TableComponentTextContent, {
       class: 'table-element-text',
       style: {

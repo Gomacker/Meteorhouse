@@ -22,6 +22,8 @@ const props = defineProps<{
       background: rgba(255 255 255 / 1);
       margin: 0 8px 16px;
       overflow: visible;
+      width: min-content;
+
     "
   >
     <div

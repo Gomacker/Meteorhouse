@@ -42,22 +42,9 @@ const props = defineProps<{ table: Table }>()
     </div>
     <div :style="table.property.background">
       <div style="image-rendering: auto; background: var(--sub-background-color)">
-        <div class="table-container" style="display: flex; flex-direction: row; flex-wrap: wrap">
-          <SummaryTableContent :content="table.content" />
-          <!--          <template v-for="(c, key) in table.content" :key="key">-->
-          <!--            <div style="color: red;">-->
-          <!--              {{ c.type }}-->
-          <!--              <template v-if="c.type === 'Row'" v-html="c.html()">-->
-          <!--              </template>-->
-          <!--              {{ c.type }}-->
-          <!--            </div>-->
-          <!--            <template v-if="c.hasOwnProperty('html')" v-html="c.html()"/>-->
-          <!--          </template>-->
-        </div>
-        {{ JSON.stringify(table) }}
+        <SummaryTableContent :content="table.content" />
         <div
           class="table-footer"
-          style="display: flex; align-items: center; flex-direction: column"
           :style="{
             background: `linear-gradient(to bottom, transparent,
             ${table.property.get_color_main(0.8)} 65%,

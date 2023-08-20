@@ -1,6 +1,5 @@
 import chroma from 'chroma-js'
 import type { JSX } from 'vue/jsx-runtime'
-import { TableElementContainer } from "@/components/table/elements/BasicElements";
 
 class TableProperty {
   public title: string
@@ -344,7 +343,7 @@ export class Table {
       this.content[index + 1] = this.content.splice(index, 1, this.content[index + 1])[0]
   }
   insert_row(index: number) {
-    this.content.splice(index, 0, new TableElementContainer({}))
+    // this.content.splice(index, 0, new TableElementContainer({}))
   }
   delete(index: number) {
     this.content.splice(index, 1)

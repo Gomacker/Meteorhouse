@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import PlayerCard, { PlayerProfile } from '@/components/card/PlayerCard.vue'
-import { computed, ref } from 'vue'
-import axios from 'axios'
-import { Party, PartyRelease } from '@/anise/worldflipper/party'
-import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
+import PlayerCard, { PlayerProfile } from "@/components/card/PlayerCard.vue";
+import { computed, ref } from "vue";
+import axios from "axios";
+import { Party, PartyRelease } from "@/anise/worldflipper/party";
+import PartyCardEliya from "@/components/party/eliya/PartyCardEliya.vue";
+import { ele2color } from "@/stores/manager";
+import { Element } from "@/anise/worldflipper/object";
 
 const playerProfile = ref<PlayerProfile | undefined | null>()
 
@@ -61,7 +63,7 @@ const partyWrapped = computed(() =>
           class="elevation-6"
           style="
             /*padding: 16px;*/
-            border-radius: 8px;
+            border-radius: 12px;
             margin-top: 32px;
             display: flex;
             flex-direction: column;
@@ -70,12 +72,21 @@ const partyWrapped = computed(() =>
           v-if="playerProfile"
         >
           <PlayerCard
-            style="width: 100%; z-index: 1"
+            style="width: 520px; z-index: 1"
             :model-value="playerProfile as PlayerProfile"
           />
-          <v-card style="margin: 15px 0" class="elevation-4">
+          <div
+            style="
+              margin: 8px 0;
+              padding: 4px;
+              box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
+              border-radius: 8px;
+            "
+          >
             <PartyCardEliya :party="partyWrapped || PartyRelease.empty()" />
-          </v-card>
+          </div>
+          <v-divider :color="ele2color[playerProfile.party?.union1.main?.element || Element.All].hex()" thickness="2" style="width: 95%" />
+          <div style="margin: 8px 0; color: grey">Powered by <a href="https://meteorhouse.wiki/">Meteorhouse.wiki</a></div>
         </v-card>
         <template v-else-if="playerProfile === null">
           <div style="margin-top: 32px; font-size: 24px; color: grey">
