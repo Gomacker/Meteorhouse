@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import type { PartyRelease } from '@/anise/worldflipper/party'
-import { Element } from '@/anise/worldflipper/object'
 import UnionComponent from '@/components/party/eliya/UnionComponent.vue'
 import { PartyEditor } from "@/anise/worldflipper/party";
 
@@ -23,7 +22,6 @@ const show_replacements = ref(false)
   <div class="party" @mouseenter="show_replacements = true" @mouseleave="show_replacements = false">
     <UnionComponent
       v-model="$props.party.party.union1"
-      is_leader
       :show_name="show_name"
       :show_awaken="show_awaken"
       :party_editor="party_editor"
@@ -44,226 +42,6 @@ const show_replacements = ref(false)
       :party_editor="party_editor"
       :union_index="3"
     />
-    <template v-if="false">
-      <div class="union" :key="union" v-for="union in [1, 2, 3]">
-        <div
-          style="z-index: 6; filter: drop-shadow(0 0 2px black)"
-          v-if="props.always_show_replacements || show_replacements"
-        >
-          <div
-            v-if="
-              props.replacements &&
-              props.replacements[`union${union}`] instanceof Array &&
-              props.replacements[`union${union}`][0]
-            "
-            style="position: absolute; display: flex; flex-direction: column"
-            :style="{ left: `-${replacement_size - 5}px`, top: `${5}px` }"
-          >
-            <img
-              v-for="(replacement, index) in props.replacements[`union${union}`][0].map((value) =>
-                manager.unit_data.get(value)
-              )"
-              :key="index"
-              :style="{
-                width: `${replacement_size}px`,
-                height: `${replacement_size}px`
-              }"
-              :src="get_pic_url(replacement)"
-              alt=""
-            />
-          </div>
-          <div
-            v-if="
-              props.replacements &&
-              props.replacements[`union${union}`] instanceof Array &&
-              props.replacements[`union${union}`][1]
-            "
-            style="position: absolute; display: flex; flex-direction: column"
-            :style="{ left: `${145}px`, top: `${105}px` }"
-          >
-            <img
-              v-for="(replacement, index) in props.replacements[`union${union}`][1].map((value) =>
-                manager.unit_data.get(value)
-              )"
-              :key="index"
-              :style="{
-                width: `${replacement_size}px`,
-                height: `${replacement_size}px`
-              }"
-              :src="get_pic_url(replacement)"
-              alt=""
-            />
-          </div>
-          <div
-            v-if="
-              props.replacements &&
-              props.replacements[`union${union}`] instanceof Array &&
-              props.replacements[`union${union}`][2]
-            "
-            style="position: absolute; display: flex; flex-direction: row"
-            :style="{ left: `${86 + 5}px`, top: `-${replacement_size - 20}px` }"
-          >
-            <img
-              v-for="(replacement, index) in props.replacements[`union${union}`][2].map((value) =>
-                manager.armament_data.get(value)
-              )"
-              :key="index"
-              :style="{
-                width: `${replacement_size}px`,
-                height: `${replacement_size}px`
-              }"
-              :src="get_pic_url(replacement)"
-              alt=""
-            />
-          </div>
-          <div
-            v-if="
-              props.replacements &&
-              props.replacements[`union${union}`] instanceof Array &&
-              props.replacements[`union${union}`][3]
-            "
-            style="position: absolute; display: flex; flex-direction: row"
-            :style="{ left: `${5}px`, top: `${170}px` }"
-          >
-            <img
-              v-for="(replacement, index) in props.replacements[`union${union}`][3].map((value) =>
-                manager.armament_data.get(value)
-              )"
-              :key="index"
-              :style="{
-                width: `${replacement_size}px`,
-                height: `${replacement_size}px`
-              }"
-              :src="get_pic_url(replacement, true)"
-              alt=""
-            />
-          </div>
-        </div>
-        <div
-          class="wfo-slot main"
-          :class="[
-            props.party.party.union(union).main instanceof Unit
-              ? `ele-${Element[props.party.party.union(union).main?.element]}`
-              : ''
-          ]"
-        >
-          <img
-            :src="get_pic_url(props.party.party.union(union).main, props.show_awaken)"
-            alt=""
-            loading="lazy"
-            @dragstart.prevent
-          />
-          <div
-            style="
-              position: absolute;
-              display: flex;
-              background-color: rgba(0, 0, 0, 0.55);
-              color: white;
-              left: 0;
-              bottom: 16px;
-              border-top-right-radius: 6px;
-            "
-            v-if="(() => {
-                  const ppm: PartyParam = props.party?._params.get('manaboard2')
-                  return ppm instanceof PartyParamManaboard2 ? !ppm[`union${union}main`].is_empty() : false
-                })()"
-          >
-            <div v-for="i in 3" :key="i" style="width: 16px; text-align: center">
-              {{
-                (() => {
-                  // if (true) {
-                  const m =
-                    props.party._params.get('manaboard2')[`union${union}main`][`manaboard${i + 3}`]
-                  return typeof m === 'number' ? m : '-'
-                })()
-              }}
-            </div>
-          </div>
-          <div style="text-align: center">
-            {{
-              props.show_name
-                ? props.party.party.union(union).main instanceof Character
-                  ? props.party.party.union(union).main['name_zh']
-                  : union === 1
-                  ? '队长'
-                  : '主要角色'
-                : union === 1
-                ? '队长'
-                : '主要角色'
-            }}
-          </div>
-        </div>
-        <div class="wfo-slot armament">
-          <img
-            :src="get_pic_url(props.party.party.union(union).armament)"
-            alt=""
-            loading="lazy"
-            @dragstart.prevent
-          />
-          <div style="text-align: center">装备</div>
-        </div>
-        <div
-          class="wfo-slot unison"
-          :class="[
-            props.party.party.union(union).unison
-              ? `ele-${ele_id2ele[props.party.party.union(union).unison?.element]}`
-              : ''
-          ]"
-        >
-          <img
-            :src="get_pic_url(props.party.party.union(union).unison, props.show_awaken)"
-            alt=""
-            loading="lazy"
-            @dragstart.prevent
-          />
-          <div
-            style="
-              position: absolute;
-              display: flex;
-              background-color: rgba(0, 0, 0, 0.55);
-              color: white;
-              left: 0;
-              bottom: 16px;
-              border-top-right-radius: 6px;
-            "
-            v-if="(() => {
-                  const ppm: PartyParam = props.party?._params.get('manaboard2')
-                  return ppm instanceof PartyParamManaboard2 ? !ppm[`union${union}unison`].is_empty() : false
-                })()"
-          >
-            <div v-for="i in 3" :key="i" style="width: 16px; text-align: center">
-              {{
-                (() => {
-                  const m =
-                    props.party._params.get('manaboard2')[`union${union}unison`][
-                      `manaboard${i + 3}`
-                    ]
-                  return typeof m === 'number' ? m : '-'
-                })()
-              }}
-            </div>
-          </div>
-          <div style="text-align: center">
-            {{
-              props.show_name
-                ? props.party.party.union(union).unison instanceof Unit
-                  ? props.party.party.union(union).unison.name_zh
-                  : '辅助角色'
-                : '辅助角色'
-            }}
-          </div>
-        </div>
-        <div class="wfo-slot core">
-          <img
-            :src="get_pic_url(props.party.party.union(union).core, true)"
-            alt=""
-            loading="lazy"
-            @dragstart.prevent
-          />
-          <div style="text-align: center">魂珠</div>
-        </div>
-      </div>
-    </template>
   </div>
 </template>
 
@@ -344,8 +122,8 @@ export default {
   background-image: url('/worldflipper/icon/dark.png');
 }
 
-.wfo-slot.main::before,
-.wfo-slot.unison::before,
+.wfo-slot.party-slot-main::before,
+.wfo-slot.party-slot-unison::before,
 .wfo::before {
   content: '';
   background-size: 14px;
@@ -373,7 +151,7 @@ export default {
   cursor: auto;
 }
 
-.main {
+.party-slot-main {
   z-index: 3;
   width: 88px;
   height: 104px;
@@ -381,12 +159,12 @@ export default {
   top: 0;
 }
 
-.main > img {
+.party-slot-main > img {
   width: 82px;
   height: 82px;
 }
 
-.armament {
+.party-slot-equipment {
   z-index: 5;
   width: 60px;
   height: 76px;
@@ -394,12 +172,12 @@ export default {
   right: 0;
 }
 
-.armament > img {
+.party-slot-equipment > img {
   width: 54px;
   height: 54px;
 }
 
-.unison {
+.party-slot-unison {
   z-index: 2;
   width: 75px;
   height: 91px;
@@ -407,7 +185,7 @@ export default {
   right: 0;
 }
 
-.unison > img {
+.party-slot-unison > img {
   width: 69px;
   height: 69px;
 }

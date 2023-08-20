@@ -7,18 +7,15 @@ const props = defineProps<{
   modelValue: Union
   show_name?: boolean
   show_awaken?: boolean
-  is_leader?: boolean
-  union_index?: number
+  union_index: number
   party_editor?: PartyEditor
 }>()
 const mainName = computed(() => {
-  if (props.show_name)
-    if (props.modelValue.main instanceof Character) return props.modelValue.main.names[0]
-  return props.is_leader ? '队长' : '主要角色'
+  if (props.show_name && props.modelValue.main) return props.modelValue.main?.names[0]
+  return props.union_index === 1 ? '队长' : '主要角色'
 })
 const unisonName = computed(() => {
-  if (props.show_name)
-    if (props.modelValue.unison instanceof Character) return props.modelValue.unison.names[0]
+  if (props.show_name && props.modelValue.unison) return props.modelValue.unison.names[0]
   return '辅助角色'
 })
 </script>
@@ -27,7 +24,7 @@ const unisonName = computed(() => {
   <div class="union">
     <div
       v-ripple="!!party_editor"
-      class="wfo-slot main"
+      class="wfo-slot party-slot-main"
       :class="[
         modelValue.main ? `ele-${Element[modelValue.main.element].toLowerCase()}` : undefined,
         party_editor?.verifyPosition(new PartyPosition(union_index, 0)) ? 'selected' : undefined
@@ -36,35 +33,53 @@ const unisonName = computed(() => {
     >
       <v-img
         :src="
-          modelValue.main
-            ? modelValue.main.res(show_awaken ? 'square212x/awakened' : 'square212x/base')
-            : '/static/worldflipper/unit/blank.png'
+          modelValue.main?.res(show_awaken ? 'square212x/awakened' : 'square212x/base') ||
+          '/static/worldflipper/unit/blank.png'
         "
         @dragstart.prevent
       />
+      <div
+        v-if="
+          (() => {
+            return true
+            // const ppm: PartyParam = props.party?._params.get('manaboard2')
+            // return ppm instanceof PartyParamManaboard2 ? !ppm[`union${union}main`].is_empty() : false
+          })()
+        "
+        class="party-card-manaboard2-wrapper"
+      >
+        <div v-for="i in 3" :key="i" style="width: 16px; text-align: center">
+          {{
+            (() => {
+              return '-'
+              // const m =
+              //   props.party._params.get('manaboard2')[`union${union}main`][`manaboard${i + 3}`]
+              // return typeof m === 'number' ? m : '-'
+            })()
+          }}
+        </div>
+      </div>
       <div style="text-align: center">
         {{ mainName }}
       </div>
     </div>
     <div
       v-ripple="!!party_editor"
-      class="wfo-slot armament"
-      :class="[party_editor?.verifyPosition(new PartyPosition(union_index, 2)) ? 'selected' : undefined]"
+      class="wfo-slot party-slot-equipment"
+      :class="[
+        party_editor?.verifyPosition(new PartyPosition(union_index, 2)) ? 'selected' : undefined
+      ]"
       @click="party_editor?.select(new PartyPosition(union_index, 2))"
     >
       <v-img
-        :src="
-          modelValue.equipment
-            ? modelValue.equipment.res('normal')
-            : '/static/worldflipper/unit/blank.png'
-        "
+        :src="modelValue.equipment?.res('normal') || '/static/worldflipper/unit/blank.png'"
         @dragstart.prevent
       />
       <div style="text-align: center">装备</div>
     </div>
     <div
       v-ripple="!!party_editor"
-      class="wfo-slot unison"
+      class="wfo-slot party-slot-unison"
       :class="[
         modelValue.unison ? `ele-${Element[modelValue.unison.element].toLowerCase()}` : undefined,
         party_editor?.verifyPosition(new PartyPosition(union_index, 1)) ? 'selected' : undefined
@@ -73,12 +88,42 @@ const unisonName = computed(() => {
     >
       <v-img
         :src="
-          modelValue.unison
-            ? modelValue.unison.res(show_awaken ? 'square212x/awakened' : 'square212x/base')
-            : '/static/worldflipper/unit/blank.png'
+          modelValue.unison?.res(show_awaken ? 'square212x/awakened' : 'square212x/base') ||
+          '/static/worldflipper/unit/blank.png'
         "
         @dragstart.prevent
       />
+      <div
+        style="
+          position: absolute;
+          display: flex;
+          background-color: rgba(0, 0, 0, 0.55);
+          color: white;
+          left: 0;
+          bottom: 16px;
+          border-top-right-radius: 6px;
+        "
+        v-if="
+          (() => {
+            return true
+            // const ppm: PartyParam = props.party?._params.get('manaboard2')
+            // return ppm instanceof PartyParamManaboard2 ? !ppm[`union${union}unison`].is_empty() : false
+          })()
+        "
+      >
+        <div v-for="i in 3" :key="i" style="width: 16px; text-align: center">
+          {{
+            (() => {
+              return '-'
+              // const m =
+              //   props.party._params.get('manaboard2')[`union${union}unison`][
+              //     `manaboard${i + 3}`
+              //     ]
+              // return typeof m === 'number' ? m : '-'
+            })()
+          }}
+        </div>
+      </div>
       <div style="text-align: center">
         {{ unisonName }}
       </div>
@@ -92,7 +137,7 @@ const unisonName = computed(() => {
       @click="party_editor?.select(new PartyPosition(union_index, 3))"
     >
       <v-img
-        :src="modelValue.core ? modelValue.core.res('soul') : '/static/worldflipper/unit/blank.png'"
+        :src="modelValue.core?.res('soul') || '/static/worldflipper/unit/blank.png'"
         @dragstart.prevent
       />
       <div style="text-align: center">魂珠</div>
@@ -150,8 +195,8 @@ const unisonName = computed(() => {
   background-image: url('/static/worldflipper/icon/dark.png');
 }
 
-.wfo-slot.main::before,
-.wfo-slot.unison::before,
+.wfo-slot.party-slot-main::before,
+.wfo-slot.party-slot-unison::before,
 .wfo::before {
   content: '';
   background-size: 14px;
@@ -185,7 +230,7 @@ const unisonName = computed(() => {
   border: rgb(var(--v-theme-primary)) 3px solid;
 }
 
-.main {
+.party-slot-main {
   z-index: 3;
   width: 88px;
   height: 104px;
@@ -193,12 +238,12 @@ const unisonName = computed(() => {
   top: 0;
 }
 
-.main > img {
+.party-slot-main > img {
   width: 82px;
   height: 82px;
 }
 
-.armament {
+.party-slot-equipment {
   z-index: 5;
   width: 60px;
   height: 76px;
@@ -206,12 +251,12 @@ const unisonName = computed(() => {
   right: 0;
 }
 
-.armament > img {
+.party-slot-equipment > img {
   width: 54px;
   height: 54px;
 }
 
-.unison {
+.party-slot-unison {
   z-index: 2;
   width: 75px;
   height: 91px;
@@ -219,7 +264,7 @@ const unisonName = computed(() => {
   right: 0;
 }
 
-.unison > img {
+.party-slot-unison > img {
   width: 69px;
   height: 69px;
 }
@@ -235,5 +280,15 @@ const unisonName = computed(() => {
 .core > img {
   width: 54px;
   height: 54px;
+}
+
+.party-card-manaboard2-wrapper {
+  position: absolute;
+  display: flex;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  left: 0;
+  bottom: 16px;
+  border-top-right-radius: 6px;
 }
 </style>

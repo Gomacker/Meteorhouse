@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { Unit, Armament, PartyRelease } from '@/stores/manager'
+import { PartyRelease, Union } from '@/anise/worldflipper/party'
+import type { WorldflipperObject } from '@/stores/worldflipper'
 
 const props = defineProps({
   party: {
@@ -22,14 +23,6 @@ const props = defineProps({
     default: false
   }
 })
-const allow_mb2_lv = [0, 1, 2, 3, 4, 5]
-const replacement_size = '36px'
-const show_replacements = ref(false)
-
-function get_pic_url(obj: Unit | Armament, awakened_or_soul = false) {
-  // console.log(obj)
-  return obj ? obj.pic_url(awakened_or_soul) : '/static/worldflipper/unit/blank.png'
-}
 </script>
 <template>
   <div
@@ -55,24 +48,47 @@ function get_pic_url(obj: Unit | Armament, awakened_or_soul = false) {
       <div
         style="width: 136px; height: 172px; margin-left: 8px"
         :key="union"
-        v-for="union in ['union1', 'union2', 'union3']"
+        v-for="union in [1, 2, 3]"
       >
-        <div class="main">
+        <div class="party-slot-main">
           <img
-            :src="get_pic_url(props.party.party[union].main, show_awaken)"
+            :src="
+              party.party
+                .union(union)
+                ?.main?.res(show_awaken ? 'square212x/awakened' : 'square212x/base') ||
+              '/static/worldflipper/unit/blank.png'
+            "
             alt=""
             @dragstart.prevent
           />
         </div>
-        <div class="armament" style="left: 80px; top: 10px">
-          <img :src="get_pic_url(props.party.party[union].armament)" alt="" @dragstart.prevent />
+        <div class="party-slot-equipment" style="left: 80px; top: 10px">
+          <img
+            :src="
+              party.party.union(union)?.equipment?.res('normal') ||
+              '/static/worldflipper/unit/blank.png'
+            "
+            alt=""
+            @dragstart.prevent
+          />
         </div>
         <div class="core" style="left: 0; bottom: 18px">
-          <img :src="get_pic_url(props.party.party[union].core)" alt="" @dragstart.prevent />
-        </div>
-        <div class="unison" style="right: 0; bottom: 8px">
           <img
-            :src="get_pic_url(props.party.party[union].unison, show_awaken)"
+            :src="
+              party.party.union(union)?.core?.res('soul') || '/static/worldflipper/unit/blank.png'
+            "
+            alt=""
+            @dragstart.prevent
+          />
+        </div>
+        <div class="party-slot-unison" style="right: 0; bottom: 8px">
+          <img
+            :src="
+              party.party
+                .union(union)
+                ?.unison?.res(show_awaken ? 'square212x/awakened' : 'square212x/base') ||
+              '/static/worldflipper/unit/blank.png'
+            "
             alt=""
             @dragstart.prevent
           />
@@ -150,8 +166,8 @@ export default {
 .ele-dark::before {
   background-image: url('/static/worldflipper/icon/dark.png');
 }
-.wfo-slot.main::before,
-.wfo-slot.unison::before,
+.wfo-slot.party-slot-main::before,
+.wfo-slot.party-slot-unison::before,
 .wfo::before {
   content: '';
   background-size: 14px;
@@ -177,7 +193,7 @@ export default {
   /*cursor: pointer;*/
   cursor: auto;
 }
-.main {
+.party-slot-main {
   height: 70px;
   width: 70px;
   box-sizing: content-box;
@@ -187,11 +203,11 @@ export default {
   box-shadow: 0 1px 8px #0003, 0 3px 4px #00000024, 0 3px 3px -2px #0000001f;
   position: absolute;
 }
-.main > img {
+.party-slot-main > img {
   width: inherit;
   height: inherit;
 }
-.armament {
+.party-slot-equipment {
   height: 50px;
   width: 50px;
   box-sizing: content-box;
@@ -201,11 +217,11 @@ export default {
   box-shadow: 0 1px 8px #0003, 0 3px 4px #00000024, 0 3px 3px -2px #0000001f;
   position: absolute;
 }
-.armament > img {
+.party-slot-equipment > img {
   width: inherit;
   height: inherit;
 }
-.unison {
+.party-slot-unison {
   height: 70px;
   width: 70px;
   box-sizing: content-box;
@@ -215,7 +231,7 @@ export default {
   box-shadow: 0 1px 8px #0003, 0 3px 4px #00000024, 0 3px 3px -2px #0000001f;
   position: absolute;
 }
-.unison > img {
+.party-slot-unison > img {
   width: inherit;
   height: inherit;
 }

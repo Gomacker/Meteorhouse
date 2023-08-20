@@ -45,6 +45,7 @@ const show_dialog = ref(false)
 
 <template>
   <v-card v-ripple class="party-card elevation-6">
+
     <div style="padding: 12px 8px 8px; background: transparent">
       <div style="display: flex; justify-content: space-between">
         <div>

@@ -684,10 +684,10 @@ export class PartyRelease {
 export const manager = reactive(new Manager())
 
 
-export async function init() {
-  const unit_rsp = await axios.post('/api/v1/data/unit/')
-  const armament_rsp = await axios.post('/api/v1/data/armament/')
-  manager.load({ unit: unit_rsp.data, armament: armament_rsp.data })
-}
-
-init().then()
+// export async function init() {
+//   const unit_rsp = await axios.post('/api/v1/data/unit/')
+//   const armament_rsp = await axios.post('/api/v1/data/armament/')
+//   manager.load({ unit: unit_rsp.data, armament: armament_rsp.data })
+// }
+//
+// init().then()

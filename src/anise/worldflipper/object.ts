@@ -110,10 +110,6 @@ export class Character extends GameObject {
     )
   }
 
-  // res(res_group: string): string {
-  //   return `/static/${this.__type_id}/${res_group}/${this.resource_id}.png`
-  // }
-
   get nature_max_level(): number {
     return Math.floor(Character.LEVEL_CAP[String(this.rarity)][0])
   }

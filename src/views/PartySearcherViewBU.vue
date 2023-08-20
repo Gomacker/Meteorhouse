@@ -3,7 +3,7 @@ import PartyReleaseCard from '@/components/card/PartyReleaseCard.vue'
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
-import { PartyRelease } from '@/anise/worldflipper/party'
+import { PartyRelease } from "@/anise/worldflipper/party";
 
 const page_party_list = ref(new Map())
 
@@ -77,19 +77,17 @@ onMounted(() => {
       padding: 16px 0;
     "
   >
-    <div style="margin: 16px 32px 8px; display: flex; align-items: center">
+    <div style="margin: 16px 32px 8px; display: flex">
       <v-text-field
         label="搜索鸭"
         variant="solo"
-        density="compact"
-        hide-details
         prepend-icon="mdi-magnify"
         v-model="search_content"
         @keydown.enter="search_party(search_content)"
-      />
+      ></v-text-field>
       <v-btn
         :color="'rgba(163,56,220,0.75)'"
-        style="margin-left: 16px"
+        style="margin-left: 16px; margin-top: 6px"
         size="large"
         @click="search_party(search_content)"
       >
@@ -97,53 +95,33 @@ onMounted(() => {
       </v-btn>
     </div>
     <v-card
-      :loading="loading"
-      class="elevation-0 party-searcher-wrapper"
-      style="background: transparent; height: 100%; padding: 8px; margin: 0 16px"
-      ><div
-        style="
-          display: flex;
-          flex-direction: row;
-          align-items: flex-start;
-          justify-content: center;
-          flex-wrap: wrap;
-        "
-      >
-        <template v-if="page_party_list.size">
-          <template v-for="party in page_party_list" :key="party[0]">
-            <PartyReleaseCard style="margin: 4px" :party_release="PartyRelease.load(party[1])" />
+      v-loading="loading"
+      class="elevation-0"
+      style="background-color: #ffffff80; height: 100%; padding: 8px; margin: 0 16px"
+    >
+      <div style="overflow-y: scroll; height: 100%">
+        <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: center; flex-wrap: wrap">
+          <template v-if="page_party_list.size">
+            <template v-for="party in page_party_list" :key="party[0]">
+              <PartyReleaseCard style="margin: 4px" :party_release="PartyRelease.load(party[1])" />
+            </template>
           </template>
-        </template>
+        </div>
       </div>
     </v-card>
-    <div class="party-searcher-pagination-wrapper">
+    <div style="margin: 16px; display: flex; justify-content: center">
       <v-pagination
         v-model="current_page"
         :length="Math.ceil(party_count / 12)"
-        @update:model-value="get_data(current_page, search_content_applied)"
-        class="party-searcher-pagination"
-      />
+        style="width: 50%"
+        @update:model-value="
+          () => {
+            get_data(current_page, search_content_applied)
+          }
+        "
+      ></v-pagination>
     </div>
   </div>
 </template>
 
-<style scoped>
-.party-searcher-wrapper {
-  overflow-y: scroll;
-  height: 100%;
-}
-.party-searcher-wrapper::-webkit-scrollbar {
-  width: 0;
-}
-
-.party-searcher-pagination-wrapper {
-  margin: 16px;
-  display: flex;
-  justify-content: center;
-}
-
-.party-searcher-pagination {
-  width: 50%;
-  min-width: 540px;
-}
-</style>
+<style scoped></style>

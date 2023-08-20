@@ -49,8 +49,8 @@
     background-image: url('/static/worldflipper/icon/dark.png');
 }
 
-.wfo-slot.main::before,
-.wfo-slot.unison::before,
+.wfo-slot.party-slot-main::before,
+.wfo-slot.party-slot-unison::before,
 .wfo::before {
     content: '';
     background-size: 14px;
@@ -79,7 +79,7 @@
     cursor: auto;
 }
 
-.main {
+.party-slot-main {
     z-index: 3;
     width: 88px;
     height: 104px;
@@ -87,12 +87,12 @@
     top: 0;
 }
 
-.main > img {
+.party-slot-main > img {
     width: 82px;
     height: 82px;
 }
 
-.armament {
+.party-slot-equipment {
     z-index: 5;
     width: 60px;
     height: 76px;
@@ -100,12 +100,12 @@
     right: 0;
 }
 
-.armament > img {
+.party-slot-equipment > img {
     width: 54px;
     height: 54px;
 }
 
-.unison {
+.party-slot-unison {
     z-index: 2;
     width: 75px;
     height: 91px;
@@ -113,7 +113,7 @@
     right: 0;
 }
 
-.unison > img {
+.party-slot-unison > img {
     width: 69px;
     height: 69px;
 }

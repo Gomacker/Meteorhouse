@@ -37,14 +37,6 @@ const table = computed(() => new Table(table_data.value))
     "
   >
     <SummaryTable v-if="table_data" :table="table"/>
-    <!--    <SummaryTableCard-->
-    <!--      :table="new Table(table)"-->
-    <!--      :party_style="{-->
-    <!--        show_awaken: show_awaken,-->
-    <!--        show_name: show_name,-->
-    <!--        show_replacements: show_replacements-->
-    <!--      }"-->
-    <!--    />-->
   </div>
 </template>
 

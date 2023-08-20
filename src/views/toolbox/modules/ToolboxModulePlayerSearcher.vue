@@ -76,6 +76,7 @@ const partyWrapped = computed(() =>
             :model-value="playerProfile as PlayerProfile"
           />
           <div
+            v-ripple
             style="
               margin: 8px 0;
               padding: 4px;
