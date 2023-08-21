@@ -1,8 +1,7 @@
 import table, { TableElement } from '@/components/table/table'
 import type { JSX } from 'vue/jsx-runtime'
-import { h, render } from "vue";
+import { h } from "vue";
 import TableComponentTextContent from '@/components/table/elements/TableComponentTextContent.vue'
-import TableTextContent from '@/components/table/TableTextContent'
 
 export class TableElementContainer extends TableElement {
   readonly __type: string = 'Container'
