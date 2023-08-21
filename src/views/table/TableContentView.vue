@@ -30,7 +30,7 @@ const table = computed(() => new Table(table_data.value))
     style="
       width: 100%;
       min-width: fit-content;
-      padding: 24px;
+      padding: 24px 0;
       display: flex;
       justify-content: center;
       overflow: auto;

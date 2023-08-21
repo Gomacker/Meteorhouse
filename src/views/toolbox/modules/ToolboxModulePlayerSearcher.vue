@@ -19,6 +19,7 @@ async function searchPlayer(player_id: string) {
   )
   if (player_data.status === 200) {
     player_data = player_data.data
+    console.log(player_data);
     if (player_data) {
       playerProfile.value = {
         player_id: player_data['search_result']['viewer_id'],

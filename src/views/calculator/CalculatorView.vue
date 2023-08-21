@@ -8,6 +8,8 @@ import CalculatorModuleWikiCard from '@/views/calculator/modules/CalculatorModul
 import CalculatorModuleResource from '@/views/calculator/modules/CalculatorModuleResource.vue'
 import CalculatorModuleParty from '@/views/calculator/modules/CalculatorModuleParty.vue'
 import { Party, PartyEditor, PartyPosition, PartyRelease } from '@/anise/worldflipper/party'
+import { useDefer } from "@/utils";
+import CalculatorModuleUpdate from "@/views/calculator/modules/CalculatorModuleUpdate.vue";
 
 const worldflipper = useWorldflipperDataStore()
 
@@ -15,10 +17,10 @@ type EditorModule = 'Calculator' | 'WikiCard' | 'Editor' | 'Upload' | 'Resource'
 const selected_module = ref<EditorModule>('Editor')
 
 const memory_object = ref<WorldflipperObject>(undefined)
-
 const panel_closed = ref<boolean>(false)
-
 const party_editor = reactive<PartyEditor>(new PartyEditor(PartyRelease.empty()))
+
+const defer = useDefer()
 
 watch(party_editor, (value) => {
   if (value.selected_object instanceof PartyPosition && value.party)
@@ -30,7 +32,7 @@ watch(party_editor, (value) => {
 <template>
   <div style="height: 100%; width: 100%; overflow-y: hidden">
     <div style="display: flex; flex-direction: column; height: 100%">
-      <v-tabs v-model="selected_module" bg-color="blue-lighten-1" align-tabs="center">
+      <v-tabs v-if="defer(0)" v-model="selected_module" bg-color="blue-lighten-1" align-tabs="center">
         <v-tab value="Calculator">
           <v-icon icon="mdi-calculator" />
           计算
@@ -57,19 +59,20 @@ watch(party_editor, (value) => {
           <CalculatorModuleNotAvailable />
         </v-window-item>
         <v-window-item value="WikiCard" style="height: 100%">
-          <CalculatorModuleWikiCard :obj="memory_object" />
+          <CalculatorModuleWikiCard v-if="defer(3)" :obj="memory_object" />
         </v-window-item>
         <v-window-item value="Editor">
           <CalculatorModuleParty
+            v-if="defer(1)"
             :party="party_editor.party as PartyRelease || PartyRelease.empty()"
-            :party_editor="party_editor instanceof PartyEditor ? party_editor : undefined"
+            :party_editor="party_editor as PartyEditor"
           />
         </v-window-item>
         <v-window-item value="Upload">
-          <CalculatorModuleNotAvailable />
+          <CalculatorModuleUpdate :party_editor="party_editor as PartyEditor" />
         </v-window-item>
         <v-window-item value="Resources" style="height: 100%">
-          <CalculatorModuleResource :obj="memory_object" />
+          <CalculatorModuleResource v-if="defer(3)" :obj="memory_object" />
         </v-window-item>
       </v-window>
     </div>
@@ -89,6 +92,7 @@ watch(party_editor, (value) => {
       @click="panel_closed = !panel_closed"
     />
     <CalculatorPanel
+      v-if="defer(2)"
       class="panel"
       :class="panel_closed ? ['closed'] : []"
       :characters="worldflipper.characters"

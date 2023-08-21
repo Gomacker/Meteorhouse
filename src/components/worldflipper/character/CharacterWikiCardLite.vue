@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import UnitPicOrigin from '@/components/objects/unit/UnitPicOrigin.vue'
 import GameTag from '@/components/party/GameTag.vue'
 import chroma from 'chroma-js'
+import { Character } from "@/anise/worldflipper/object";
 
 const alpha = 0.85
 
@@ -20,13 +21,13 @@ function get_tags(unit: Unit) {
 }
 
 const props = defineProps({
-  unit: Unit
+  obj: Character
 })
 </script>
 <template>
   <div
     class="unit-lite-card"
-    v-if="props.unit"
+    v-if="props.obj"
   >
     <div
       style="
@@ -40,20 +41,20 @@ const props = defineProps({
         color: rgb(50, 50, 50);
       "
       :style="{
-        background: `linear-gradient(135deg, ${chroma(ele2color[props.unit.element]).alpha(
+        background: `linear-gradient(135deg, ${chroma(ele2color[props.obj.element]).alpha(
           alpha
         )} 101px, rgba(248,248,248, 0.77) 101px, rgba(248,248,248, 0.85) calc(100% - 32px), rgba(0,40,115, 0.85) calc(100% - 32px), rgba(0,0,0, 0.85))`
       }"
     >
       <div style="display: flex; width: 100%; margin: 16px 16px 0">
-        <UnitPicOrigin :unit="props.unit" :size="80" :awakened="show_awakened" />
+        <UnitPicOrigin :unit="props.obj" :size="80" :awakened="show_awakened" />
         <div style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap">
           <div style="padding: 0 16px; font-size: 20px; max-width: 186px">
             <p style="font-size: 18px; font-family: '华文细黑', serif; font-weight: 600">
-              {{ props.unit.name_sub }}
+              {{ props.obj.name_sub }}
             </p>
             <p style="font-size: 30px; font-family: '华文细黑', serif; font-weight: 600">
-              {{ props.unit.name_zh }}
+              {{ props.obj.name_zh }}
             </p>
           </div>
           <div>
@@ -68,11 +69,11 @@ const props = defineProps({
               <div style="/*margin: -8px 8px; width: 165px*/">
                 <div class="span-f">
                   <div class="span-tag">类型</div>
-                  {{ props.unit.pf_type }}
+                  {{ props.obj.pf_type }}
                 </div>
                 <div class="span-f">
                   <div class="span-tag">CV</div>
-                  {{ props.unit.cv }}
+                  {{ props.obj.cv }}
                 </div>
               </div>
             </div>
@@ -81,9 +82,9 @@ const props = defineProps({
       </div>
       <hr style="width: 100%; margin: 12px 12px 8px" />
       <div>
-        <template v-if="props.unit.tags">
+        <template v-if="props.obj.tags">
           <GameTag
-            v-for="(tag_content, index) in get_tags(props.unit)"
+            v-for="(tag_content, index) in get_tags(props.obj)"
             :key="index"
             :content="tag_content"
           />
@@ -97,7 +98,7 @@ const props = defineProps({
 .unit-lite-card {
   display: block;
   width: 480px;
-  background: url('/static/worldflipper/ui/background_cut_official.png');
+  background: url('/worldflipper/ui/background_cut_official.png');
   background-size: 136px;
   background-position-x: -10px;
   background-position-y: -10px;

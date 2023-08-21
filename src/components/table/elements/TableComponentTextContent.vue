@@ -2,9 +2,13 @@
 import { manager } from '@/stores/manager'
 import ArmamentPicOrigin from '@/components/objects/armament/ArmamentPicOrigin.vue'
 import GameTag from '@/components/party/GameTag.vue'
+import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
+import { useWorldflipperDataStore } from '@/stores/worldflipper'
+import EquipmentIcon from '@/components/worldflipper/equipment/EquipmentIcon.vue'
 
 function splitByBrackets(str: string) {
-  str = str.replaceAll('\n', '</span><span style="padding-bottom: 5px;">')
+  // str = str.replaceAll('\n', '</span><span style="padding-bottom: 5px;">')
+  // str = str.split('\n')
   // str = str.replaceAll(
   //   '[biliicon]',
   //   '<img style="width: 24px; vertical-align: text-bottom; margin: 0 4px;" src="https://www.bilibili.com/favicon.ico" alt=""/>'
@@ -46,6 +50,8 @@ const props = defineProps({
     default: false
   }
 })
+
+const worldflipper = useWorldflipperDataStore()
 </script>
 <template>
   <div>
@@ -61,47 +67,33 @@ const props = defineProps({
         style="font-weight: inherit"
         :key="row_index"
         class="table-text-row"
-        v-for="(row, row_index) in props.content.split('\n')"
+        v-for="(row, row_index) in typeof props.content === 'string'
+          ? props.content.split('\n')
+          : []"
       >
         <template :key="s_index" v-for="(s, s_index) in splitByBrackets(row)">
-          <UnitPicOrigin
-            v-if="
-              s.startsWith('[bigicon:u') &&
-              manager.unit_data.get(parseInt(s.substring(10, s.length - 1)))
-            "
-            style="margin: 0 4px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
+          <CharacterIcon
+            v-if="s.match(/^\[bigicon:u/)"
+            class="icon-wfo-obj"
             :size="90"
-            :unit="manager.unit_data.get(parseInt(s.substring(10, s.length - 1)))"
+            :obj="worldflipper.characters.get(s.substring(10, s.length - 1))"
           />
-          <!-- [bigicon:uX] -->
-          <UnitPicOrigin
-            v-else-if="
-              s.startsWith('[icon:u') &&
-              manager.unit_data.get(parseInt(s.substring(7, s.length - 1)))
-            "
-            style="margin: 0 2px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
+          <CharacterIcon
+            v-else-if="s.startsWith('[icon:u')"
+            class="icon-wfo-obj"
             :size="60"
-            :unit="manager.unit_data.get(parseInt(s.substring(7, s.length - 1)))"
+            :obj="worldflipper.characters.get(s.substring(7, s.length - 1))"
           />
-          <!-- [icon:uX] -->
-          <ArmamentPicOrigin
-            v-else-if="
-              s.startsWith('[bigicon:a') &&
-              manager.armament_data.get(parseInt(s.substring(10, s.length - 1)))
-            "
-            style="margin: 0 4px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
+          <EquipmentIcon
+            v-else-if="s.startsWith('[bigicon:a')"
+            class="icon-wfo-obj"
             :size="90"
-            :armament="manager.armament_data.get(parseInt(s.substring(10, s.length - 1)))"
+            :obj="worldflipper.equipments.get(s.substring(10, s.length - 1))"
           />
-          <!-- [bigicon:aX] -->
-          <ArmamentPicOrigin
-            v-else-if="
-              s.startsWith('[icon:a') &&
-              manager.armament_data.get(parseInt(s.substring(7, s.length - 1)))
-            "
-            style="margin: 0 2px; filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8))"
+          <EquipmentIcon
+            v-else-if="s.startsWith('[icon:a')"
             :size="60"
-            :armament="manager.armament_data.get(parseInt(s.substring(7, s.length - 1)))"
+            :obj="worldflipper.equipments.get(s.substring(7, s.length - 1))"
           />
           <img
             @dragstart.prevent
@@ -110,7 +102,6 @@ const props = defineProps({
             :src="`/static/worldflipper/icon/${s.substring(6, s.length - 1)}.png`"
             alt=""
           />
-          <!-- [icon:aX] -->
           <img
             v-else-if="s === '[biliicon]'"
             style="
@@ -265,5 +256,10 @@ export default {
 }
 .bold {
   font-weight: bold;
+}
+
+.icon-wfo-obj {
+  margin: 0 4px;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
 }
 </style>

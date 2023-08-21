@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SummaryTableCard
+    <SummaryTable
       :table="new Table(table)"
       :party_style="{
         show_awaken: show_awaken,
@@ -12,11 +12,11 @@
 </template>
 
 <script lang="ts">
-import SummaryTableCard from '@/components/table/SummaryTableCard.vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { Table } from '@/components/table/table'
+import SummaryTable from "@/components/table/SummaryTable.vue";
 
 const table_data = ref({})
 
@@ -55,7 +55,7 @@ export default {
   unmounted() {
     table_data.value = {}
   },
-  components: { SummaryTableCard }
+  components: { SummaryTable }
 }
 </script>
 

@@ -206,20 +206,6 @@ export class Party {
     }
   }
 }
-export interface PartyParam {
-  dump(): any
-  load(): PartyParam
-  empty(): PartyParam
-}
-export class PartyParamManaboard2 implements PartyParam {
-  load(): PartyParam {
-    return new PartyParamManaboard2()
-  }
-  empty(): PartyParam {
-    return new PartyParamManaboard2()
-  }
-  dump(): any {}
-}
 export class PartyRelease {
   constructor(
     public party: Party,
@@ -300,7 +286,7 @@ export class PartyEditor {
     )
   }
 
-  hasRepeat() {
+  getRepeats() {
     const characterRepeat = [
       this.party.party.union1.main?.id,
       this.party.party.union2.main?.id,
@@ -336,5 +322,97 @@ export class PartyEditor {
       { cache: [], repeat: new Set<PartyPosition>() }
     )
     return repeater.repeat
+  }
+}
+
+export abstract class PartyParam {
+  abstract readonly __type: string
+  abstract dump(): any
+  abstract load(data: any): PartyParam
+  abstract isEmpty(): boolean
+}
+
+interface Manaboard2Values {
+  manaboard4?: number
+  manaboard5?: number
+  manaboard6?: number
+}
+export class PartyParamManaboard2 extends PartyParam {
+  readonly __type: string = 'manaboard2'
+  private readonly union1: Manaboard2Values[]
+  private readonly union2: Manaboard2Values[]
+  private readonly union3: Manaboard2Values[]
+  constructor(
+    union1?: Manaboard2Values[],
+    union2?: Manaboard2Values[],
+    union3?: Manaboard2Values[]
+  ) {
+    super()
+    this.union1 = union1 || [{}, {}]
+    this.union2 = union2 || [{}, {}]
+    this.union3 = union3 || [{}, {}]
+  }
+
+  set(position: PartyPosition, mb2: Manaboard2Values) {
+    if ([0, 1].includes(position.positionIndex)) {
+      switch (position.positionIndex) {
+        case 1:
+          this.union1[position.positionIndex] = mb2
+          return
+        case 2:
+          this.union2[position.positionIndex] = mb2
+          return
+        case 3:
+          this.union3[position.positionIndex] = mb2
+          return
+      }
+    }
+    return
+  }
+
+  get(position: PartyPosition): Manaboard2Values | undefined {
+    if ([0, 1].includes(position.positionIndex)) {
+      switch (position.positionIndex) {
+        case 1:
+          return this.union1[position.positionIndex] || {}
+        case 2:
+          return this.union2[position.positionIndex] || {}
+        case 3:
+          return this.union3[position.positionIndex] || {}
+      }
+    }
+    return
+  }
+
+  dump(): any {
+    const dumpFunc = (value: Manaboard2Values) => [
+      value.manaboard4,
+      value.manaboard5,
+      value.manaboard6
+    ]
+    return {
+      union1: this.union1.map(dumpFunc),
+      union2: this.union2.map(dumpFunc),
+      union3: this.union3.map(dumpFunc)
+    }
+  }
+
+  load(data: any): PartyParam {
+    const loadFunc = (value: Array<number | undefined>) => {
+      return { manaboard4: value[0], manaboard5: value[1], manaboard6: value[2] }
+    }
+    return new PartyParamManaboard2(
+      (data['union1'] as Array<Array<number | undefined>>).map(loadFunc),
+      (data['union2'] as Array<Array<number | undefined>>).map(loadFunc),
+      (data['union3'] as Array<Array<number | undefined>>).map(loadFunc)
+    )
+  }
+
+  isEmpty(): boolean {
+    return !(
+      this.union1.some((value) => !!value) &&
+      this.union2.some((value) => !!value) &&
+      this.union3.some((value) => !!value)
+    )
   }
 }

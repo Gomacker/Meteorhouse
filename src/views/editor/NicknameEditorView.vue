@@ -7,7 +7,7 @@ import axios from 'axios'
 const roster_data = ref<{
   unit: Map<number, Array<string>>
   armament: Map<number, Array<string>>
-}>({ unit: new Map(), armament: new Map() })
+}>({ obj: new Map(), armament: new Map() })
 axios.post('/api/v1/data/roster/').then((r) => {
   roster_data.value.unit = new Map(
     Object.entries(r.data['unit']).map((value) => [parseInt(value[0]), <Array<string>>value[1]])

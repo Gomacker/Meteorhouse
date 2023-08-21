@@ -7,12 +7,7 @@ import GameTag from '@/components/party/GameTag.vue'
 import chroma from 'chroma-js'
 import { computed } from 'vue'
 
-const props = defineProps({
-  obj: {
-    type: Character,
-    required: true
-  }
-})
+const props = defineProps<{ obj: Character; lite?: boolean }>()
 
 const alpha = 0.8
 
@@ -42,26 +37,25 @@ const translated_type = computed(() => type2zh[props.obj?.type])
 
 <template>
   <div
+    v-ripple="lite"
     style="
-      width: 960px;
       background: url(/static/worldflipper/ui/background_cut_official.png);
       background-size: 136px;
       background-position-x: -10px;
       background-position-y: -10px;
       image-rendering: pixelated;
     "
+    :style="{
+      width: lite ? '480px' : '960px'
+    }"
   >
     <div
       :style="{
-        background: `url(/static/${obj.__type_id}/full_resized/awakened/${obj.resource_id}.png) no-repeat`
+        background: `url(/static/${obj.__type_id}/full_resized/awakened/${obj.resource_id}.png) no-repeat`,
+        backgroundSize: lite ? '420px' : '720px',
+        backgroundPosition: lite ? 'calc(100% + 40px) 20%' : 'calc(100% + 100px) 80%'
       }"
-      style="
-        background-position: calc(100% + 100px) 80%;
-        background-size: 720px;
-        image-rendering: initial;
-        height: 100%;
-        border-radius: inherit;
-      "
+      style="image-rendering: initial; height: 100%; border-radius: inherit"
     >
       <div
         style="
@@ -70,12 +64,12 @@ const translated_type = computed(() => type2zh[props.obj?.type])
           align-content: flex-start;
           align-items: flex-start;
           flex-wrap: wrap;
-          padding: 16px;
           color: rgb(50, 50, 50);
           height: 100%;
           border-radius: inherit;
         "
         :style="{
+          padding: lite ? '6px' : '16px',
           background: `
           linear-gradient(
           135deg,
@@ -119,20 +113,23 @@ const translated_type = computed(() => type2zh[props.obj?.type])
                 style="
                   display: grid;
                   grid-auto-flow: column;
-                  grid-template-rows: repeat(2, auto);
-                  grid-template-columns: repeat(3, 160px);
+                  grid-template-columns: repeat(auto-fit, 160px);
                   grid-gap: 12px;
-                  padding: 16px 4px;
                   font-size: 16px;
                   justify-content: space-evenly;
                 "
+                :style="{
+                  gridTemplateRows: lite ? 'repeat(1, auto)' : 'repeat(2, auto)',
+                  gridTemplateColumns: lite ? 'repeat(auto-fit, 160px)' : 'repeat(3, 160px)',
+                  padding: lite ? '4px' : '16px 4px'
+                }"
               >
-                <div class="span-f">
+                <div v-if="!lite" class="span-f">
                   <div class="span-tag">HP</div>
                   {{ status[0] }}
                   <span style="color: crimson">({{ status_max[0] }})</span>
                 </div>
-                <div class="span-f">
+                <div v-if="!lite" class="span-f">
                   <div class="span-tag">ATK</div>
                   {{ status[1] }}
                   <span style="color: crimson">({{ status_max[1] }})</span>
@@ -141,11 +138,11 @@ const translated_type = computed(() => type2zh[props.obj?.type])
                   <div class="span-tag">类型</div>
                   {{ translated_type }}
                 </div>
-                <div class="span-f">
+                <div v-if="!lite" class="span-f">
                   <div class="span-tag">种族</div>
                   {{ translated_race }}
                 </div>
-                <div class="span-f">
+                <div v-if="!lite" class="span-f">
                   <div class="span-tag">性别</div>
                   {{ translated_gender }}
                 </div>
@@ -154,18 +151,21 @@ const translated_type = computed(() => type2zh[props.obj?.type])
                   {{ obj.cv }}
                 </div>
               </div>
-              <template v-if="obj.tags">
+              <div v-if="obj.tags && !lite">
                 <GameTag
                   v-for="(tag_content, index) in obj.tags"
                   :key="index"
                   :content="tag_content"
                 />
-              </template>
+              </div>
             </div>
           </div>
         </div>
-        <hr style="width: 100%; margin: 12px 12px 8px" />
-        <div>
+        <hr style="width: 100%" :style="{margin: lite ? '6px 6px 4px' : '12px 12px 8px'}" />
+        <div v-if="obj.tags && lite" style="margin: 0 4px">
+          <GameTag v-for="(tag_content, index) in obj.tags" :key="index" :content="tag_content" />
+        </div>
+        <div v-if="!lite">
           <div style="display: flex; margin: 16px 16px 0">
             <div class="span-title">队长</div>
             <div style="display: flex; flex-direction: column">
@@ -227,17 +227,23 @@ const translated_type = computed(() => type2zh[props.obj?.type])
               </div>
               <div v-if="obj.abilities[4]" class="span-ability">
                 <div style="color: rgb(47, 195, 183); font-size: 20px">❺</div>
-                <div style="margin: 0 8px; opacity: 0.55" v-html="format_content(obj.abilities[4])" />
+                <div
+                  style="margin: 0 8px; opacity: 0.55"
+                  v-html="format_content(obj.abilities[4])"
+                />
               </div>
               <div v-if="obj.abilities[5]" class="span-ability">
                 <div style="color: rgb(47, 195, 183); font-size: 20px">❻</div>
-                <div style="margin: 0 8px; opacity: 0.55" v-html="format_content(obj.abilities[5])" />
+                <div
+                  style="margin: 0 8px; opacity: 0.55"
+                  v-html="format_content(obj.abilities[5])"
+                />
               </div>
             </div>
           </div>
         </div>
-        <hr style="width: 100%; margin: 12px 12px 8px" />
-        <div style="display: flex; flex-direction: column">
+        <hr v-if="!lite" style="width: 100%; margin: 12px 12px 8px" />
+        <div v-if="!lite" style="display: flex; flex-direction: column">
           <div style="padding: 16px; font-size: 16px">
             {{ obj.description }}
           </div>

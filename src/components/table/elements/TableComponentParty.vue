@@ -54,6 +54,7 @@ const props = defineProps<{
         :show_awaken="props.party_style?.show_awaken"
         :always_show_replacements="props.party_style?.show_replacements"
         :party="element.party"
+        eager
       />
     </div>
   </v-card>

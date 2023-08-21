@@ -67,7 +67,6 @@ const show_awaken = ref(false)
 
 <template>
   <div class="party-editor-container">
-    <!--    <div style="height: 36px" />-->
     <div style="display: flex">
       <v-switch v-model="show_name" density="compact" hide-details label="显示名称" />
       <v-switch
@@ -192,7 +191,17 @@ const show_awaken = ref(false)
         </div>
       </div>
     </v-card>
-    <div class="masked-gradient"></div>
+    <v-card color="warning" style="width: 480px; margin-top: 36px" class="elevation-4">
+      <v-card-item>
+        <v-textarea
+          style="margin-top: 8px"
+          label="Debug Object"
+          variant="outlined"
+          :model-value="JSON.stringify(party.dump())"
+          hide-details
+        />
+      </v-card-item>
+    </v-card>
   </div>
 </template>
 

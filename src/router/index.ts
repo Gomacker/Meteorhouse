@@ -62,7 +62,7 @@ const router = createRouter({
     {
       path: '/editor/table',
       name: 'table_editor',
-      component: () => import('@/views/editor/TableEditorView.vue')
+      component: () => import('@/views/table/TableEditorView.vue')
     },
     {
       path: '/editor/nickname',
@@ -126,7 +126,7 @@ const router = createRouter({
       path: '/card/room',
       name: 'room_card',
       component: () => import('@/views/card/RoomCardView.vue')
-    },
+    }
   ]
 })
 

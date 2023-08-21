@@ -80,3 +80,11 @@ html {
   overflow-y: auto;
   overflow-x: auto;
 }
+
+.icon-desc {
+  width: 24px;
+  height: 24px;
+  aspect-ratio: 1/1;
+  vertical-align: text-bottom;
+  margin: 0 2px;
+}

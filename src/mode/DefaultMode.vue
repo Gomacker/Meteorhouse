@@ -55,7 +55,7 @@ onMounted(() => {
           />
           <v-list-item
             prepend-icon="mdi-calculator"
-            color="red"
+            color="blue"
             title="组盘器"
             value="partyeditor"
             @click="$router.push('/partyEditor')"
@@ -69,8 +69,8 @@ onMounted(() => {
           />
           <v-list-item
             prepend-icon="mdi-toolbox"
-            color="orange"
-            title="工具箱"
+            color="red"
+            title="工具箱（Beta）"
             value="toolbox"
             @click="$router.push('/toolbox')"
           />
@@ -81,13 +81,13 @@ onMounted(() => {
             value="calendar"
             @click="$router.push('/calendar')"
           />
-<!--          <v-list-item-->
-<!--            prepend-icon="mdi-calendar"-->
-<!--            color="purple"-->
-<!--            title="Events2"-->
-<!--            value="calendar"-->
-<!--            @click="$router.push('/events')"-->
-<!--          />-->
+          <!--          <v-list-item-->
+          <!--            prepend-icon="mdi-calendar"-->
+          <!--            color="purple"-->
+          <!--            title="Events2"-->
+          <!--            value="calendar"-->
+          <!--            @click="$router.push('/events')"-->
+          <!--          />-->
           <v-list-item
             prepend-icon="mdi-table"
             color="blue"

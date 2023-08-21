@@ -3,7 +3,7 @@ import TableComponentEditor from '@/components/editor/TableComponentEditor.vue'
 import { ref } from 'vue'
 import axios from 'axios'
 import { Table, TableElement } from '@/components/table/table'
-import SummaryTableCard from '@/components/table/SummaryTableCard.vue'
+import SummaryTable from "@/components/table/SummaryTable.vue";
 // import { ElMessage } from 'element-plus'
 
 const table_list = ref({})
@@ -231,7 +231,7 @@ function save_table() {
         "
         v-if="combine_view"
       >
-        <SummaryTableCard
+        <SummaryTable
           class="elevation-12"
           style="flex-shrink: 0; overflow: auto; height: fit-content; border-radius: 16px"
           :table="table"

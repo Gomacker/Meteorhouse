@@ -13,6 +13,7 @@ const props = defineProps<{
   replacements?: object
   editable?: boolean
   party_editor?: PartyEditor
+  eager?: boolean
 }>()
 const replacement_size = 26
 const show_replacements = ref(false)
@@ -26,6 +27,7 @@ const show_replacements = ref(false)
       :show_awaken="show_awaken"
       :party_editor="party_editor"
       :union_index="1"
+      :eager="eager"
 
     />
     <UnionComponent
@@ -34,6 +36,7 @@ const show_replacements = ref(false)
       :show_awaken="show_awaken"
       :party_editor="party_editor"
       :union_index="2"
+      :eager="eager"
     />
     <UnionComponent
       v-model="$props.party.party.union3"
@@ -41,6 +44,7 @@ const show_replacements = ref(false)
       :show_awaken="show_awaken"
       :party_editor="party_editor"
       :union_index="3"
+      :eager="eager"
     />
   </div>
 </template>

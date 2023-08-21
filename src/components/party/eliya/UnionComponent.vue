@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PartyEditor, PartyPosition, Union } from '@/anise/worldflipper/party'
-import { Character, Element } from '@/anise/worldflipper/object'
+import { Element } from '@/anise/worldflipper/object'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -9,6 +9,7 @@ const props = defineProps<{
   show_awaken?: boolean
   union_index: number
   party_editor?: PartyEditor
+  eager?: boolean
 }>()
 const mainName = computed(() => {
   if (props.show_name && props.modelValue.main) return props.modelValue.main?.names[0]
@@ -36,6 +37,7 @@ const unisonName = computed(() => {
           modelValue.main?.res(show_awaken ? 'square212x/awakened' : 'square212x/base') ||
           '/static/worldflipper/unit/blank.png'
         "
+        :eager="eager || false"
         @dragstart.prevent
       />
       <div
@@ -73,6 +75,7 @@ const unisonName = computed(() => {
     >
       <v-img
         :src="modelValue.equipment?.res('normal') || '/static/worldflipper/unit/blank.png'"
+        :eager="eager || false"
         @dragstart.prevent
       />
       <div style="text-align: center">装备</div>
@@ -91,6 +94,7 @@ const unisonName = computed(() => {
           modelValue.unison?.res(show_awaken ? 'square212x/awakened' : 'square212x/base') ||
           '/static/worldflipper/unit/blank.png'
         "
+        :eager="eager || false"
         @dragstart.prevent
       />
       <div
@@ -138,6 +142,7 @@ const unisonName = computed(() => {
     >
       <v-img
         :src="modelValue.core?.res('soul') || '/static/worldflipper/unit/blank.png'"
+        :eager="eager || false"
         @dragstart.prevent
       />
       <div style="text-align: center">魂珠</div>
