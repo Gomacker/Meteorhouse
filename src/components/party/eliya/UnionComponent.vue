@@ -19,6 +19,10 @@ const unisonName = computed(() => {
   if (props.show_name && props.modelValue.unison) return props.modelValue.unison.names[0]
   return '辅助角色'
 })
+
+function make_position(unionIndex: number, positionIndex: number) {
+  return new PartyPosition(unionIndex, positionIndex)
+}
 </script>
 
 <template>
@@ -28,9 +32,9 @@ const unisonName = computed(() => {
       class="wfo-slot party-slot-main"
       :class="[
         modelValue.main ? `ele-${Element[modelValue.main.element].toLowerCase()}` : undefined,
-        party_editor?.verifyPosition(new PartyPosition(union_index, 0)) ? 'selected' : undefined
+        party_editor?.verifyPosition(make_position(union_index, 0)) ? 'selected' : undefined
       ]"
-      @click="party_editor?.select(new PartyPosition(union_index, 0))"
+      @click="party_editor?.select(make_position(union_index, 0))"
     >
       <v-img
         :src="
@@ -69,9 +73,9 @@ const unisonName = computed(() => {
       v-ripple="!!party_editor"
       class="wfo-slot party-slot-equipment"
       :class="[
-        party_editor?.verifyPosition(new PartyPosition(union_index, 2)) ? 'selected' : undefined
+        party_editor?.verifyPosition(make_position(union_index, 2)) ? 'selected' : undefined
       ]"
-      @click="party_editor?.select(new PartyPosition(union_index, 2))"
+      @click="party_editor?.select(make_position(union_index, 2))"
     >
       <v-img
         :src="modelValue.equipment?.res('normal') || '/static/worldflipper/unit/blank.png'"
@@ -85,9 +89,9 @@ const unisonName = computed(() => {
       class="wfo-slot party-slot-unison"
       :class="[
         modelValue.unison ? `ele-${Element[modelValue.unison.element].toLowerCase()}` : undefined,
-        party_editor?.verifyPosition(new PartyPosition(union_index, 1)) ? 'selected' : undefined
+        party_editor?.verifyPosition(make_position(union_index, 1)) ? 'selected' : undefined
       ]"
-      @click="party_editor?.select(new PartyPosition(union_index, 1))"
+      @click="party_editor?.select(make_position(union_index, 1))"
     >
       <v-img
         :src="
@@ -136,9 +140,9 @@ const unisonName = computed(() => {
       v-ripple="!!party_editor"
       class="wfo-slot core"
       :class="[
-        party_editor?.verifyPosition(new PartyPosition(union_index, 3)) ? 'selected' : undefined
+        party_editor?.verifyPosition(make_position(union_index, 3)) ? 'selected' : undefined
       ]"
-      @click="party_editor?.select(new PartyPosition(union_index, 3))"
+      @click="party_editor?.select(make_position(union_index, 3))"
     >
       <v-img
         :src="modelValue.core?.res('soul') || '/static/worldflipper/unit/blank.png'"

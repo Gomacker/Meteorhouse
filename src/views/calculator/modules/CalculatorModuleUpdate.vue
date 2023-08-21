@@ -7,7 +7,7 @@ defineProps<{ party_editor: PartyEditor }>()
 
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
-    <div style="height: 36px"/>
+    <div style="height: 36px" />
     <PartyReleaseCard :party_release="party_editor.party" />
     <div style="display: flex; justify-content: center">
       <div style="margin-top: 32px; font-size: 24px; color: grey">

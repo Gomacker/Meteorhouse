@@ -25,7 +25,7 @@ defineProps<{
         :obj="obj"
         style="width: 100%"
       />
-      <div v-else style="margin-top: 32px; font-size: 24px; color: gray">
+      <div v-else style="margin-top: 32px; font-size: 24px; color: grey">
         <v-icon icon="mdi-package-variant" />
         选择一个角色／装备
       </div>

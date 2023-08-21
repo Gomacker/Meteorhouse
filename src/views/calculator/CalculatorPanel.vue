@@ -14,8 +14,6 @@ const props = defineProps<{
   modelValue: PartyEditor
 }>()
 defineEmits(['update:modelValue']);
-const characters = ref(props.characters)
-const equipments = ref(props.equipments)
 
 const updateValue = (obj: Character | Equipment | null | undefined) => {
   props.modelValue.select(obj)

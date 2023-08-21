@@ -3,6 +3,7 @@ import type { WorldflipperObject } from '@/stores/worldflipper'
 import { ele2color } from '@/stores/manager'
 import { computed } from 'vue'
 import { Element } from '@/anise/worldflipper/object'
+import EquipmentWikiCard from '@/components/worldflipper/equipment/EquipmentWikiCard.vue'
 
 const props = defineProps<{
   obj?: WorldflipperObject
@@ -16,82 +17,93 @@ const font_color = computed(() =>
 </script>
 
 <template>
-  <div
-    style="
-      display: grid;
-      grid-template-columns: repeat(2, 512px);
-      grid-gap: 16px;
-      justify-content: center;
-      margin-top: 16px;
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-    "
-  >
-    <v-card class="resource-card">
-      <v-toolbar density="compact" :color="color">
-        <v-toolbar-title class="title__" :style="{ color: font_color }"> 觉醒前 </v-toolbar-title>
-      </v-toolbar>
-      <v-img
-        v-if="obj"
-        style="height: calc(100% - 48px)"
-        :src="`/static/${obj.__type_id}/full_resized/base/${obj.resource_id}.png`"
-      />
-    </v-card>
-    <v-card class="resource-card">
-      <v-toolbar density="compact" :color="color">
-        <v-toolbar-title class="title__" :style="{ color: font_color }"> 觉醒后 </v-toolbar-title>
-      </v-toolbar>
-      <v-img
-        v-if="obj"
-        style="height: calc(100% - 48px)"
-        :src="`/static/${obj.__type_id}/full_resized/awakened/${obj.resource_id}.png`"
-      />
-    </v-card>
-    <v-card class="resource-card">
-      <v-toolbar density="compact" :color="color">
-        <v-toolbar-title class="title__" :style="{ color: font_color }"> SPECIAL </v-toolbar-title>
-      </v-toolbar>
+  <div style="overflow-y: auto; height: 100%">
+    <div style="display: flex; justify-content: center">
       <div
+        v-if="obj"
         style="
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-          height: calc(100% - 48px);
-          align-items: center;
-          justify-content: center;
-        "
+        display: grid;
+        grid-template-columns: repeat(2, 512px);
+        grid-gap: 16px;
+        justify-content: center;
+        margin-top: 16px;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+      "
       >
-        <img
-          v-if="obj"
-          style="image-rendering: pixelated; scale: 2"
-          :src="`/static/${obj.__type_id}/pixelart/special/${obj.resource_id}.gif`"
-          alt=""
-        />
+        <v-card class="resource-card">
+          <v-toolbar density="compact" :color="color">
+            <v-toolbar-title class="title__" :style="{ color: font_color }"> 觉醒前 </v-toolbar-title>
+          </v-toolbar>
+          <v-img
+            v-if="obj"
+            style="height: calc(100% - 48px)"
+            :src="`/static/${obj.__type_id}/full_resized/base/${obj.resource_id}.png`"
+          />
+        </v-card>
+        <v-card class="resource-card">
+          <v-toolbar density="compact" :color="color">
+            <v-toolbar-title class="title__" :style="{ color: font_color }"> 觉醒后 </v-toolbar-title>
+          </v-toolbar>
+          <v-img
+            v-if="obj"
+            style="height: calc(100% - 48px)"
+            :src="`/static/${obj.__type_id}/full_resized/awakened/${obj.resource_id}.png`"
+          />
+        </v-card>
+        <v-card class="resource-card">
+          <v-toolbar density="compact" :color="color">
+            <v-toolbar-title class="title__" :style="{ color: font_color }">
+              SPECIAL
+            </v-toolbar-title>
+          </v-toolbar>
+          <div
+            style="
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: calc(100% - 48px);
+            align-items: center;
+            justify-content: center;
+          "
+          >
+            <img
+              v-if="obj"
+              style="image-rendering: pixelated; scale: 2"
+              :src="`/static/${obj.__type_id}/pixelart/special/${obj.resource_id}.gif`"
+              alt=""
+            />
+          </div>
+        </v-card>
+        <v-card class="resource-card">
+          <v-toolbar density="compact" :color="color">
+            <v-toolbar-title class="title__" :style="{ color: font_color }"> WALK </v-toolbar-title>
+          </v-toolbar>
+          <div
+            style="
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: calc(100% - 48px);
+            align-items: center;
+            justify-content: center;
+          "
+          >
+            <img
+              v-if="obj"
+              style="image-rendering: pixelated; scale: 2"
+              :src="`/static/${obj.__type_id}/pixelart/walk_front/${obj.resource_id}.gif`"
+              alt=""
+            />
+          </div>
+        </v-card>
       </div>
-    </v-card>
-    <v-card class="resource-card">
-      <v-toolbar density="compact" :color="color">
-        <v-toolbar-title class="title__" :style="{ color: font_color }"> WALK </v-toolbar-title>
-      </v-toolbar>
-      <div
-        style="
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-          height: calc(100% - 48px);
-          align-items: center;
-          justify-content: center;
-        "
-      >
-        <img
-          v-if="obj"
-          style="image-rendering: pixelated; scale: 2"
-          :src="`/static/${obj.__type_id}/pixelart/walk_front/${obj.resource_id}.gif`"
-          alt=""
-        />
+      <div v-else style="margin-top: 32px; font-size: 24px; color: grey">
+        <v-icon icon="mdi-package-variant" />
+        选择一个角色／装备
       </div>
-    </v-card>
+    </div>
   </div>
 </template>
 

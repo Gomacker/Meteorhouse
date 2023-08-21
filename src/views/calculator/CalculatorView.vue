@@ -26,7 +26,7 @@ watch(party_editor, (value) => {
   if (value.selected_object instanceof PartyPosition && value.party)
     memory_object.value = value.party.party.get(value.selected_object) || memory_object.value
   else if (value.selected_object) memory_object.value = value.selected_object as WorldflipperObject
-})
+}, {deep: true})
 </script>
 
 <template>

@@ -213,14 +213,16 @@ export class PartyRelease {
     public title?: string,
     public id?: string,
     public updater_id?: string
-  ) {}
+  ) {
+    this.title = title || ''
+  }
   static empty(): PartyRelease {
     return new PartyRelease(Party.empty(), [])
   }
   static load(data: any): PartyRelease {
     const party = Party.load(data['party'])
     const pr = new PartyRelease(party, [])
-    pr.title = data['title']
+    pr.title = data['title'] || ''
     pr.id = data['id']
     return pr
   }

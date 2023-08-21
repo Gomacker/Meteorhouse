@@ -11,7 +11,7 @@ export function useDefer() {
   }
   updateFrameCount()
   onUnmounted(() => cancelAnimationFrame(rafId))
-  return function defer(n: number) {
-    return frameCount.value >= n
+  return function defer(n: number, before: boolean = false) {
+    return before ? frameCount.value <= n : frameCount.value >= n
   }
 }

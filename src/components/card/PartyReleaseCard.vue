@@ -1,9 +1,8 @@
 <script setup lang="ts">
-// import { PartyRelease } from '@/stores/manager'
 import PartyCard from '@/components/party/eliya/PartyCardEliya.vue'
 import Clipboard from 'clipboard'
 import { ref } from 'vue'
-import { PartyRelease } from "@/anise/worldflipper/party";
+import { PartyRelease } from '@/anise/worldflipper/party'
 
 const props = defineProps({
   party_release: {
@@ -23,21 +22,23 @@ const props = defineProps({
   }
 })
 
+const id_copied = ref(false)
+const party_copied = ref(false)
+
 function copy_release_id(id_: string) {
-  const cb = new Clipboard('#copy-id-' + id_)
-  // cb.on('success', () => {
-  //   ElMessage.success('复制成功')
-  //   cb.destroy()
-  // })
+  const cb = new Clipboard(`#copy-id-${id_}`, {text: elem => props.party_release.id || ''})
+  cb.on('success', (e) => {
+    id_copied.value = true
+    cb.destroy()
+  })
 }
 
 function copy_party(id_: string) {
-  const cb = new Clipboard('#copy-' + id_)
-
-  // cb.on('success', () => {
-  //   ElMessage.success('复制成功')
-  //   cb.destroy()
-  // })
+  const cb = new Clipboard(`#copy-${id_}`, {text: elem => JSON.stringify(props.party_release.dump())})
+  cb.on('success', (e) => {
+    party_copied.value = true
+    cb.destroy()
+  })
 }
 
 const show_dialog = ref(false)
@@ -45,11 +46,10 @@ const show_dialog = ref(false)
 
 <template>
   <v-card v-ripple class="party-card elevation-6">
-
     <div style="padding: 12px 8px 8px; background: transparent">
       <div style="display: flex; justify-content: space-between">
         <div>
-          <span style="font-weight: bold; font-size: 18px">{{ props.party_release.title }}</span>
+          <span style="font-weight: bold; font-size: 18px">{{ party_release.title }}</span>
           <v-chip
             v-if="false"
             v-ripple
@@ -59,6 +59,16 @@ const show_dialog = ref(false)
           >
             无盘子码
           </v-chip>
+          <v-snackbar
+            v-model="id_copied"
+            color="green-lighten-4"
+            location="top"
+            style="top: 72px"
+            close-on-content-click
+          >
+            <v-icon icon="mdi-check-circle-outline" color="green" />
+            已复制
+          </v-snackbar>
           <v-chip
             v-ripple
             style="
@@ -72,17 +82,10 @@ const show_dialog = ref(false)
               vertical-align: text-bottom;
             "
             density="comfortable"
-            @click="
-              () => {
-                if (props.party_release instanceof PartyRelease) {
-                  copy_release_id(props.party_release.id || '')
-                }
-              }
-            "
-            :data-clipboard-text="props.party_release?.id"
-            :id="'copy-id-' + props.party_release?.id"
+            @click="copy_release_id(party_release.id || '')"
+            :id="`copy-id-${party_release.id || ''}`"
           >
-            {{ props.party_release.id }}
+            {{ party_release.id }}
           </v-chip>
         </div>
         <div>
@@ -96,14 +99,14 @@ const show_dialog = ref(false)
             <v-card style="padding: 16px">
               <p>Oops...</p>
               <p>还没有来源记录</p>
-              <p style="color: lightgrey">上传id: {{ props.party_release.updater_id }}</p>
+              <p style="color: lightgrey">上传id: {{ party_release.updater_id }}</p>
             </v-card>
           </v-menu>
         </div>
       </div>
       <v-divider :thickness="2" style="margin: 2px 0" />
       <PartyCard :party="party_release"></PartyCard>
-      <div v-if="props.extra_option" style="display: flex; justify-content: space-between">
+      <div v-if="extra_option" style="display: flex; justify-content: space-between">
         <div>
           <v-dialog v-model="show_dialog" width="auto">
             <template v-slot:activator="{ props }">
@@ -129,19 +132,22 @@ const show_dialog = ref(false)
               </v-card>
             </v-menu>
           </v-btn-group>
+          <v-snackbar
+            v-model="party_copied"
+            color="green-lighten-4"
+            location="top"
+            style="top: 72px"
+            close-on-content-click
+          >
+            <v-icon icon="mdi-check-circle-outline" color="green" />
+            已复制
+          </v-snackbar>
           <v-btn
             variant="flat"
             color="warning"
             size="small"
-            :data-clipboard-text="JSON.stringify(props.party_release?.dump())"
-            :id="'copy-' + props.party_release?.id"
-            @click="
-              () => {
-                if (props.party_release instanceof PartyRelease) {
-                  copy_party(props.party_release.id || '')
-                }
-              }
-            "
+            :id="`copy-${party_release.id || ''}`"
+            @click="copy_party(party_release.id || '')"
             style="margin: 0 2px"
           >
             <v-icon icon="mdi-content-copy" />

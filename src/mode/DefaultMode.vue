@@ -3,6 +3,8 @@ import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import axios from 'axios'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
+import { useDefer } from '@/utils'
+import { de } from 'vuetify/locale'
 
 const sidebar_hidden = ref(false)
 const user = useUserStore()
@@ -29,9 +31,41 @@ onMounted(() => {
       }
     })
 })
+
+const defer = useDefer()
+
+const loading_images = [
+  '/static/worldflipper/unit/pixelart/special/lion_boy.gif',
+  '/static/worldflipper/unit/pixelart/special/tiger_treasure_hunter_smr20.gif',
+  '/static/worldflipper/unit/pixelart/special/black_wolf_knight.gif',
+  '/static/worldflipper/unit/pixelart/special/beast_adventurer.gif',
+  '/static/worldflipper/unit/pixelart/special/lady_summoner_xm20.gif',
+  '/static/worldflipper/unit/pixelart/walk_front/kinoko.gif'
+]
+const loading_img = loading_images[Math.floor(Math.random() * loading_images.length)]
 </script>
+
 <template>
   <v-app style="--v-theme-background: 248, 248, 248, 0">
+    <transition name="loading" mode="out-in">
+      <div v-if="defer(60, true)" key="element" class="loading-page">
+        <div class="loading-page-text">Meteorhouse</div>
+        <div>Loading...</div>
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 512px;
+            height: 512px;
+            overflow: visible;
+            filter: drop-shadow(0 0 4px rgba(0 0 0 / 50%));
+          "
+        >
+          <img style="scale: 2; image-rendering: pixelated" :src="loading_img" alt="" />
+        </div>
+      </div>
+    </transition>
     <v-snackbar
       v-model="worldflipper_updated"
       color="green-lighten-4"
@@ -125,7 +159,6 @@ onMounted(() => {
         </template>
       </div>
     </v-navigation-drawer>
-
     <v-app-bar
       style="
         background: linear-gradient(
@@ -154,17 +187,58 @@ onMounted(() => {
       <!--      <v-text-field label="搜索" hide-details></v-text-field>-->
       <!--      <v-btn style="margin: 8px" icon="mdi-magnify"/>-->
     </v-app-bar>
-
-    <v-main>
+    <v-main v-if="defer(1)">
       <router-view></router-view>
     </v-main>
-    <div class="bg-magic-circle-wrapper" oncontextmenu="return false;" style="z-index: -1">
+    <div
+      v-if="defer(1)"
+      class="bg-magic-circle-wrapper"
+      oncontextmenu="return false;"
+      style="z-index: -1"
+    >
       <div class="bg-magic-circle" />
     </div>
   </v-app>
 </template>
 
 <style scoped>
+.loading-page {
+  position: fixed;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  //background: radial-gradient(rgba(247,246,250) 70%, rgba(0, 0, 0) 160%);
+  background: rgba(247,246,250);
+}
+
+.loading-page-text {
+  font-size: 42px;
+  font-weight: bold;
+}
+.loading-enter-active .loading-page-text,
+.loading-leave-active .loading-page-text {
+  transition: color 0.5s ease, filter 0.5s ease;
+}
+
+.loading-enter-active,
+.loading-leave-active {
+  transition: opacity 0.5s ease;
+  transition-delay: 1.25s;
+}
+
+.loading-enter-from .loading-page-text,
+.loading-leave-to .loading-page-text {
+  color: rgb(90, 49, 255);
+  filter: drop-shadow(0 0 8px rgb(90, 49, 255));
+}
+.loading-enter-from,
+.loading-leave-to {
+  opacity: 0;
+}
 .bg-magic-circle-wrapper {
   filter: drop-shadow(0 0 8px rgba(0, 0, 0, 18%));
   z-index: 0;
