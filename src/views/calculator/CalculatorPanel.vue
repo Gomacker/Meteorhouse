@@ -3,7 +3,7 @@ import EmptyIcon from '@/components/worldflipper/EmptyIcon.vue'
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
 import EquipmentIcon from '@/components/worldflipper/equipment/EquipmentIcon.vue'
 import { Character, Element, Equipment, SpecialityType } from '@/anise/worldflipper/object'
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { ele2color } from '@/stores/manager'
 import type { WorldflipperObject } from '@/stores/worldflipper'
 import type { PartyEditor } from '@/anise/worldflipper/party'
@@ -13,13 +13,20 @@ const props = defineProps<{
   equipments: Map<string, Equipment>
   modelValue: PartyEditor
 }>()
-defineEmits(['update:modelValue']);
+defineEmits(['update:modelValue'])
+const characters = ref(props.characters)
+const equipments = ref(props.equipments)
 
-const updateValue = (obj: Character | Equipment | null | undefined) => {
+watch(props, () => {
+  characters.value = props.characters
+  equipments.value = props.equipments
+})
+
+const updateValue = (obj: WorldflipperObject) => {
   props.modelValue.select(obj)
 }
 
-function isSelected(obj: Character | Equipment | null | undefined) {
+function isSelected(obj: WorldflipperObject) {
   return props.modelValue.selected_object === obj
 }
 

@@ -31,8 +31,6 @@ function get_data(page_index: number, search_content = '') {
       }
     )
     .then((r) => {
-      console.log(r.data)
-      r.data
       page_party_list.value = new Map(Object.entries(r.data['parties']))
       // for (const party in r.data['parties']) {
       //   console.log(party)

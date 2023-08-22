@@ -1,7 +1,14 @@
 <script setup lang="ts">
-import { PartyEditor, PartyPosition, Union } from '@/anise/worldflipper/party'
-import { Element } from '@/anise/worldflipper/object'
-import { computed } from 'vue'
+import {
+  Manaboard2Values,
+  PartyEditor,
+  PartyParamManaboard2,
+  PartyPosition,
+  PartyRelease,
+  Union
+} from "@/anise/worldflipper/party";
+import { Element } from "@/anise/worldflipper/object";
+import { computed } from "vue";
 
 const props = defineProps<{
   modelValue: Union
@@ -9,6 +16,7 @@ const props = defineProps<{
   show_awaken?: boolean
   union_index: number
   party_editor?: PartyEditor
+  party?: PartyRelease
   eager?: boolean
 }>()
 const mainName = computed(() => {
@@ -22,6 +30,17 @@ const unisonName = computed(() => {
 
 function make_position(unionIndex: number, positionIndex: number) {
   return new PartyPosition(unionIndex, positionIndex)
+}
+const param_manaboard2 = computed(() => props.party?.getParam('manaboard2') as PartyParamManaboard2 || new PartyParamManaboard2())
+const main_manaboard2 = computed(() => param_manaboard2.value.get(make_position(props.union_index, 0)))
+const unison_manaboard2 = computed(() => param_manaboard2.value.get(make_position(props.union_index, 1)))
+function is_manaboard2_empty(mb2: Manaboard2Values) {
+  return !(typeof mb2.manaboard4 === 'number' || typeof mb2.manaboard5 === 'number' || typeof mb2.manaboard6 === 'number')
+}
+
+function mb_string(v: number | undefined):string {
+  if (typeof v === 'number' && v <= 5 && v >= 0) return String(v)
+  else return '-'
 }
 </script>
 
@@ -45,25 +64,12 @@ function make_position(unionIndex: number, positionIndex: number) {
         @dragstart.prevent
       />
       <div
-        v-if="
-          (() => {
-            return true
-            // const ppm: PartyParam = props.party?._params.get('manaboard2')
-            // return ppm instanceof PartyParamManaboard2 ? !ppm[`union${union}main`].is_empty() : false
-          })()
-        "
+        v-if="main_manaboard2 ? !is_manaboard2_empty(main_manaboard2) : false"
         class="party-card-manaboard2-wrapper"
       >
-        <div v-for="i in 3" :key="i" style="width: 16px; text-align: center">
-          {{
-            (() => {
-              return '-'
-              // const m =
-              //   props.party._params.get('manaboard2')[`union${union}main`][`manaboard${i + 3}`]
-              // return typeof m === 'number' ? m : '-'
-            })()
-          }}
-        </div>
+        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).manaboard4) }}</div>
+        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).manaboard5) }}</div>
+        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).manaboard6) }}</div>
       </div>
       <div style="text-align: center">
         {{ mainName }}
@@ -101,36 +107,14 @@ function make_position(unionIndex: number, positionIndex: number) {
         :eager="eager || false"
         @dragstart.prevent
       />
+
       <div
-        style="
-          position: absolute;
-          display: flex;
-          background-color: rgba(0, 0, 0, 0.55);
-          color: white;
-          left: 0;
-          bottom: 16px;
-          border-top-right-radius: 6px;
-        "
-        v-if="
-          (() => {
-            return true
-            // const ppm: PartyParam = props.party?._params.get('manaboard2')
-            // return ppm instanceof PartyParamManaboard2 ? !ppm[`union${union}unison`].is_empty() : false
-          })()
-        "
+        v-if="unison_manaboard2 ? !is_manaboard2_empty(unison_manaboard2) : false"
+        class="party-card-manaboard2-wrapper"
       >
-        <div v-for="i in 3" :key="i" style="width: 16px; text-align: center">
-          {{
-            (() => {
-              return '-'
-              // const m =
-              //   props.party._params.get('manaboard2')[`union${union}unison`][
-              //     `manaboard${i + 3}`
-              //     ]
-              // return typeof m === 'number' ? m : '-'
-            })()
-          }}
-        </div>
+        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).manaboard4) }}</div>
+        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).manaboard5) }}</div>
+        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).manaboard6) }}</div>
       </div>
       <div style="text-align: center">
         {{ unisonName }}
@@ -299,5 +283,9 @@ function make_position(unionIndex: number, positionIndex: number) {
   left: 0;
   bottom: 16px;
   border-top-right-radius: 6px;
+}
+.party-card-manaboard2-wrapper > div {
+  width: 16px;
+  text-align: center;
 }
 </style>

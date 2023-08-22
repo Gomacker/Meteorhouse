@@ -59,22 +59,6 @@ export class Union {
 
 export class PartyPosition {
   constructor(public unionIndex: number, public positionIndex: number) {}
-  get(party: Party): WorldflipperObject {
-    const union = party.union(this.unionIndex)
-    if (union instanceof Union) {
-      switch (this.positionIndex) {
-        case 0:
-          return union.main
-        case 1:
-          return union.unison
-        case 2:
-          return union.equipment
-        case 3:
-          return union.core
-      }
-    }
-    return undefined
-  }
 
   equals(position: PartyPosition) {
     return this.unionIndex === position.unionIndex && this.positionIndex === position.positionIndex
@@ -209,26 +193,45 @@ export class Party {
 export class PartyRelease {
   constructor(
     public party: Party,
-    public params: Array<any>,
+    public params: Array<PartyParam>,
     public title?: string,
     public id?: string,
     public updater_id?: string
-  ) {
-    this.title = title || ''
+  ) {}
+
+  getParam(id_: string): PartyParam | undefined {
+    return this.params.filter((value) => value.__type === id_)[0]
   }
   static empty(): PartyRelease {
     return new PartyRelease(Party.empty(), [])
   }
   static load(data: any): PartyRelease {
     const party = Party.load(data['party'])
-    const pr = new PartyRelease(party, [])
+    const pr = new PartyRelease(party, this.loadParams(data['params']))
     pr.title = data['title'] || ''
     pr.id = data['id']
+
     return pr
   }
+
+  static loadParams(data: any): PartyParam[] {
+    const params: PartyParam[] = []
+    if (data['manaboard2']) {
+      console.log(data['manaboard2'])
+      const ppm2 = PartyParamManaboard2.load(data['manaboard2'])
+      if (ppm2) params.push(ppm2)
+      console.log(ppm2)
+    }
+    return params
+  }
+
   dump(): any {
     return {
-      party: this.party.dump()
+      party: this.party.dump(),
+      params: this.params.reduce((obj: any, value) => {
+        obj[value.__type] = value.dump()
+        return obj
+      }, {})
     }
   }
 }
@@ -330,11 +333,13 @@ export class PartyEditor {
 export abstract class PartyParam {
   abstract readonly __type: string
   abstract dump(): any
-  abstract load(data: any): PartyParam
+  static load(data: any): PartyParam | undefined {
+    return undefined
+  }
   abstract isEmpty(): boolean
 }
 
-interface Manaboard2Values {
+export interface Manaboard2Values {
   manaboard4?: number
   manaboard5?: number
   manaboard6?: number
@@ -357,7 +362,7 @@ export class PartyParamManaboard2 extends PartyParam {
 
   set(position: PartyPosition, mb2: Manaboard2Values) {
     if ([0, 1].includes(position.positionIndex)) {
-      switch (position.positionIndex) {
+      switch (position.unionIndex) {
         case 1:
           this.union1[position.positionIndex] = mb2
           return
@@ -374,7 +379,7 @@ export class PartyParamManaboard2 extends PartyParam {
 
   get(position: PartyPosition): Manaboard2Values | undefined {
     if ([0, 1].includes(position.positionIndex)) {
-      switch (position.positionIndex) {
+      switch (position.unionIndex) {
         case 1:
           return this.union1[position.positionIndex] || {}
         case 2:
@@ -388,9 +393,9 @@ export class PartyParamManaboard2 extends PartyParam {
 
   dump(): any {
     const dumpFunc = (value: Manaboard2Values) => [
-      value.manaboard4,
-      value.manaboard5,
-      value.manaboard6
+      value.manaboard4 ?? -1,
+      value.manaboard5 ?? -1,
+      value.manaboard6 ?? -1
     ]
     return {
       union1: this.union1.map(dumpFunc),
@@ -399,15 +404,23 @@ export class PartyParamManaboard2 extends PartyParam {
     }
   }
 
-  load(data: any): PartyParam {
+  static load(data: any): PartyParam | undefined {
     const loadFunc = (value: Array<number | undefined>) => {
+      const m4 =
+        typeof value[0] === 'number' && value[0] <= 5 && value[0] >= 0 ? value[0] : undefined
+      const m5 =
+        typeof value[1] === 'number' && value[1] <= 5 && value[1] >= 0 ? value[1] : undefined
+      const m6 =
+        typeof value[2] === 'number' && value[2] <= 5 && value[2] >= 0 ? value[2] : undefined
       return { manaboard4: value[0], manaboard5: value[1], manaboard6: value[2] }
     }
-    return new PartyParamManaboard2(
+    const ppm2 = new PartyParamManaboard2(
       (data['union1'] as Array<Array<number | undefined>>).map(loadFunc),
       (data['union2'] as Array<Array<number | undefined>>).map(loadFunc),
       (data['union3'] as Array<Array<number | undefined>>).map(loadFunc)
     )
+    if (!ppm2 || ppm2.isEmpty()) return undefined
+    else return ppm2
   }
 
   isEmpty(): boolean {
