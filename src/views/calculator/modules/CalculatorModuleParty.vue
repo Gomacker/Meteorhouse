@@ -4,6 +4,7 @@ import { ele2color } from '@/stores/manager'
 import { Element } from '@/anise/worldflipper/object'
 import { Party, PartyEditor, PartyRelease, Union } from '@/anise/worldflipper/party'
 import { computed, ref } from 'vue'
+import PartyStatus from '@/views/calculator/modules/party/PartyStatus.vue'
 
 const props = defineProps<{ party: PartyRelease; party_editor?: PartyEditor }>()
 
@@ -86,107 +87,97 @@ const show_awaken = ref(false)
         :party_editor="party_editor"
         :show_name="show_name"
         :show_awaken="show_awaken"
+        eager
       />
     </v-card>
     <v-card
       class="elevation-4"
       style="padding: 8px 0; border-top-left-radius: 0; border-top-right-radius: 0; width: 480px"
     >
-      <div style="display: grid; grid-gap: 8px">
-        <div style="display: grid; grid-template-columns: repeat(3, 160px)">
-          <div class="extra-info">
-            <div class="extra-info-tag">HP</div>
-            <span>{{ party_status[0][0] }}</span>
+      <div style="display: grid; grid-template-columns: repeat(3, 160px)">
+        <PartyStatus
+          :skill_weights="skill_weights[0]"
+          :party_status="party_status[0]"
+          style="display: grid; grid-gap: 8px"
+        />
+        <PartyStatus
+          :skill_weights="skill_weights[1]"
+          :party_status="party_status[1]"
+          style="display: grid; grid-gap: 8px"
+        />
+        <PartyStatus
+          :skill_weights="skill_weights[2]"
+          :party_status="party_status[2]"
+          style="display: grid; grid-gap: 8px"
+        />
+      </div>
+    </v-card>
+    <v-card style="overflow: visible; width: 480px; margin-top: 36px" class="elevation-4">
+      <div style="display: grid; padding: 4px; grid-template-columns: repeat(3, 160px)">
+        <div style="font-size: 7px">
+          <div>
+            <div style="font-weight: bold; font-size: 18px; height: 32px">
+              <img :src="party.party.union(1)?.main?.res('pixelart/walk_front', 'gif')" alt="" />
+              {{ party.party.union(1).main?.names[0] }}
+            </div>
+            <div>能力4</div>
+            <div>能力5</div>
+            <div>能力6</div>
           </div>
-          <div class="extra-info">
-            <div class="extra-info-tag">HP</div>
-            <span>{{ party_status[1][0] }}</span>
-          </div>
-          <div class="extra-info">
-            <div class="extra-info-tag">HP</div>
-            <span>{{ party_status[2][0] }}</span>
+          <div>
+            <div style="font-weight: bold; font-size: 18px; height: 32px">
+              <img :src="party.party.union(1)?.unison?.res('pixelart/walk_front', 'gif')" alt="" />
+              {{ party.party.union(1).unison?.names[0] }}
+            </div>
+            <div>能力4</div>
+            <div>能力5</div>
+            <div>能力6</div>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(3, 160px)">
-          <div class="extra-info">
-            <div class="extra-info-tag">攻击</div>
-            <span>{{ party_status[0][1] }}</span>
+        <div style="font-size: 7px">
+          <div>
+            <div style="height: 24px; display: flex">
+              <div style="margin-top: -8px; width: 32px">
+                <img :src="party.party.union(2)?.main?.res('pixelart/walk_front', 'gif')" alt="" />
+              </div>
+              <div style="font-weight: bold; font-size: 18px">
+                {{ party.party.union(2).main?.names[0] }}
+              </div>
+            </div>
+            <div>能力4</div>
+            <div>能力5</div>
+            <div>能力6</div>
           </div>
-          <div class="extra-info">
-            <div class="extra-info-tag">攻击</div>
-            <span>{{ party_status[1][1] }}</span>
-          </div>
-          <div class="extra-info">
-            <div class="extra-info-tag">攻击</div>
-            <span>{{ party_status[2][1] }}</span>
+          <div>
+            <div style="font-weight: bold; font-size: 18px; height: 32px">
+              <img :src="party.party.union(2)?.unison?.res('pixelart/walk_front', 'gif')" alt="" />
+              {{ party.party.union(2).unison?.names[0] }}
+            </div>
+            <div>能力4</div>
+            <div>能力5</div>
+            <div>能力6</div>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(3, 160px)">
-          <div class="extra-info">
-            <div class="extra-info-tag">能量</div>
-            <div
-              class="skill-weight-bar"
-              :style="{
-                '--percent': `${((skill_weights[0] - 200) / (700 - 200)) * 100}%`
-              }"
-              style="text-align: right; padding-right: 10px"
-            />
-            <div class="skill-weight-bar-text">
-              {{ skill_weights[0] }}
+        <div style="font-size: 7px">
+          <div>
+            <div style="font-weight: bold; font-size: 18px; height: 32px">
+              <div style="height: 24px; overflow: visible; display: inline">
+                <img :src="party.party.union(3)?.main?.res('pixelart/walk_front', 'gif')" alt="" />
+              </div>
+              {{ party.party.union(3).main?.names[0] }}
             </div>
+            <div>能力4</div>
+            <div>能力5</div>
+            <div>能力6</div>
           </div>
-          <div class="extra-info">
-            <div class="extra-info-tag">能量</div>
-            <div
-              class="skill-weight-bar"
-              :style="{
-                '--percent': `${((skill_weights[1] - 200) / (700 - 200)) * 100}%`
-              }"
-            />
-            <div class="skill-weight-bar-text">
-              {{ skill_weights[1] }}
+          <div>
+            <div style="font-weight: bold; font-size: 18px; height: 32px">
+              <img :src="party.party.union(3)?.unison?.res('pixelart/walk_front', 'gif')" alt="" />
+              {{ party.party.union(3).unison?.names[0] }}
             </div>
-          </div>
-          <div class="extra-info">
-            <div class="extra-info-tag">能量</div>
-            <div
-              class="skill-weight-bar"
-              :style="{
-                '--percent': `${((skill_weights[2] - 200) / (700 - 200)) * 100}%`
-              }"
-            />
-            <div class="skill-weight-bar-text">
-              {{ skill_weights[2] }}
-            </div>
-          </div>
-        </div>
-        <div v-if="false" style="display: grid; grid-template-columns: repeat(3, 160px)">
-          <div class="extra-info">
-            <div class="extra-info-tag">0%</div>
-            <div
-              class="skill-gauge-bar"
-              :style="{
-                '--percent': `0%`
-              }"
-            />
-          </div>
-          <div class="extra-info">
-            <div class="extra-info-tag">0%</div>
-            <div
-              class="skill-gauge-bar"
-              :style="{
-                '--percent': `0%`
-              }"
-            />
-          </div>
-          <div class="extra-info">
-            <div class="extra-info-tag">0%</div>
-            <div
-              class="skill-gauge-bar"
-              :style="{
-                '--percent': `50%`
-              }"
-            />
+            <div>能力4</div>
+            <div>能力5</div>
+            <div>能力6</div>
           </div>
         </div>
       </div>
@@ -202,6 +193,9 @@ const show_awaken = ref(false)
         />
       </v-card-item>
     </v-card>
+    <div style="margin-top: 60vh; margin-bottom: 32px; color: grey">
+      ©Copyright(2022-2023) Meteorhouse Library
+    </div>
   </div>
 </template>
 
@@ -217,111 +211,5 @@ const show_awaken = ref(false)
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.extra-info-tag {
-  --fill-color: rgb(222, 223, 222);
-  height: 20px;
-  width: 48px;
-  font-size: 10px;
-  display: flex;
-  align-items: center;
-  padding-left: 5px;
-  background: linear-gradient(1rad, var(--fill-color) 0, var(--fill-color) 80%, transparent 80%);
-}
-.skill-weight-bar {
-  width: 112px;
-  height: 20px;
-  --percent: 0%; /* 百分比 */
-  --fill-color: rgb(33, 194, 230);
-  --bar-color: rgb(173, 170, 173);
-  --step-width: 15px;
-  --gap-width: 2px;
-  --bar-start: 8px;
-  --percent-fixed: calc(var(--bar-start) + (0.825 * var(--percent))); /* 百分比渲染修正 */
-  margin-left: calc(-1 * var(--bar-start));
-  background: linear-gradient(
-      1rad,
-      var(--fill-color) var(--percent-fixed),
-      transparent var(--percent-fixed)
-    ),
-    var(--bar-color);
-  --mask: linear-gradient(
-    1rad,
-    transparent 0,
-    transparent calc(var(--gap-width) + var(--bar-start)),
-    white calc(var(--gap-width) + var(--bar-start) + 1px),
-    white calc(var(--gap-width) + var(--step-width) + var(--bar-start)),
-    transparent calc(var(--gap-width) + var(--step-width) + var(--bar-start) + 1px),
-    transparent calc(2 * var(--gap-width) + var(--step-width) + var(--bar-start)),
-    white calc(2 * var(--gap-width) + var(--step-width) + var(--bar-start) + 1px),
-    white calc(2 * var(--gap-width) + 2 * var(--step-width) + var(--bar-start)),
-    transparent calc(2 * var(--gap-width) + 2 * var(--step-width) + var(--bar-start) + 1px),
-    transparent calc(3 * var(--gap-width) + 2 * var(--step-width) + var(--bar-start)),
-    white calc(3 * var(--gap-width) + 2 * var(--step-width) + var(--bar-start) + 1px),
-    white calc(3 * var(--gap-width) + 3 * var(--step-width) + var(--bar-start)),
-    transparent calc(3 * var(--gap-width) + 3 * var(--step-width) + var(--bar-start) + 1px),
-    transparent calc(4 * var(--gap-width) + 3 * var(--step-width) + var(--bar-start)),
-    white calc(4 * var(--gap-width) + 3 * var(--step-width) + var(--bar-start) + 1px),
-    white calc(4 * var(--gap-width) + 4 * var(--step-width) + var(--bar-start)),
-    transparent calc(4 * var(--gap-width) + 4 * var(--step-width) + var(--bar-start) + 1px),
-    transparent calc(5 * var(--gap-width) + 4 * var(--step-width) + var(--bar-start)),
-    white calc(5 * var(--gap-width) + 4 * var(--step-width) + var(--bar-start) + 1px),
-    white calc(5 * var(--gap-width) + 5 * var(--step-width) + var(--bar-start)),
-    transparent calc(5 * var(--gap-width) + 5 * var(--step-width) + var(--bar-start) + 1px),
-    transparent calc(6 * var(--gap-width) + 5 * var(--step-width) + var(--bar-start))
-  );
-  -webkit-mask: var(--mask);
-  mask: var(--mask);
-}
-.skill-gauge-bar {
-  width: 112px;
-  height: 20px;
-  --percent: 0%; /* 百分比 */
-  --fill-color: rgb(255, 158, 25);
-  --bar-color: rgb(173, 170, 173);
-  --step-width: 15px;
-  --gap-width: 2px;
-  --bar-start: 8px;
-  --percent-fixed: calc(var(--bar-start) + (0.825 * var(--percent))); /* 百分比渲染修正 */
-  margin-left: calc(-1 * var(--bar-start));
-  background: linear-gradient(
-      1rad,
-      var(--fill-color) var(--percent-fixed),
-      transparent var(--percent-fixed)
-    ),
-    var(--bar-color);
-  --mask: linear-gradient(
-    1rad,
-    transparent 0,
-    transparent calc(var(--gap-width) + var(--bar-start)),
-    white calc(var(--gap-width) + var(--bar-start) + 1px),
-    white calc(5 * var(--gap-width) + 5 * var(--step-width) + var(--bar-start)),
-    transparent calc(5 * var(--gap-width) + 5 * var(--step-width) + var(--bar-start) + 1px),
-    transparent calc(6 * var(--gap-width) + 5 * var(--step-width) + var(--bar-start))
-  );
-  -webkit-mask: var(--mask);
-  mask: var(--mask);
-}
-.extra-info > span {
-  padding-right: 15px;
-}
-.extra-info {
-  display: flex;
-  font-size: 14px;
-  justify-content: space-between;
-  padding: 0 5px;
-}
-
-.skill-weight-bar-text {
-  position: absolute;
-  background-clip: text;
-  -webkit-background-clip: text;
-  right: 20px;
-  -webkit-text-fill-color: black;
-  --text-stroke-width: 0.25em;
-  -webkit-text-stroke: var(--text-stroke-width) transparent;
-  background-color: white;
-  padding: var(--text-stroke-width);
-  margin: calc(-1 * var(--text-stroke-width));
 }
 </style>

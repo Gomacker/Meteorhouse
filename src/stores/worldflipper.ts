@@ -1,16 +1,15 @@
-import { defineStore } from 'pinia'
-import { Character, Equipment } from '@/anise/worldflipper/object'
-import axios from 'axios'
-import { plainToInstance } from 'class-transformer'
-
+import { defineStore } from "pinia";
+import { Character, Equipment } from "@/anise/worldflipper/object";
+import axios from "axios";
+import { plainToInstance } from "class-transformer";
 
 export type WorldflipperObject = Character | Equipment | null | undefined
 
 export const useWorldflipperDataStore = defineStore('worldflipperData', {
   state(): {
     version: string | undefined
-    __characters: {}
-    __equipments: {}
+    __characters: { [key: string]: any }
+    __equipments: { [key: string]: any }
   } {
     return {
       version: undefined,
@@ -42,24 +41,20 @@ export const useWorldflipperDataStore = defineStore('worldflipperData', {
   },
   getters: {
     characters: (state) => {
-      return new Map<string, Character>(
-        Object.entries(state.__characters).map((value: [string, any]): [string, Character] => [
-          value[0],
-          <Character>(
-            (<unknown>plainToInstance(Character, Object.assign(value[1], { id: value[0] })))
-          )
-        ])
-      )
+      const keys = Object.keys(state.__characters)
+      const characterEntries = Object.keys(state.__characters).map((key) => [
+        key,
+        plainToInstance(Character, { ...state.__characters[key], id: key } as object)
+      ]) as [string, Character][]
+      return new Map<string, Character>(characterEntries)
     },
     equipments: (state) => {
-      return new Map<string, Equipment>(
-        Object.entries(state.__equipments).map((value: [string, any]): [string, Equipment] => [
-          value[0],
-          <Equipment>(
-            (<unknown>plainToInstance(Equipment, Object.assign(value[1], { id: value[0] })))
-          )
-        ])
-      )
+      const equipmentEntries = Object.keys(state.__equipments).map((key) => [
+        key,
+        plainToInstance(Equipment, { ...state.__equipments[key], id: key } as object)
+      ]) as [string, Equipment][]
+
+      return new Map<string, Equipment>(equipmentEntries)
     }
   },
   persist: {

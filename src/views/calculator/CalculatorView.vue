@@ -61,14 +61,14 @@ watch(party_editor, (value) => {
         <v-window-item value="WikiCard" style="height: 100%">
           <CalculatorModuleWikiCard v-if="defer(3)" :obj="memory_object" />
         </v-window-item>
-        <v-window-item value="Editor">
+        <v-window-item value="Editor" class="hidden-scroll" style="height: 100%">
           <CalculatorModuleParty
             v-if="defer(1)"
             :party="party_editor.party as PartyRelease || PartyRelease.empty()"
             :party_editor="party_editor as PartyEditor"
           />
         </v-window-item>
-        <v-window-item value="Upload">
+        <v-window-item value="Upload" style="height: 100%">
           <CalculatorModuleUpdate :party_editor="party_editor as PartyEditor" />
         </v-window-item>
         <v-window-item value="Resources" style="height: 100%">
@@ -98,7 +98,6 @@ watch(party_editor, (value) => {
       :characters="worldflipper.characters"
       :equipments="worldflipper.equipments"
       v-model="party_editor"
-
     />
   </div>
 </template>
@@ -113,9 +112,16 @@ watch(party_editor, (value) => {
   padding: 8px;
   z-index: 10;
   transition: height 0.4s ease, width 0.4s ease, padding 0.4s ease;
+  border-radius: 16px 16px 0 0;
 }
 .panel.closed {
   height: 0;
   padding: 0 8px;
+}
+.hidden-scroll {
+  overflow-y: scroll;
+}
+.hidden-scroll::-webkit-scrollbar {
+  width: 0;
 }
 </style>

@@ -23,7 +23,6 @@ const url = computed(() => `/static/${props.obj?.__type_id}/square212x/${props.a
 <template>
   <div
     v-if="obj instanceof Character"
-    style="display: inline-block; width: fit-content; vertical-align: bottom"
     :title="`${obj.id} : ${obj.resource_id}`"
   >
     <svg

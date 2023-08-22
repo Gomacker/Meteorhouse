@@ -74,7 +74,8 @@ export class Character extends GameObject {
     public obtain: string,
     public tags: Array<string>,
 
-    public cv: string
+    public cv: string,
+    public server: string | null
   ) {
     super(resource_id)
   }
@@ -205,7 +206,9 @@ export class Equipment extends GameObject {
     public abilities: string[],
     public description: string,
     public obtain: string,
-    public tags: string[]
+    public tags: string[],
+
+    public server: string | null
   ) {
     super(resource_id)
   }

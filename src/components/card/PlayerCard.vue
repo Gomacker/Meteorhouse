@@ -2,7 +2,7 @@
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
 import { computed } from 'vue'
-import type { Party } from '@/anise/worldflipper/party'
+import { PartyRelease } from "@/anise/worldflipper/party";
 
 export interface PlayerProfile {
   player_id: number
@@ -13,7 +13,7 @@ export interface PlayerProfile {
   leader_character_id: string
   last_login: number
   degree_id: number
-  party?: Party
+  party?: PartyRelease
 }
 const props = defineProps<{ modelValue: PlayerProfile }>()
 

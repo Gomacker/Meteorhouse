@@ -104,7 +104,7 @@ export class Party {
   static load(data: any): Party {
     return new Party(data['union1'], data['union2'], data['union3'])
   }
-  static loadOrigin(data: any): Party {
+  static loadOrigin(data: any): PartyRelease {
     const main_party_data = data['target_user_party']
     const character_data: Array<any> = data['user_character_list']
     const union1 = new Union(
@@ -131,8 +131,52 @@ export class Party {
         (value) => value['character_id'] === main_party_data['character_ids'][2]
       )[0]['ability_soul_slot_1']
     )
-    return new Party(union1, union2, union3)
+    const user_character_mana_node_list: any = data['user_character_mana_node_list']
+    const u1m_mb2 = this.readOriginMb2(
+      user_character_mana_node_list[String(union1.main?.id)] as Array<any>
+    )
+    const u1u_mb2 = this.readOriginMb2(
+      user_character_mana_node_list[String(union1.unison?.id)] as Array<any>
+    )
+    const u2m_mb2 = this.readOriginMb2(
+      user_character_mana_node_list[String(union2.main?.id)] as Array<any>
+    )
+    const u2u_mb2 = this.readOriginMb2(
+      user_character_mana_node_list[String(union2.unison?.id)] as Array<any>
+    )
+    const u3m_mb2 = this.readOriginMb2(
+      user_character_mana_node_list[String(union3.main?.id)] as Array<any>
+    )
+    const u3u_mb2 = this.readOriginMb2(
+      user_character_mana_node_list[String(union3.unison?.id)] as Array<any>
+    )
+    const ppm2 = new PartyParamManaboard2(
+      [u1m_mb2, u1u_mb2],
+      [u2m_mb2, u2u_mb2],
+      [u3m_mb2, u3u_mb2]
+    )
+    return new PartyRelease(new Party(union1, union2, union3), [ppm2])
   }
+
+  static readOriginMb2(data: Array<any>): Manaboard2Values {
+    const nodes = data
+      .map((value) => String(value['mana_node_multiplied_id']))
+      .map((value) => value.substring(value.length - 3, value.length))
+    let ab4level: number | undefined = nodes.filter((value) =>
+      ['401', '402', '403', '404', '405', '406'].includes(value)
+    ).length
+    ab4level = ab4level ? ab4level - 1 : undefined
+    let ab5level: number | undefined = nodes.filter((value) =>
+      ['407', '408', '409', '410', '411', '412'].includes(value)
+    ).length
+    ab5level = ab5level ? ab5level - 1 : undefined
+    let ab6level: number | undefined = nodes.filter((value) =>
+      ['413', '414', '415', '416', '417', '418'].includes(value)
+    ).length
+    ab6level = ab6level ? ab6level - 1 : undefined
+    return { manaboard4: ab4level, manaboard5: ab5level, manaboard6: ab6level }
+  }
+
   dump(): any {
     return {
       union1: this.union1.dump(),
@@ -217,22 +261,21 @@ export class PartyRelease {
   static loadParams(data: any): PartyParam[] {
     const params: PartyParam[] = []
     if (data['manaboard2']) {
-      console.log(data['manaboard2'])
       const ppm2 = PartyParamManaboard2.load(data['manaboard2'])
       if (ppm2) params.push(ppm2)
-      console.log(ppm2)
     }
     return params
   }
 
-  dump(): any {
-    return {
+  dump(for_update: boolean = false): any {
+    const base = {
       party: this.party.dump(),
       params: this.params.reduce((obj: any, value) => {
         obj[value.__type] = value.dump()
         return obj
       }, {})
     }
+    return for_update ? { ...base, title: this.title } : base
   }
 }
 
@@ -250,6 +293,11 @@ export class PartyEditor {
       else {
         if (this.selected_object instanceof PartyPosition) {
           if (
+            this.party.party.get(this.selected_object) === undefined &&
+            this.party.party.get(obj) === undefined
+          ) {
+            this.selected_object = obj
+          } else if (
             [0, 1].includes(this.selected_object.positionIndex) &&
             [0, 1].includes(obj.positionIndex)
           ) {

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
-import { useUserStore } from "@/stores/user";
-import axios from "axios";
-import { useWorldflipperDataStore } from "@/stores/worldflipper";
-import { useDefer } from "@/utils";
-import { Element } from "@/anise/worldflipper/object";
-import { ele2color } from "@/stores/manager";
+import { onMounted, ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+import axios from 'axios'
+import { useWorldflipperDataStore } from '@/stores/worldflipper'
+import { useDefer } from '@/utils'
+import { Element } from '@/anise/worldflipper/object'
+import { ele2color } from '@/stores/manager'
 
 const sidebar_hidden = ref(false)
 const user = useUserStore()
@@ -41,12 +41,46 @@ interface LoadingImage {
 }
 
 const loading_images: Array<LoadingImage> = [
-  { src: '/static/worldflipper/unit/pixelart/special/lion_boy.gif', color: ele2color[Element.Thunder].hex() },
-  { src: '/static/worldflipper/unit/pixelart/special/tiger_treasure_hunter_smr20.gif', color: ele2color[Element.Fire].hex() },
-  { src: '/static/worldflipper/unit/pixelart/special/black_wolf_knight.gif', color: ele2color[Element.Fire].hex() },
-  { src: '/static/worldflipper/unit/pixelart/special/beast_adventurer.gif', color: ele2color[Element.Wind].hex() },
-  { src: '/static/worldflipper/unit/pixelart/special/lady_summoner_xm20.gif', color: ele2color[Element.Fire].hex() },
-  { src: '/static/worldflipper/unit/pixelart/walk_front/kinoko.gif', color: ele2color[Element.Fire].hex() }
+  {
+    src: '/static/worldflipper/unit/pixelart/special/lion_boy.gif',
+    color: ele2color[Element.Thunder].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/special/tiger_treasure_hunter_smr20.gif',
+    color: ele2color[Element.Fire].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/special/black_wolf_knight.gif',
+    color: ele2color[Element.Fire].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/special/beast_adventurer.gif',
+    color: ele2color[Element.Wind].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/special/lady_summoner_xm20.gif',
+    color: ele2color[Element.Fire].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/walk_front/kinoko.gif',
+    color: ele2color[Element.Fire].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/special/fire_dragon.gif',
+    color: ele2color[Element.Fire].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/special/white_tiger_2anv.gif',
+    color: ele2color[Element.Thunder].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/special/dog_slasher_proud.gif',
+    color: ele2color[Element.Thunder].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/special/light_ballot23.gif',
+    color: ele2color[Element.Light].hex()
+  }
 ]
 const loading_img = loading_images[Math.floor(Math.random() * loading_images.length)]
 </script>
@@ -55,22 +89,37 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
   <v-app style="--v-theme-background: 248, 248, 248, 0">
     <transition name="loading" mode="out-in">
       <div v-if="defer(60, true)" key="element" class="loading-page">
-<!--      <div v-if="defer(0)" key="element" class="loading-page">-->
-        <div class="loading-page-text">Meteorhouse</div>
-        <div>Loading...</div>
-        <div class="loading-page-special-effect" :style="{'--loading-special-effect-color': loading_img.color}"/>
+        <div />
         <div
           style="
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            max-width: 512px;
-            height: 512px;
-            overflow: visible;
-            filter: drop-shadow(0 0 4px rgba(0 0 0 / 50%));
           "
         >
-          <img style="scale: 2; image-rendering: pixelated" :src="loading_img.src" alt="" />
+          <div class="loading-page-text">Meteorhouse</div>
+          <div>Loading...</div>
+          <div
+            class="loading-page-special-effect"
+            :style="{ '--loading-special-effect-color': loading_img.color }"
+          />
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              max-width: 512px;
+              height: 512px;
+              overflow: visible;
+              filter: drop-shadow(0 0 4px rgba(0 0 0 / 50%));
+            "
+          >
+            <img style="scale: 2; image-rendering: pixelated" :src="loading_img.src" alt="" />
+          </div>
+        </div>
+        <div style="margin-bottom: 36px; color: grey">
+          ©Copyright(2022-2023) Meteorhouse Library
         </div>
       </div>
     </transition>
@@ -158,10 +207,14 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
           <v-divider />
           <v-list>
             <v-list-item>
-              <v-textarea :model-value="user.token" hide-details />
+              Login Debug: <span style="color: orange">{{ user.token }}</span>
+              <!--              <v-textarea :model-value="user.token" hide-details />-->
             </v-list-item>
           </v-list>
           <v-list>
+            <v-list-item>
+              <span style="color: red">登录还没有转移，如果编辑失败请尝试重新登录</span>
+            </v-list-item>
             <v-list-item> 已登录 {{ user.username }} </v-list-item>
           </v-list>
         </template>
@@ -217,9 +270,9 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  background: rgba(247,246,250);
+  background: rgba(247, 246, 250);
 }
 .loading-enter-active,
 .loading-leave-active {
@@ -251,7 +304,9 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
   height: 512px;
   position: absolute;
   --loading-special-effect-color: white;
-  background: radial-gradient(rgba(255 255 255 / 0.4) 20%, transparent 20%), radial-gradient(rgba(255 255 255 / 0.4) 30%, transparent 30%), radial-gradient(var(--loading-special-effect-color) 50%, transparent 50%);
+  background: radial-gradient(rgba(255 255 255 / 0.4) 20%, transparent 20%),
+    radial-gradient(rgba(255 255 255 / 0.4) 30%, transparent 30%),
+    radial-gradient(var(--loading-special-effect-color) 50%, transparent 50%);
   scale: 0;
   filter: drop-shadow(0 0 4px var(--loading-special-effect-color));
 }
@@ -260,10 +315,10 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
     scale: 0;
   }
   50% {
-    scale: 1;
+    scale: 1.2;
   }
   100% {
-    scale: 0.8;
+    scale: 1;
   }
 }
 .loading-enter-active .loading-page-special-effect,
@@ -272,7 +327,7 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
 }
 .loading-enter-from .loading-page-special-effect,
 .loading-leave-to .loading-page-special-effect {
-  scale: 0.8;
+  scale: 1;
 }
 
 .bg-magic-circle-wrapper {

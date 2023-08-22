@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import PlayerCard, { PlayerProfile } from "@/components/card/PlayerCard.vue";
-import { computed, ref } from "vue";
-import axios from "axios";
-import { Party, PartyRelease } from "@/anise/worldflipper/party";
-import PartyCardEliya from "@/components/party/eliya/PartyCardEliya.vue";
-import { ele2color } from "@/stores/manager";
-import { Element } from "@/anise/worldflipper/object";
+import PlayerCard, { PlayerProfile } from '@/components/card/PlayerCard.vue'
+import { computed, ref } from 'vue'
+import axios from 'axios'
+import { Party, PartyRelease } from '@/anise/worldflipper/party'
+import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
+import { ele2color } from '@/stores/manager'
+import { Element } from '@/anise/worldflipper/object'
 
 const playerProfile = ref<PlayerProfile | undefined | null>()
 
@@ -19,7 +19,7 @@ async function searchPlayer(player_id: string) {
   )
   if (player_data.status === 200) {
     player_data = player_data.data
-    console.log(player_data);
+    console.log(player_data)
     if (player_data) {
       playerProfile.value = {
         player_id: player_data['search_result']['viewer_id'],
@@ -37,9 +37,6 @@ async function searchPlayer(player_id: string) {
     }
   }
 }
-const partyWrapped = computed(() =>
-  playerProfile.value?.party ? new PartyRelease(playerProfile.value.party, []) : undefined
-)
 </script>
 
 <template>
@@ -55,7 +52,12 @@ const partyWrapped = computed(() =>
         "
       >
         <div style="display: flex; align-items: center; width: 100%">
-          <v-text-field hide-details style="width: 80%" v-model="input" />
+          <v-text-field
+            hide-details
+            style="width: 80%"
+            v-model="input"
+            @keydown.enter="searchPlayer(input)"
+          />
           <v-btn icon="mdi-magnify" style="margin-left: 8px" @click="searchPlayer(input)" />
         </div>
       </v-card>
@@ -85,10 +87,16 @@ const partyWrapped = computed(() =>
               border-radius: 8px;
             "
           >
-            <PartyCardEliya :party="partyWrapped || PartyRelease.empty()" />
+            <PartyCardEliya :party="playerProfile.party || PartyRelease.empty()" />
           </div>
-          <v-divider :color="ele2color[playerProfile.party?.union1.main?.element || Element.All].hex()" thickness="2" style="width: 95%" />
-          <div style="margin: 8px 0; color: grey">Powered by <a href="https://meteorhouse.wiki/">Meteorhouse.wiki</a></div>
+          <v-divider
+            :color="ele2color[playerProfile.party?.party?.union1.main?.element || Element.All].hex()"
+            thickness="2"
+            style="width: 95%"
+          />
+          <div style="margin: 8px 0; color: grey">
+            Powered by <a href="https://meteorhouse.wiki/">Meteorhouse.wiki</a>
+          </div>
         </v-card>
         <template v-else-if="playerProfile === null">
           <div style="margin-top: 32px; font-size: 24px; color: grey">

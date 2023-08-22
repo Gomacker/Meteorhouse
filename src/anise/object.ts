@@ -4,7 +4,7 @@ export abstract class GameObject {
   protected constructor(resource_id: string) {
     this.resource_id = resource_id
   }
-  res(res_group: string): string {
-    return `/static/${this.__type_id}/${res_group}/${this.resource_id}.png`
+  res(res_group: string, suffix: string = 'png'): string {
+    return `/static/${this.__type_id}/${res_group}/${this.resource_id}.${suffix}`
   }
 }

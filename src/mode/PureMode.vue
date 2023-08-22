@@ -33,7 +33,7 @@ const sidebar_hidden = ref(false)
       </el-page-header>
       <div style="flex: 1" />
       <div style="display: flex; align-items: center; user-select: none; cursor: pointer">
-        © Copyright 2022~2023 Meteorhouse Library
+        ©Copyright(2022-2023) Meteorhouse Library
       </div>
     </el-header>
     <div style="position: relative; width: 100%">

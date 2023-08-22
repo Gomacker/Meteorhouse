@@ -7,6 +7,7 @@ import { reactive, ref, watch } from 'vue'
 import { ele2color } from '@/stores/manager'
 import type { WorldflipperObject } from '@/stores/worldflipper'
 import type { PartyEditor } from '@/anise/worldflipper/party'
+import { useDefer } from '@/utils'
 
 const props = defineProps<{
   characters: Map<string, Character>
@@ -109,7 +110,7 @@ class Filter {
   }
 
   sort(obj1: WorldflipperObject, obj2: WorldflipperObject): number {
-    return obj1 && obj2 ? obj2.rarity - obj1.rarity : 0
+    return obj1 && obj2 ? obj2.rarity * 100 - obj2.element - (obj1.rarity * 100 - obj1.element) : 0
   }
 }
 
@@ -117,8 +118,7 @@ const filter = reactive(new Filter())
 </script>
 
 <template>
-  <v-card
-    :elevation="6"
+  <div
     style="
       background: rgba(0 0 0 / 0.4);
       backdrop-filter: blur(2px);
@@ -160,19 +160,23 @@ const filter = reactive(new Filter())
         @click="isSelected(null) ? updateValue(undefined) : updateValue(null)"
       />
       <template v-if="type === 'Character'">
-        <CharacterIcon
-          v-ripple
-          class="wfo"
+        <template
           v-for="c in [...characters.entries()]
             .filter((value) => filter.filter(value[1]))
+            .filter((value) => value[1].server !== 'mh')
             .sort((a, b) => filter.sort(a[1], b[1]))"
-          :class="isSelected(c[1]) ? ['selected'] : []"
           :key="c[0]"
-          :obj="c[1]"
-          :size="82"
-          :style="{ '--element-color': ele2color[c[1].element] }"
-          @click="isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])"
-        />
+        >
+          <CharacterIcon
+            v-ripple
+            class="wfo"
+            :class="isSelected(c[1]) ? ['selected'] : []"
+            :obj="c[1]"
+            :size="82"
+            :style="{ '--element-color': ele2color[c[1].element] }"
+            @click="isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])"
+          />
+        </template>
       </template>
       <template v-if="type === 'Equipment'">
         <EquipmentIcon
@@ -243,7 +247,7 @@ const filter = reactive(new Filter())
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
-  </v-card>
+  </div>
 </template>
 
 <style scoped>
