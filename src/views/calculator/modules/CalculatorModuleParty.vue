@@ -118,7 +118,7 @@ function make_position(unionIndex: number, positionIndex: number) {
       </div>
     </v-card>
     <v-card style="overflow: visible; width: 480px; margin-top: 36px" class="elevation-4">
-      <div style="display: grid; padding: 4px; grid-template-columns: repeat(3, 160px)">
+      <div style="display: grid; padding: 4px; grid-template-columns: repeat(3, 158px)">
         <div>
           <PartyManaboard2Editor class="manaboard2-editor-single" :party-editor="party_editor" :position="make_position(1, 0)"/>
           <PartyManaboard2Editor class="manaboard2-editor-single" style="margin-top: 4px" :party-editor="party_editor" :position="make_position(1, 1)"/>
@@ -133,7 +133,7 @@ function make_position(unionIndex: number, positionIndex: number) {
         </div>
       </div>
     </v-card>
-    <v-card color="warning" style="width: 480px; margin-top: 36px" class="elevation-4">
+    <v-card v-if="false" color="warning" style="width: 480px; margin-top: 36px" class="elevation-4">
       <v-card-item>
         <v-textarea
           style="margin-top: 8px"

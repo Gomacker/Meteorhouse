@@ -201,14 +201,6 @@ const worldflipper = useWorldflipperDataStore()
   </div>
 </template>
 
-<script lang="ts">
-import UnitPicOrigin from '@/components/objects/unit/UnitPicOrigin.vue'
-
-export default {
-  name: 'TableComponentTextContent',
-  components: { UnitPicOrigin }
-}
-</script>
 
 <style scoped>
 .table-text-row {

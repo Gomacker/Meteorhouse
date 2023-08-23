@@ -25,6 +25,11 @@ const router = createRouter({
       component: () => import('@/views/PartySearcherView.vue')
     },
     {
+      path: '/pure/partySearcher',
+      name: 'pure_partySearcher',
+      component: () => import('@/views/PartySearcherView.vue')
+    },
+    {
       path: '/toolbox',
       name: 'toolbox',
       component: () => import('@/views/ToolboxView.vue')
@@ -78,11 +83,6 @@ const router = createRouter({
       path: '/gacha',
       name: 'test_gacha_list',
       component: () => import('@/views/test/GachaList.vue')
-    },
-    {
-      path: '/card/test',
-      name: 'card_test',
-      component: () => import('@/views/TestCardView.vue')
     },
     {
       path: '/test/room',

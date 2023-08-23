@@ -3,12 +3,16 @@ import { PartyEditor, PartyRelease } from '@/anise/worldflipper/party'
 import PartyReleaseCard from '@/components/card/PartyReleaseCard.vue'
 import { useUserStore } from '@/stores/user'
 import { computed, ref } from 'vue'
+import axios from "axios";
 
 const user = useUserStore()
 
 const props = defineProps<{ party_editor: PartyEditor }>()
-function updateParty(partyRelease: PartyRelease) {
-  partyRelease.dump()
+async function updateParty(partyRelease: PartyRelease) {
+  const r = await axios.post('/api/v1/party/upload/', partyRelease.dump(true))
+  if (r.status === 200) {
+    console.log(r.data);
+  }
 }
 const alerts = computed(() => {
   const list = []
@@ -25,7 +29,7 @@ const alerts = computed(() => {
     <PartyReleaseCard :party_release="party_editor.party" />
     <div style="height: 36px" />
     <div style="display: flex; justify-content: center">
-      <v-card v-if="user.is_login()" class="elevation-6" style="width: 480px">
+      <v-card v-if="true" class="elevation-6" style="width: 480px">
         <v-card-title style="font-weight: bold">上传(Legacy)</v-card-title>
         <v-card-item>
           <v-textarea v-model="party_editor.party.title" :rows="2" label="标题" maxlength="40" no-resize />
@@ -41,10 +45,11 @@ const alerts = computed(() => {
           </template>
           <v-alert v-else type="success" density="compact" style="margin-bottom: 16px">
             队伍没有错误
-            <div>{{ JSON.stringify(party_editor.party.dump()) }}</div>
           </v-alert>
-          <v-btn color="blue" style="float: right" @click="updateParty(party_editor.party)"
-            >上传</v-btn
+          <v-btn :disabled="!!alerts.length" color="blue" style="float: right" @click="updateParty(party_editor.party)"
+            >
+            上传
+          </v-btn
           >
         </v-card-item>
       </v-card>

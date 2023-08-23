@@ -1,13 +1,18 @@
+<script setup lang="ts">
+import { useWorldflipperDataStore } from "@/stores/worldflipper";
+
+const worldflipper = useWorldflipperDataStore()
+</script>
 <template>
   <div style="display: flex; justify-content: center; align-items: center; height: 100%">
     <div style="display: grid; grid-template-columns: repeat(4, auto)">
       <v-card class="editor-select active" @click="$router.push('/editor/character')">
         <p style="font-size: 28px; font-weight: 600">角色</p>
-        <p>已加载 {{ manager.unit_data.size }} 个角色</p>
+        <p>已加载 {{ worldflipper.characters.size }} 个角色</p>
       </v-card>
       <v-card style="" class="editor-select active" @click="$router.push('/editor/equipment')">
         <p style="font-size: 28px; font-weight: 600">装备</p>
-        <p>已加载 {{ manager.armament_data.size }} 个装备</p>
+        <p>已加载 {{ worldflipper.equipments.size }} 个装备</p>
       </v-card>
       <v-card class="editor-select">
         <p style="font-size: 28px; font-weight: 600">盘子</p>
@@ -30,19 +35,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { manager } from '@/stores/manager'
-
-export default {
-  name: 'EditorView',
-  computed: {
-    manager() {
-      return manager
-    }
-  }
-}
-</script>
 
 <style scoped>
 .editor-select {

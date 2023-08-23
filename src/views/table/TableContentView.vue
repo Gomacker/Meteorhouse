@@ -26,18 +26,32 @@ const table = computed(() => new Table(table_data.value))
 </script>
 
 <template>
-  <div
-    style="
-      width: 100%;
-      min-width: fit-content;
-      padding: 24px 0;
-      display: flex;
-      justify-content: center;
-      overflow: auto;
-    "
-  >
-    <SummaryTable v-if="table_data" :table="table"/>
+  <div>
+    <v-toolbar density="compact" style="position: fixed; z-index: 15"/>
+    <div
+      class="table-wrapper">
+      <SummaryTable class="table-body" v-if="table_data" :table="table"/>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.table-wrapper {
+  width: 100%;
+  min-width: fit-content;
+  padding-top: 54px;
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+}
+@media (max-width: 768px) {
+  .table-body {
+    zoom: 0.8;
+  }
+}
+@media (width: 560px) {
+  .table-body {
+    zoom: calc(560 / 1036);
+  }
+}
+</style>

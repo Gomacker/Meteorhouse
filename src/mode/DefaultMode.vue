@@ -86,7 +86,7 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
 </script>
 
 <template>
-  <v-app style="--v-theme-background: 248, 248, 248, 0">
+  <v-app style="--v-theme-background: 247,246,250, 0">
     <transition name="loading" mode="out-in">
       <div v-if="defer(60, true)" key="element" class="loading-page">
         <div />
@@ -245,8 +245,6 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
           流星屋图书馆
         </a>
       </v-toolbar-title>
-      <!--      <v-text-field label="搜索" hide-details></v-text-field>-->
-      <!--      <v-btn style="margin: 8px" icon="mdi-magnify"/>-->
     </v-app-bar>
     <v-main v-if="defer(1)">
       <router-view></router-view>
