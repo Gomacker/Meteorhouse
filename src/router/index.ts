@@ -69,11 +69,11 @@ const router = createRouter({
       name: 'table_editor',
       component: () => import('@/views/table/TableEditorView.vue')
     },
-    {
-      path: '/editor/nickname',
-      name: 'nickname_editor',
-      component: () => import('@/views/editor/NicknameEditorView.vue')
-    },
+    // {
+    //   path: '/editor/nickname',
+    //   name: 'nickname_editor',
+    //   component: () => import('@/views/editor/NicknameEditorView.vue')
+    // },
     {
       path: '/editor/event',
       name: 'event_editor',

@@ -29,7 +29,7 @@ const alerts = computed(() => {
     <PartyReleaseCard :party_release="party_editor.party" />
     <div style="height: 36px" />
     <div style="display: flex; justify-content: center">
-      <v-card v-if="true" class="elevation-6" style="width: 480px">
+      <v-card v-if="user.is_login()" class="elevation-6" style="width: 480px">
         <v-card-title style="font-weight: bold">上传(Legacy)</v-card-title>
         <v-card-item>
           <v-textarea v-model="party_editor.party.title" :rows="2" label="标题" maxlength="40" no-resize />
