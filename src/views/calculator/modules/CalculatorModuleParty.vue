@@ -2,11 +2,12 @@
 import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
 import { ele2color } from '@/stores/manager'
 import { Element } from '@/anise/worldflipper/object'
-import { Party, PartyEditor, PartyRelease, Union } from '@/anise/worldflipper/party'
+import { Party, PartyEditor, PartyPosition, PartyRelease, Union } from "@/anise/worldflipper/party";
 import { computed, ref } from 'vue'
 import PartyStatus from '@/views/calculator/modules/party/PartyStatus.vue'
+import PartyManaboard2Editor from "@/views/calculator/modules/party/PartyManaboard2Editor.vue";
 
-const props = defineProps<{ party: PartyRelease; party_editor?: PartyEditor }>()
+const props = defineProps<{ party: PartyRelease; party_editor: PartyEditor }>()
 
 function sum_main_element(party: Party) {
   const elements = new Map<Element, number>()
@@ -64,6 +65,10 @@ const party_status = computed(() => [
 
 const show_name = ref(false)
 const show_awaken = ref(false)
+
+function make_position(unionIndex: number, positionIndex: number) {
+  return new PartyPosition(unionIndex, positionIndex)
+}
 </script>
 
 <template>
@@ -114,71 +119,17 @@ const show_awaken = ref(false)
     </v-card>
     <v-card style="overflow: visible; width: 480px; margin-top: 36px" class="elevation-4">
       <div style="display: grid; padding: 4px; grid-template-columns: repeat(3, 160px)">
-        <div style="font-size: 7px">
-          <div>
-            <div style="font-weight: bold; font-size: 18px; height: 32px">
-              <img :src="party.party.union(1)?.main?.res('pixelart/walk_front', 'gif')" alt="" />
-              {{ party.party.union(1).main?.names[0] }}
-            </div>
-            <div>能力4</div>
-            <div>能力5</div>
-            <div>能力6</div>
-          </div>
-          <div>
-            <div style="font-weight: bold; font-size: 18px; height: 32px">
-              <img :src="party.party.union(1)?.unison?.res('pixelart/walk_front', 'gif')" alt="" />
-              {{ party.party.union(1).unison?.names[0] }}
-            </div>
-            <div>能力4</div>
-            <div>能力5</div>
-            <div>能力6</div>
-          </div>
+        <div>
+          <PartyManaboard2Editor class="manaboard2-editor-single" :party-editor="party_editor" :position="make_position(1, 0)"/>
+          <PartyManaboard2Editor class="manaboard2-editor-single" style="margin-top: 4px" :party-editor="party_editor" :position="make_position(1, 1)"/>
         </div>
-        <div style="font-size: 7px">
-          <div>
-            <div style="height: 24px; display: flex">
-              <div style="margin-top: -8px; width: 32px">
-                <img :src="party.party.union(2)?.main?.res('pixelart/walk_front', 'gif')" alt="" />
-              </div>
-              <div style="font-weight: bold; font-size: 18px">
-                {{ party.party.union(2).main?.names[0] }}
-              </div>
-            </div>
-            <div>能力4</div>
-            <div>能力5</div>
-            <div>能力6</div>
-          </div>
-          <div>
-            <div style="font-weight: bold; font-size: 18px; height: 32px">
-              <img :src="party.party.union(2)?.unison?.res('pixelart/walk_front', 'gif')" alt="" />
-              {{ party.party.union(2).unison?.names[0] }}
-            </div>
-            <div>能力4</div>
-            <div>能力5</div>
-            <div>能力6</div>
-          </div>
+        <div>
+          <PartyManaboard2Editor class="manaboard2-editor-single" :party-editor="party_editor" :position="make_position(2, 0)"/>
+          <PartyManaboard2Editor class="manaboard2-editor-single" style="margin-top: 4px" :party-editor="party_editor" :position="make_position(2, 1)"/>
         </div>
-        <div style="font-size: 7px">
-          <div>
-            <div style="font-weight: bold; font-size: 18px; height: 32px">
-              <div style="height: 24px; overflow: visible; display: inline">
-                <img :src="party.party.union(3)?.main?.res('pixelart/walk_front', 'gif')" alt="" />
-              </div>
-              {{ party.party.union(3).main?.names[0] }}
-            </div>
-            <div>能力4</div>
-            <div>能力5</div>
-            <div>能力6</div>
-          </div>
-          <div>
-            <div style="font-weight: bold; font-size: 18px; height: 32px">
-              <img :src="party.party.union(3)?.unison?.res('pixelart/walk_front', 'gif')" alt="" />
-              {{ party.party.union(3).unison?.names[0] }}
-            </div>
-            <div>能力4</div>
-            <div>能力5</div>
-            <div>能力6</div>
-          </div>
+        <div>
+          <PartyManaboard2Editor class="manaboard2-editor-single" :party-editor="party_editor" :position="make_position(3, 0)"/>
+          <PartyManaboard2Editor class="manaboard2-editor-single" style="margin-top: 4px" :party-editor="party_editor" :position="make_position(3, 1)"/>
         </div>
       </div>
     </v-card>
@@ -211,5 +162,9 @@ const show_awaken = ref(false)
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.manaboard2-editor-single {
+  height: 106px;
 }
 </style>

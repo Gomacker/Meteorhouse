@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { manager } from '@/stores/manager'
-import UnitPicOrigin from '@/components/objects/unit/UnitPicOrigin.vue'
 import { ref } from 'vue'
 import axios from 'axios'
 

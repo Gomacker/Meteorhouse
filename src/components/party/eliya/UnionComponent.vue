@@ -35,7 +35,7 @@ const param_manaboard2 = computed(() => props.party?.getParam('manaboard2') as P
 const main_manaboard2 = computed(() => param_manaboard2.value.get(make_position(props.union_index, 0)))
 const unison_manaboard2 = computed(() => param_manaboard2.value.get(make_position(props.union_index, 1)))
 function is_manaboard2_empty(mb2: Manaboard2Values) {
-  return !(typeof mb2.manaboard4 === 'number' || typeof mb2.manaboard5 === 'number' || typeof mb2.manaboard6 === 'number')
+  return !(typeof mb2.ability4 === 'number' || typeof mb2.ability5 === 'number' || typeof mb2.ability6 === 'number')
 }
 
 function mb_string(v: number | undefined):string {
@@ -67,9 +67,9 @@ function mb_string(v: number | undefined):string {
         v-if="main_manaboard2 ? !is_manaboard2_empty(main_manaboard2) : false"
         class="party-card-manaboard2-wrapper"
       >
-        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).manaboard4) }}</div>
-        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).manaboard5) }}</div>
-        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).manaboard6) }}</div>
+        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).ability4) }}</div>
+        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).ability5) }}</div>
+        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).ability6) }}</div>
       </div>
       <div style="text-align: center">
         {{ mainName }}
@@ -112,9 +112,9 @@ function mb_string(v: number | undefined):string {
         v-if="unison_manaboard2 ? !is_manaboard2_empty(unison_manaboard2) : false"
         class="party-card-manaboard2-wrapper"
       >
-        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).manaboard4) }}</div>
-        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).manaboard5) }}</div>
-        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).manaboard6) }}</div>
+        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).ability4) }}</div>
+        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).ability5) }}</div>
+        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).ability6) }}</div>
       </div>
       <div style="text-align: center">
         {{ unisonName }}
@@ -144,7 +144,6 @@ function mb_string(v: number | undefined):string {
   height: 195px;
   margin: 5px;
   position: relative;
-  //background-color: #0f0;
 }
 
 .union img {
@@ -213,8 +212,6 @@ function mb_string(v: number | undefined):string {
   position: absolute;
   background-color: white;
   box-shadow: rgba(9, 30, 66, 0.35) 0 1px 1px, rgba(9, 30, 66, 0.25) 0 0 1px 1px;
-  //box-shadow: 0 0 2px black;
-  /*cursor: pointer;*/
   cursor: auto;
   transition: border 0.3s ease;
 }

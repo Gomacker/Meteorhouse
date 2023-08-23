@@ -1,5 +1,4 @@
 import { GameObject } from '@/anise/object'
-import type { Unit } from '@/stores/manager'
 
 export enum Element {
   All = -1,
@@ -80,36 +79,6 @@ export class Character extends GameObject {
     super(resource_id)
   }
 
-  static from_legacy(unit: Unit): Character {
-    console.log(unit)
-    return new Character(
-      unit.wf_id,
-      unit.extraction_id,
-      [unit.name_zh, unit.name_sub, unit.name_jp],
-      unit.rarity,
-      unit.element,
-      unit.type_id,
-      unit.race,
-      unit.gender,
-      // unit.data['stance'],
-      // unit.cv,
-      '[]',
-      {
-        description: unit.leader_ability,
-        name: unit.leader_ability_name
-      },
-      {
-        description: unit.skill_description,
-        name: unit.skill_name,
-        weight: unit.skill_weight
-      },
-      [unit.ability1, unit.ability2, unit.ability3, unit.ability4, unit.ability5, unit.ability6],
-      unit.description,
-      unit.obtain,
-      JSON.parse(unit.tags),
-      unit.cv
-    )
-  }
 
   get nature_max_level(): number {
     return Math.floor(Character.LEVEL_CAP[String(this.rarity)][0])

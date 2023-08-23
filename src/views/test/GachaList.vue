@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { Unit } from '@/stores/manager'
-import { manager } from '@/stores/manager'
+import { ref } from 'vue'
 import { Character } from '@/anise/worldflipper/object'
-import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import QuestEventBanner, { QuestEvent } from '@/components/worldflipper/event/QuestEventBanner.vue'
 import moment from "moment";

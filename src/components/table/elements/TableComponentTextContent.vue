@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { manager } from '@/stores/manager'
-import ArmamentPicOrigin from '@/components/objects/armament/ArmamentPicOrigin.vue'
 import GameTag from '@/components/party/GameTag.vue'
 import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'

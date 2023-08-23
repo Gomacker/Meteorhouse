@@ -54,7 +54,7 @@ watch(party_editor, (value) => {
           资源
         </v-tab>
       </v-tabs>
-      <v-window style="height: 100%" v-model="selected_module">
+      <v-window :touch="false" style="height: 100%" v-model="selected_module">
         <v-window-item value="Calculator">
           <CalculatorModuleNotAvailable />
         </v-window-item>

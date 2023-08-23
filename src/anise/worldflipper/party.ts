@@ -174,7 +174,7 @@ export class Party {
       ['413', '414', '415', '416', '417', '418'].includes(value)
     ).length
     ab6level = ab6level ? ab6level - 1 : undefined
-    return { manaboard4: ab4level, manaboard5: ab5level, manaboard6: ab6level }
+    return { ability4: ab4level, ability5: ab5level, ability6: ab6level }
   }
 
   dump(): any {
@@ -235,17 +235,29 @@ export class Party {
   }
 }
 export class PartyRelease {
+  protected params: Map<string, PartyParam> = new Map<string, PartyParam>()
   constructor(
     public party: Party,
-    public params: Array<PartyParam>,
+    params: Array<PartyParam>,
     public title?: string,
     public id?: string,
     public updater_id?: string
-  ) {}
+  ) {
+    params.filter(value => value).forEach(value => this.setParam(value))
+  }
 
   getParam(id_: string): PartyParam | undefined {
-    return this.params.filter((value) => value.__type === id_)[0]
+    return this.params.get(id_)
   }
+
+  removeParam(id_: string) {
+    this.params.delete(id_)
+  }
+
+  setParam(param: PartyParam) {
+    param.isEmpty() ? this.removeParam(param.__type) : this.params.set(param.__type, param)
+  }
+
   static empty(): PartyRelease {
     return new PartyRelease(Party.empty(), [])
   }
@@ -270,7 +282,11 @@ export class PartyRelease {
   dump(for_update: boolean = false): any {
     const base = {
       party: this.party.dump(),
-      params: this.params.reduce((obj: any, value) => {
+      // params: this.params.reduce((obj: any, value) => {
+      //   obj[value.__type] = value.dump()
+      //   return obj
+      // }, {})
+      params: Array.from(this.params.values()).reduce((obj: any, value) => {
         obj[value.__type] = value.dump()
         return obj
       }, {})
@@ -287,6 +303,7 @@ export class PartyEditor {
   }
 
   select(obj: WorldflipperObject | PartyPosition) {
+    const ppm2 = this.party.getParam('manaboard2') as PartyParamManaboard2 | undefined
     if (obj instanceof PartyPosition) {
       if (this.verifyPosition(new PartyPosition(obj.unionIndex, obj.positionIndex)))
         this.selected_object = undefined
@@ -311,14 +328,18 @@ export class PartyEditor {
             this.selected_object = undefined
           } else this.selected_object = obj
         } else if (this.selected_object || this.selected_object === null) {
-          if (this.party.party.set(obj, this.selected_object)) this.selected_object = undefined
-          else this.selected_object = new PartyPosition(obj.unionIndex, obj.positionIndex)
+          if (this.party.party.set(obj, this.selected_object)) {
+            ppm2 && ppm2.set(obj, {})
+            this.selected_object = undefined
+          } else this.selected_object = new PartyPosition(obj.unionIndex, obj.positionIndex)
         } else this.selected_object = new PartyPosition(obj.unionIndex, obj.positionIndex)
       }
     } else {
       if (this.selected_object instanceof PartyPosition) {
-        if (this.party.party.set(this.selected_object, obj)) this.selected_object = undefined
-        else this.selected_object = obj
+        if (this.party.party.set(this.selected_object, obj)) {
+          ppm2 && ppm2.set(this.selected_object, {})
+          this.selected_object = undefined
+        } else this.selected_object = obj
       } else this.selected_object = obj
     }
   }
@@ -329,6 +350,13 @@ export class PartyEditor {
     const obj2 = p.get(position2)
     p.set(position2, obj1)
     p.set(position1, obj2)
+    const ppm2 = this.party.getParam('manaboard2') as PartyParamManaboard2 | undefined
+    if (ppm2) {
+      const mb1 = ppm2.get(position1)
+      const mb2 = ppm2.get(position2)
+      mb1 && ppm2.set(position2, mb1)
+      mb2 && ppm2.set(position1, mb2)
+    }
   }
 
   verifyPosition(position: PartyPosition): boolean {
@@ -388,9 +416,9 @@ export abstract class PartyParam {
 }
 
 export interface Manaboard2Values {
-  manaboard4?: number
-  manaboard5?: number
-  manaboard6?: number
+  ability4?: number
+  ability5?: number
+  ability6?: number
 }
 export class PartyParamManaboard2 extends PartyParam {
   readonly __type: string = 'manaboard2'
@@ -441,9 +469,9 @@ export class PartyParamManaboard2 extends PartyParam {
 
   dump(): any {
     const dumpFunc = (value: Manaboard2Values) => [
-      value.manaboard4 ?? -1,
-      value.manaboard5 ?? -1,
-      value.manaboard6 ?? -1
+      value.ability4 ?? -1,
+      value.ability5 ?? -1,
+      value.ability6 ?? -1
     ]
     return {
       union1: this.union1.map(dumpFunc),
@@ -460,7 +488,7 @@ export class PartyParamManaboard2 extends PartyParam {
         typeof value[1] === 'number' && value[1] <= 5 && value[1] >= 0 ? value[1] : undefined
       const m6 =
         typeof value[2] === 'number' && value[2] <= 5 && value[2] >= 0 ? value[2] : undefined
-      return { manaboard4: value[0], manaboard5: value[1], manaboard6: value[2] }
+      return { ability4: value[0], ability5: value[1], ability6: value[2] }
     }
     const ppm2 = new PartyParamManaboard2(
       (data['union1'] as Array<Array<number | undefined>>).map(loadFunc),
@@ -470,12 +498,15 @@ export class PartyParamManaboard2 extends PartyParam {
     if (!ppm2 || ppm2.isEmpty()) return undefined
     else return ppm2
   }
-
   isEmpty(): boolean {
-    return !(
-      this.union1.some((value) => !!value) &&
-      this.union2.some((value) => !!value) &&
-      this.union3.some((value) => !!value)
-    )
+    const unions = [this.union1, this.union2, this.union3]
+
+    return unions.every((union) => {
+      const abilityIndices = [0, 1]
+      return abilityIndices.every((index) => {
+        const { ability4, ability5, ability6 } = union[index]
+        return [ability4, ability5, ability6].every((ability) => ability === undefined)
+      })
+    })
   }
 }
