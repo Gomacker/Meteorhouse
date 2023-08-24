@@ -6,12 +6,12 @@ import type { WorldflipperObject } from '@/stores/worldflipper'
 const props = defineProps({
   party: {
     type: PartyRelease,
-    require: true,
+    required: true,
     default: PartyRelease.empty()
   },
   hidden_replacement: {
     type: Boolean,
-    require: false,
+    required: false,
     default: true
   },
   show_name: {

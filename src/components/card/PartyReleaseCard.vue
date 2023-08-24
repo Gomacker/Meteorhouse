@@ -7,18 +7,22 @@ import { PartyRelease } from '@/anise/worldflipper/party'
 const props = defineProps({
   party_release: {
     type: PartyRelease,
-    require: true,
+    required: true,
     default: PartyRelease.empty()
   },
   extra_option: {
     type: Boolean,
-    require: false,
+    required: false,
     default: true
   },
   event: {
     type: Boolean,
-    require: false,
+    required: false,
     default: false
+  },
+  eager: {
+    type: Boolean,
+    required: false
   }
 })
 
@@ -105,7 +109,7 @@ const show_dialog = ref(false)
         </div>
       </div>
       <v-divider :thickness="2" style="margin: 2px 0" />
-      <PartyCard :party="party_release"></PartyCard>
+      <PartyCard :eager="eager" :party="party_release"></PartyCard>
       <div v-if="extra_option" style="display: flex; justify-content: space-between">
         <div>
           <v-dialog v-model="show_dialog" width="auto">

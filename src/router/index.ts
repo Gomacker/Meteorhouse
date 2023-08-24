@@ -27,7 +27,7 @@ const router = createRouter({
     {
       path: '/pure/partySearcher',
       name: 'pure_partySearcher',
-      component: () => import('@/views/PartySearcherView.vue')
+      component: () => import('@/views/PurePartySearcherView.vue')
     },
     {
       path: '/toolbox',

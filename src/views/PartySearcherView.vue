@@ -13,6 +13,8 @@ const party_count = ref(0)
 const current_page = ref(1)
 const loading = ref(true)
 
+defineProps<{ eager?: boolean }>()
+
 function get_data(page_index: number, search_content = '') {
   const params = {
     page_index: page_index,
@@ -31,10 +33,11 @@ function get_data(page_index: number, search_content = '') {
       }
     )
     .then((r) => {
-      page_party_list.value = new Map(Object.entries(r.data['parties']))
-      // for (const party in r.data['parties']) {
-      //   console.log(party)
-      // }
+      page_party_list.value = new Map(
+        Object.keys(r.data['parties']).map((key) => [key, r.data['parties'][key]]) as Array<
+          [string, PartyRelease]
+        >
+      )
       party_count.value = r.data['party_count']
       loading.value = false
     })
@@ -109,7 +112,11 @@ onMounted(() => {
       >
         <template v-if="page_party_list.size">
           <template v-for="party in page_party_list" :key="party[0]">
-            <PartyReleaseCard style="margin: 4px" :party_release="PartyRelease.load(party[1])" />
+            <PartyReleaseCard
+              :eager="eager"
+              style="margin: 4px"
+              :party_release="PartyRelease.load(party[1])"
+            />
           </template>
         </template>
       </div>

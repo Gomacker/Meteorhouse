@@ -1,8 +1,4 @@
-<script lang="ts" setup>
-import { ref } from 'vue'
-
-const sidebar_hidden = ref(false)
-</script>
+<script lang="ts" setup></script>
 <template>
   <v-app style="--v-theme-background: 247, 246, 250, 0">
     <div style="display: flex; justify-content: center">
