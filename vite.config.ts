@@ -3,40 +3,40 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-// import { VitePWA } from 'vite-plugin-pwa'
+import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    // VitePWA({
-    //   manifest: {
-    //     name: 'Meteorhouse',
-    //     short_name: 'Meteorhouse',
-    //     description: '流星屋图书馆',
-    //     start_url: '/',
-    //     display: 'standalone',
-    //     background_color: '#fff',
-    //     theme_color: '#fff',
-    //     icons: [
-    //       {
-    //         src: '/static/worldflipper/unit/square212x/base/devil_princess_xm20.png',
-    //         sizes: '192x192',
-    //         type: 'image/png'
-    //       }
-    //     ]
-    //   },
-    //   workbox: {
-    //     runtimeCaching: [
-    //       {
-    //         urlPattern: new RegExp('^https://meteorhouse.wiki/'),
-    //         handler: 'NetworkFirst'
-    //       }
-    //     ],
-    //     cleanupOutdatedCaches: true
-    //   }
-    // })
+    VitePWA({
+      manifest: {
+        name: 'Meteorhouse',
+        short_name: 'Meteorhouse',
+        description: '流星屋图书馆',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#fff',
+        theme_color: '#fff',
+        icons: [
+          {
+            src: '/static/worldflipper/unit/square212x/base/devil_princess_xm20.png',
+            sizes: '192x192',
+            type: 'image/png'
+          }
+        ]
+      },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: new RegExp('^https://meteorhouse.wiki'),
+            handler: 'NetworkFirst'
+          }
+        ],
+        cleanupOutdatedCaches: true
+      }
+    })
   ],
   resolve: {
     alias: {
