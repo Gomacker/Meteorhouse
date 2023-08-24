@@ -21,9 +21,9 @@ export default defineConfig({
         theme_color: '#fff',
         icons: [
           {
-            src: '/static/worldflipper/unit/square212x/base/devil_princess_xm20.png',
+            src: '/static/favicon.ico',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/x-icon'
           }
         ]
       },
