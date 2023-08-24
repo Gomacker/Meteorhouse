@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import TableComponentTextContent from '@/components/table/elements/TableComponentTextContent.vue'
 import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
-import { TableElementParty } from "@/components/table/elements/WorldflipperElements";
+import type { TableElementParty } from "@/components/table/elements/WorldflipperElements";
 
 const props = defineProps<{
   element: TableElementParty
