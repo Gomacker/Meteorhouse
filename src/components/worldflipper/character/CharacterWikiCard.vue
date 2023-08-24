@@ -98,13 +98,13 @@ const translated_type = computed(() => type2zh[props.obj?.type])
           <CharacterIcon :obj="obj" :size="120" />
           <div style="display: flex; flex-wrap: wrap; width: 100%; justify-content: space-between">
             <div style="padding: 8px 16px; font-size: 20px">
-              <p style="font-size: 20px; font-family: '华文细黑', serif; font-weight: 600">
+              <p style="font-size: 20px; font-family: '黑体', serif; font-weight: 600">
                 {{ obj.names[1] }}
               </p>
-              <p style="font-size: 34px; font-family: '华文细黑', serif; font-weight: 600">
+              <p style="font-size: 34px; font-family: '黑体', serif; font-weight: 600">
                 {{ obj.names[0] }}
               </p>
-              <p style="font-size: 18px; font-family: '华文细黑', serif; margin-top: 2px">
+              <p style="font-size: 18px; font-family: '黑体', serif;">
                 {{ obj.names[2] }}
               </p>
             </div>

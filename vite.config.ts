@@ -55,12 +55,6 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
-      //'/api/v2': {
-      //   target: 'http://127.0.0.1:10317',
-      //   // target: 'https://meteorhouse.wiki/api/',
-      //   changeOrigin: true,
-      //   rewrite: (path) => path.replace(/^\/api\/v2/, '')
-      // },
       '/static': {
         // target: 'http://localhost:10317/static/',
         target: 'https://meteorhouse.wiki/static/',
