@@ -43,7 +43,7 @@ export class TableElementWikiCard extends TableElement {
   html(): JSX.Element {
     const worldflipper = useWorldflipperDataStore()
     if (this.type === 'Character') {
-      return h(CharacterWikiCard, {
+      return h<typeof CharacterWikiCard>(CharacterWikiCard, {
         obj: worldflipper.characters.get(String(this.id)),
         lite: this.lite,
         style: {

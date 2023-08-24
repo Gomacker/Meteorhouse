@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import PlayerCard, { PlayerProfile } from '@/components/card/PlayerCard.vue'
-import { computed, ref } from 'vue'
+import PlayerCard from '@/components/card/PlayerCard.vue'
+import type { PlayerProfile } from '@/components/card/PlayerCard.vue'
+import { ref } from 'vue'
 import axios from 'axios'
 import { Party, PartyRelease } from '@/anise/worldflipper/party'
 import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
