@@ -6,9 +6,9 @@ import {
   PartyPosition,
   PartyRelease,
   Union
-} from "@/anise/worldflipper/party";
-import { Element } from "@/anise/worldflipper/object";
-import { computed } from "vue";
+} from '@/anise/worldflipper/party'
+import { Element } from '@/anise/worldflipper/object'
+import { computed } from 'vue'
 
 const props = defineProps<{
   modelValue: Union
@@ -31,14 +31,24 @@ const unisonName = computed(() => {
 function make_position(unionIndex: number, positionIndex: number) {
   return new PartyPosition(unionIndex, positionIndex)
 }
-const param_manaboard2 = computed(() => props.party?.getParam('manaboard2') as PartyParamManaboard2 || new PartyParamManaboard2())
-const main_manaboard2 = computed(() => param_manaboard2.value.get(make_position(props.union_index, 0)))
-const unison_manaboard2 = computed(() => param_manaboard2.value.get(make_position(props.union_index, 1)))
+const param_manaboard2 = computed(
+  () => (props.party?.getParam('manaboard2') as PartyParamManaboard2) || new PartyParamManaboard2()
+)
+const main_manaboard2 = computed(() =>
+  param_manaboard2.value.get(make_position(props.union_index, 0))
+)
+const unison_manaboard2 = computed(() =>
+  param_manaboard2.value.get(make_position(props.union_index, 1))
+)
 function is_manaboard2_empty(mb2: Manaboard2Values) {
-  return !(typeof mb2.ability4 === 'number' || typeof mb2.ability5 === 'number' || typeof mb2.ability6 === 'number')
+  return !(
+    typeof mb2.ability4 === 'number' ||
+    typeof mb2.ability5 === 'number' ||
+    typeof mb2.ability6 === 'number'
+  )
 }
 
-function mb_string(v: number | undefined):string {
+function mb_string(v: number | undefined): string {
   if (typeof v === 'number' && v <= 5 && v >= 0) return String(v)
   else return '-'
 }

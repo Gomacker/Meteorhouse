@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-
-
 import { useWorldflipperDataStore } from "@/stores/worldflipper";
 import { ref } from "vue";
 
