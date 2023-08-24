@@ -162,7 +162,6 @@ const filter = reactive(new Filter())
       <template v-if="type === 'Character'">
         <template
           v-for="c in [...characters.entries()]
-            .filter((value) => filter.filter(value[1]))
             .filter((value) => value[1].server !== 'mh')
             .sort((a, b) => filter.sort(a[1], b[1]))"
           :key="c[0]"
