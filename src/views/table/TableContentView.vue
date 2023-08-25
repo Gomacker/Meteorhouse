@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import SummaryTable from '@/components/table/SummaryTable.vue'
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { Table } from '@/components/table/table'
@@ -27,10 +27,11 @@ const table = computed(() => new Table(table_data.value))
 
 <template>
   <div>
-    <v-toolbar density="compact" style="position: fixed; z-index: 15"/>
-    <div
-      class="table-wrapper">
-      <SummaryTable class="table-body" v-if="table_data" :table="table"/>
+    <v-toolbar density="compact">
+      绑定ID: {{ route.params['table_id'] }}
+    </v-toolbar>
+    <div class="table-wrapper">
+      <SummaryTable class="table-body" v-if="table_data" :table="table" />
     </div>
   </div>
 </template>
@@ -39,7 +40,7 @@ const table = computed(() => new Table(table_data.value))
 .table-wrapper {
   width: 100%;
   min-width: fit-content;
-  padding-top: 54px;
+  /*padding-top: 54px;*/
   display: flex;
   justify-content: center;
   overflow: auto;

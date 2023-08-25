@@ -266,7 +266,7 @@ export class PartyRelease {
     const pr = new PartyRelease(party, this.loadParams(data['params']))
     pr.title = data['title'] || ''
     pr.id = data['id']
-
+    pr.party = Party.load(data['party'])
     return pr
   }
 

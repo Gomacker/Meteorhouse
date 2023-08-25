@@ -31,7 +31,7 @@ async function searchPlayer(player_id: string) {
         leader_character_id: String(player_data['search_result']['leader_character_id']),
         last_login: player_data['search_result']['last_login_time'],
         degree_id: player_data['search_result']['degree_id'],
-        party: Party.loadOrigin(player_data)
+        // party: Party.loadOrigin(player_data)
       }
     } else {
       playerProfile.value = null
@@ -79,17 +79,17 @@ async function searchPlayer(player_id: string) {
             style="width: 520px; z-index: 1"
             :model-value="playerProfile as PlayerProfile"
           />
-          <div
-            v-ripple
-            style="
-              margin: 8px 0;
-              padding: 4px;
-              box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
-              border-radius: 8px;
-            "
-          >
-            <PartyCardEliya :party="playerProfile.party || PartyRelease.empty()" />
-          </div>
+<!--          <div-->
+<!--            v-ripple-->
+<!--            style="-->
+<!--              margin: 8px 0;-->
+<!--              padding: 4px;-->
+<!--              box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);-->
+<!--              border-radius: 8px;-->
+<!--            "-->
+<!--          >-->
+<!--            <PartyCardEliya :party="playerProfile.party || PartyRelease.empty()" />-->
+<!--          </div>-->
           <v-divider
             :color="ele2color[playerProfile.party?.party?.union1.main?.element || Element.All].hex()"
             thickness="2"

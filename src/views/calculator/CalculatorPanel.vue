@@ -4,10 +4,11 @@ import CharacterIcon from '@/components/worldflipper/character/CharacterIcon.vue
 import EquipmentIcon from '@/components/worldflipper/equipment/EquipmentIcon.vue'
 import { Character, Element, Equipment, SpecialityType } from '@/anise/worldflipper/object'
 import { reactive, ref, watch } from 'vue'
-import { ele2color } from '@/stores/manager'
+import { ele2color, race2zh } from "@/stores/manager";
 import type { WorldflipperObject } from '@/stores/worldflipper'
 import type { PartyEditor } from '@/anise/worldflipper/party'
 import { useDefer } from '@/utils'
+import { useWorldflipperDataStore } from "@/stores/worldflipper";
 
 const props = defineProps<{
   characters: Map<string, Character>
@@ -31,7 +32,7 @@ function isSelected(obj: WorldflipperObject) {
   return props.modelValue.selected_object === obj
 }
 
-const type = ref<'Character' | 'Equipment'>('Character')
+const type = ref<'Character' | 'Equipment' | 'Filter'>('Character')
 
 class Filter {
   text: string = ''
@@ -67,7 +68,7 @@ class Filter {
       'Devil',
       'Plants',
       'Aquatic',
-      'Untead'
+      'Undead'
     ]
   }
 
@@ -87,23 +88,25 @@ class Filter {
     if (object instanceof Character) {
       const text_filter =
         !this.text ||
+        object.id === this.text ||
+        object.resource_id === this.text ||
         object.leader_ability.name.includes(this.text) ||
         object.leader_ability.description.includes(this.text) ||
         object.skill.name.includes(this.text) ||
         object.skill.description.includes(this.text) ||
-        (object.abilities[0] && object.abilities[0].includes(this.text)) ||
-        (object.abilities[1] && object.abilities[1].includes(this.text)) ||
-        (object.abilities[2] && object.abilities[2].includes(this.text)) ||
-        (object.abilities[3] && object.abilities[3].includes(this.text)) ||
-        (object.abilities[4] && object.abilities[4].includes(this.text)) ||
-        (object.abilities[5] && object.abilities[5].includes(this.text)) ||
+        object.abilities.some((ability) => ability && ability.includes(this.text)) ||
         object.description.includes(this.text) ||
         object.obtain.includes(this.text)
       const element_filter = this.element.indexOf(object.element) > -1
       const race_filter = object.race.split(',').some((val) => this.race.includes(val))
       return [text_filter, element_filter, race_filter].every((value) => value)
     } else if (object instanceof Equipment) {
-      const text_filter = true
+      const text_filter =
+        !this.text ||
+        object.id === this.text ||
+        object.resource_id === this.text ||
+        object.abilities.some((ability) => ability && ability.includes(this.text)) ||
+        object.description.includes(this.text)
       const element_filter = this.element.indexOf(object.element) > -1
       return [text_filter, element_filter].every((value) => value)
     } else return false
@@ -115,6 +118,7 @@ class Filter {
 }
 
 const filter = reactive(new Filter())
+const worldflipper = useWorldflipperDataStore()
 </script>
 
 <template>
@@ -129,16 +133,92 @@ const filter = reactive(new Filter())
     "
   >
     <div style="display: flex; justify-content: space-between">
-      <div style="display: grid; grid-template-columns: repeat(2, auto); grid-gap: 8px">
+      <div style="display: grid; grid-template-columns: repeat(3, auto); grid-gap: 8px">
         <v-btn :color="type === 'Character' ? 'primary' : 'white'" @click="type = 'Character'">
           角色
         </v-btn>
         <v-btn :color="type === 'Equipment' ? 'primary' : 'white'" @click="type = 'Equipment'">
           装备
         </v-btn>
+        <v-btn :color="type === 'Filter' ? 'primary' : 'white'" @click="type = 'Filter'">
+          筛选条件
+        </v-btn>
+      </div>
+    </div>
+
+    <div v-if="type === 'Filter'">
+
+      <div style="margin: 4px">
+        <span style="margin: 4px; display: inline-block; width: 50px">属性</span>
+        <v-btn
+          size="small"
+          @click="
+                filter.element.length === filter.defaults.element().length
+                  ? (filter.element = [])
+                  : (filter.element = filter.defaults.element())
+              "
+        >
+          {{ filter.element.length !== filter.defaults.element().length ? '全部' : '清空' }}
+        </v-btn>
+        <v-btn-toggle
+          color="light-blue-accent-1"
+          v-model="filter.element"
+          multiple=""
+          style="margin-left: 8px; height: 28px"
+        >
+          <v-btn
+            v-for="(ele, id_) in {
+                  [Element.All]: 'none',
+                  [Element.Fire]: 'fire',
+                  [Element.Water]: 'water',
+                  [Element.Thunder]: 'thunder',
+                  [Element.Wind]: 'wind',
+                  [Element.Light]: 'light',
+                  [Element.Dark]: 'dark'
+                }"
+            size="small"
+            :key="id_"
+            :value="parseInt(String(id_))"
+          >
+            <img
+              style="width: 16px; height: 16px; filter: drop-shadow(0 0 2px rgba(0 0 0 / 0.6))"
+              :src="`/static/worldflipper/icon/${ele}.png`"
+              alt=""
+            />
+          </v-btn>
+        </v-btn-toggle>
+      </div>
+      <div style="margin: 4px">
+        <span style="margin: 4px; display: inline-block; width: 50px">种族</span>
+        <v-btn
+          size="small"
+          @click="
+                filter.race.length === filter.defaults.race().length
+                  ? (filter.race = [])
+                  : (filter.race = filter.defaults.race())
+              "
+        >
+          {{ filter.race.length !== filter.defaults.race().length ? '全部' : '清空' }}
+        </v-btn>
+        <v-btn-toggle
+          color="light-blue-accent-1"
+          v-model="filter.race"
+          multiple=""
+          style="margin-left: 8px; height: 28px"
+        >
+          <v-btn
+            v-for="race in Object.keys(race2zh as object)"
+            size="small"
+            :key="race"
+            :value="race"
+          >
+            {{ race2zh[race] }}
+          </v-btn>
+        </v-btn-toggle>
       </div>
     </div>
     <div
+      v-else
       style="
         display: grid;
         max-width: 1280px;
@@ -162,7 +242,8 @@ const filter = reactive(new Filter())
       <template v-if="type === 'Character'">
         <template
           v-for="c in [...characters.entries()]
-            .filter((value) => value[1].server !== 'mh')
+            .filter((value) => filter.filter(value[1]))
+            .filter((value) => worldflipper.mhMode ? true : value[1].server !== 'mh')
             .sort((a, b) => filter.sort(a[1], b[1]))"
           :key="c[0]"
         >
@@ -193,59 +274,9 @@ const filter = reactive(new Filter())
         />
       </template>
     </div>
-    <v-expansion-panels>
-      <v-expansion-panel>
-        <v-expansion-panel-title ripple>
-          <v-icon icon="mdi-filter" />
-          筛选条件
-        </v-expansion-panel-title>
-        <v-expansion-panel-text>
-          <v-text-field label="搜索" v-model="filter.text" density="compact" />
-          <div style="margin: 4px">
-            <span style="margin: 4px; display: inline-block; width: 50px">属性</span>
-            <v-btn
-              size="small"
-              @click="
-                () => {
-                  if (filter.element.length === filter.defaults.element().length)
-                    filter.element = []
-                  else filter.element = filter.defaults.element()
-                }
-              "
-            >
-              {{ filter.element.length !== filter.defaults.element().length ? '全部' : '清空' }}
-            </v-btn>
-            <v-btn-toggle
-              color="light-blue-accent-1"
-              v-model="filter.element"
-              multiple=""
-              style="margin-left: 8px; height: 28px"
-            >
-              <v-btn
-                v-for="(ele, id_) in {
-                  [Element.All]: 'none',
-                  [Element.Fire]: 'fire',
-                  [Element.Water]: 'water',
-                  [Element.Thunder]: 'thunder',
-                  [Element.Wind]: 'wind',
-                  [Element.Light]: 'light',
-                  [Element.Dark]: 'dark'
-                }"
-                size="small"
-                :key="id_"
-                :value="parseInt(String(id_))"
-              >
-                <img
-                  style="width: 16px; height: 16px; filter: drop-shadow(0 0 2px rgba(0 0 0 / 0.6))"
-                  :src="`/static/worldflipper/icon/${ele}.png`"
-                  alt=""
-                />
-              </v-btn>
-            </v-btn-toggle>
-          </div>
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
+    <div style="width: 90%; max-width: 1280px">
+      <v-text-field style="width: 100%" hide-details variant="solo-filled" label="搜索 - ID / 名称 / 能力内容" v-model="filter.text" density="compact" />
+    </div>
   </div>
 </template>
 

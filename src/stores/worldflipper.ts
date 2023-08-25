@@ -10,11 +10,13 @@ export const useWorldflipperDataStore = defineStore('worldflipperData', {
     version: string | undefined
     __characters: { [key: string]: any }
     __equipments: { [key: string]: any }
+    mhMode: boolean
   } {
     return {
       version: undefined,
       __characters: {},
-      __equipments: {}
+      __equipments: {},
+      mhMode: false
     }
   },
   actions: {
@@ -63,7 +65,7 @@ export const useWorldflipperDataStore = defineStore('worldflipperData', {
       {
         key: 'worldflipperData',
         storage: localStorage,
-        paths: ['version', '__characters', '__equipments']
+        paths: ['version', '__characters', '__equipments', 'mhMode']
       }
     ]
   }

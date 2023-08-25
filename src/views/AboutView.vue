@@ -1,3 +1,11 @@
+<script setup lang="ts">
+import { useWorldflipperDataStore } from "@/stores/worldflipper";
+import { useUserStore } from "@/stores/user";
+
+const user = useUserStore()
+const worldflipper = useWorldflipperDataStore()
+</script>
+
 <template>
   <div
     style="
@@ -54,26 +62,30 @@
         <a href="https://worldflipper.jp/">弹射世界官网</a>
       </p>
     </div>
-    <v-card v-show="false" width="80%">
-      攻略/内容协力感谢：
-      <div class="thanks-list">
-        <p>
-          @白鸢别馆Official
-          <a href="https://space.bilibili.com/148736" target="_blank">
-            <img
-              style="width: 16px; vertical-align: middle"
-              src="https://www.bilibili.com/favicon.ico"
-              alt=""
-            />
-          </a>
-        </p>
-        <p>@安息香酸</p>
-        <p>@猫猫球</p>
-        <p>@御坂葉子</p>
-        <p>@DMeow</p>
-        <p>@Nyaaakui</p>
-        <p>@真帆</p>
-      </div>
+    <div v-if="user.is_login()">
+      <v-switch color="orange" v-model="worldflipper.mhMode" label="Meteorhouse Mode！"/>
+    </div>
+    <v-card>
+      <v-card-item>
+        攻略/内容协力感谢：
+        <div class="thanks-list">
+          <p>
+            @白鸢别馆Official
+            <a href="https://space.bilibili.com/148736" target="_blank">
+              <img
+                style="width: 16px; vertical-align: middle"
+                src="https://www.bilibili.com/favicon.ico"
+                alt=""
+              />
+            </a>
+          </p>
+          <p>@安息香酸</p>
+          <p>@猫猫球</p>
+          <p>@御坂葉子</p>
+          <p>@DMeow</p>
+          <p>@Nyaaakui</p>
+        </div>
+      </v-card-item>
     </v-card>
     <div style="display: grid; grid-gap: 8px; grid-template-columns: repeat(4, 130px)">
       <v-card v-ripple style="border-radius: 8px; background: white" :elevation="4">
@@ -157,8 +169,7 @@
 <style scoped>
 .thanks-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 150px);
+  grid-template-columns: repeat(3, 150px);
   justify-content: center;
 }
 </style>
-<script setup lang="ts"></script>
