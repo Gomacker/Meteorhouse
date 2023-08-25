@@ -60,7 +60,7 @@ const cards: RouteRecordRaw[] = [
   {
     path: '/card/armament',
     name: 'card_armament',
-    component: () => import('@/views/card/ArmamentCardView.vue')
+    component: () => import('@/views/card/EquipmentCardView.vue')
   },
   {
     path: '/card/character',
@@ -68,7 +68,7 @@ const cards: RouteRecordRaw[] = [
   },
   {
     path: '/card/equipment',
-    component: () => import('@/views/card/ArmamentCardView.vue')
+    component: () => import('@/views/card/EquipmentCardView.vue')
   },
   {
     path: '/card/table',
