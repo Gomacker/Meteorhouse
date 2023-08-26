@@ -8,7 +8,12 @@ const table = computed(() => new Table(table_data))
 
 <template>
   <v-toolbar>
-    <v-toolbar-title>Test</v-toolbar-title>
+    <v-toolbar-title>
+      <v-toolbar-items>
+        <v-btn>aa</v-btn>
+        <v-btn>aa</v-btn>
+      </v-toolbar-items>
+    </v-toolbar-title>
   </v-toolbar>
   <div>
     <v-card>

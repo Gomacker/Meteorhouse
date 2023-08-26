@@ -268,6 +268,11 @@ export class PartyRelease {
     pr.title = data['title'] || ''
     pr.id = data['id']
     pr.party = Party.load(data['party'])
+    const params = data['params']
+    if (params.hasOwnProperty('manaboard2')) {
+      const ppm2 = PartyParamManaboard2.load(params['manaboard2'])
+      if (ppm2) pr.setParam(ppm2)
+    }
     return pr
   }
 
