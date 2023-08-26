@@ -10,17 +10,16 @@ const props = defineProps({
     required: true,
     default: PartyRelease.empty()
   },
-  extra_option: {
-    type: Boolean,
-    required: false,
-    default: true
-  },
   event: {
     type: Boolean,
     required: false,
     default: false
   },
   eager: {
+    type: Boolean,
+    required: false
+  },
+  hideTools: {
     type: Boolean,
     required: false
   }
@@ -55,13 +54,20 @@ const show_dialog = ref(false)
         <div>
           <span style="font-weight: bold; font-size: 18px">{{ party_release.title }}</span>
           <v-chip
-            v-if="false"
             v-ripple
-            style="user-select: none; margin: 0 4px; color: white; flex-shrink: 0"
-            color="warning"
+            style="
+              user-select: none;
+              margin: 0 4px;
+              height: 20px;
+              color: white;
+              flex-shrink: 0;
+              cursor: default;
+              vertical-align: text-bottom;
+            "
+            color="red"
             density="comfortable"
           >
-            无盘子码
+            {{ party_release.partyCode?.length === 6 ? party_release.partyCode : '盘子码未解析' }}
           </v-chip>
           <v-snackbar
             v-model="id_copied"
@@ -85,6 +91,7 @@ const show_dialog = ref(false)
               cursor: default;
               vertical-align: text-bottom;
             "
+            v-if="party_release.id"
             density="comfortable"
             @click="copy_release_id(party_release.id || '')"
             :id="`copy-id-${party_release.id || ''}`"
@@ -93,7 +100,10 @@ const show_dialog = ref(false)
           </v-chip>
         </div>
         <div>
-          <v-menu open-delay="0" location="end" open-on-hover>
+          <div v-if="hideTools" style="font-size: 12px">
+            Powered by <a>Meteorhouse.wiki</a>
+          </div>
+          <v-menu v-else open-delay="0" location="end" open-on-hover>
             <template v-slot:activator="{ props }">
               <div v-bind="props" class="party-card-source-tag">
                 <v-icon icon="mdi-magnify"></v-icon>
@@ -110,7 +120,7 @@ const show_dialog = ref(false)
       </div>
       <v-divider :thickness="2" style="margin: 2px 0" />
       <PartyCard :eager="eager" :party="party_release"></PartyCard>
-      <div v-if="extra_option" style="display: flex; justify-content: space-between">
+      <div v-if="!hideTools" style="display: flex; justify-content: space-between">
         <div>
           <v-dialog v-model="show_dialog" width="auto">
             <template v-slot:activator="{ props }">

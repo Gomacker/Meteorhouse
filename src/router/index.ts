@@ -54,17 +54,15 @@ const views: RouteRecordRaw[] = [
 const cards: RouteRecordRaw[] = [
   {
     path: '/card/unit',
-    name: 'card_unit',
-    component: () => import('@/views/card/UnitCardView.vue')
+    component: () => import('@/views/card/CharacterCardView.vue')
   },
   {
     path: '/card/armament',
-    name: 'card_armament',
     component: () => import('@/views/card/EquipmentCardView.vue')
   },
   {
     path: '/card/character',
-    component: () => import('@/views/card/UnitCardView.vue')
+    component: () => import('@/views/card/CharacterCardView.vue')
   },
   {
     path: '/card/equipment',
@@ -72,12 +70,14 @@ const cards: RouteRecordRaw[] = [
   },
   {
     path: '/card/table',
-    name: 'card_table',
     component: () => import('@/views/card/TableCardView.vue')
   },
   {
+    path: '/card/party/refer',
+    component: () => import('@/views/card/PartyReferCardView.vue')
+  },
+  {
     path: '/card/room',
-    name: 'room_card',
     component: () => import('@/views/card/RoomCardView.vue')
   }
 ]

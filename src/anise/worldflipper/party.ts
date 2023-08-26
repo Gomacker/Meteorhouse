@@ -236,6 +236,7 @@ export class Party {
 }
 export class PartyRelease {
   protected params: Map<string, PartyParam> = new Map<string, PartyParam>()
+  public partyCode: string | undefined
   constructor(
     public party: Party,
     params: Array<PartyParam>,

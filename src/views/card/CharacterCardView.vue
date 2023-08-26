@@ -4,21 +4,20 @@ import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import { useRoute } from 'vue-router'
 import CharacterWikiCard from "@/components/worldflipper/character/CharacterWikiCard.vue";
 
-const wf_id = ref<string | undefined>()
+const id = ref<string | undefined>()
 const worldflipper = useWorldflipperDataStore()
-
-const obj = computed(() => worldflipper.characters.get(wf_id.value || '0'))
+const obj = computed(() => worldflipper.characters.get(id.value || '0'))
 
 onMounted(() => {
   const route = useRoute()
-  wf_id.value = typeof route.query['wf_id'] === 'string' ? route.query['wf_id'] : undefined
+  id.value = route.query['id'] as string || route.query['wf_id'] as string  // Version legacy: wf_id
 })
 </script>
 <template>
   <template v-if="obj">
     <CharacterWikiCard id="main-card" :obj="obj" />
   </template>
-  <template v-else> 缺少ID </template>
+  <template v-else> 缺少ID / ID无效 </template>
 </template>
 
 <style scoped></style>

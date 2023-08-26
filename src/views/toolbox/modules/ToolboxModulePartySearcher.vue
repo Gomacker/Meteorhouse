@@ -6,24 +6,12 @@ import { PartyRelease } from '@/anise/worldflipper/party'
 import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
 import { ele2color } from '@/stores/manager'
 import { Element } from '@/anise/worldflipper/object'
+import { apiService } from "@/utils";
 
 const input = ref<string>('')
 
 async function searchParty(party_id: string) {
-  let party_data: any = await axios.post(
-    '/api/v2/worldflipper/api/party/refer',
-    {},
-    { params: { party_id: party_id } }
-  )
-  if (party_data.status === 200) {
-    party_data = party_data.data
-    if (party_data) {
-      party.value = PartyRelease.load(party_data)
-      console.log(party.value?.dump());
-    } else {
-      party.value = null
-    }
-  }
+  party.value = await apiService.searchParty(party_id) || null
 }
 
 const debug_data = ref()
