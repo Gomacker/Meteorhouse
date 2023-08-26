@@ -16,7 +16,9 @@ async function getParty(id: string) {
 onMounted(() => {
   const route = useRoute()
   const id = route.query['id'] as string
-  getParty(id).then()
+  getParty(id)
+    .then((e) => (complete.value = true))
+    .catch(() => (complete.value = true))
 })
 const party = ref<PartyRelease | undefined>(undefined)
 </script>
