@@ -1,7 +1,8 @@
 import table, { TableElement } from '@/components/table/table'
 import type { JSX } from 'vue/jsx-runtime'
-import { h } from "vue";
+import { h } from 'vue'
 import TableComponentTextContent from '@/components/table/elements/TableComponentTextContent.vue'
+import { VBtn, VCard, VSwitch, VTextarea, VTextField } from 'vuetify/components'
 
 export class TableElementContainer extends TableElement {
   readonly __type: string = 'Container'
@@ -20,11 +21,42 @@ export class TableElementContainer extends TableElement {
           padding: this.elements.length === 1 && this.elements[0].__type === 'Html' ? '0' : '16px 0'
         }}
       >
-        {this.elements.map((value) => (
-          <div style={{ width: value.isFull ? '1008px' : '504px' }}>{value.html()}</div>
+        {this.elements.map((value, index) => (
+          <div key={index} style={{ width: value.isFull ? '1008px' : '504px' }}>
+            {value.html()}
+          </div>
         ))}
       </div>
     )
+  }
+
+  editor(): JSX.Element {
+    return (
+      <VCard style={{ background: '#0f0', padding: '4px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {this.elements.map((value) =>
+            value.editorWrapped(
+              (data) => (this.elements[this.elements.indexOf(value)] = table.load(data))
+            )
+          )}
+          <div style={{ width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <VBtn
+              // @ts-ignore onClick在此处没有受到WebStorm支持
+              onClick={() => {
+                this.elements.push(new TableElementText({}))
+              }}
+              prependIcon="mdi-plus"
+            >
+              新增组件
+            </VBtn>
+          </div>
+        </div>
+      </VCard>
+    )
+  }
+
+  get isFull(): boolean {
+    return true
   }
 }
 
@@ -55,6 +87,26 @@ export class TableElementTitle extends TableElement {
       </div>
     )
   }
+
+  editor(): JSX.Element {
+    return (
+      <>
+        <div style="display: flex; align-items: center">
+          <img
+            src={`/static/worldflipper/icon/${this.icon}.png`}
+            alt=""
+            style={{ width: '28px', height: '28px', margin: '0 8px' }}
+          />
+          <VTextField v-model={this.icon} label="icon" density="compact" hideDetails />
+        </div>
+        <VTextField v-model={this.content} label="内容" density="compact" hideDetails />
+      </>
+    )
+  }
+
+  get isFull(): boolean {
+    return true
+  }
 }
 
 export class TableElementHtml extends TableElement {
@@ -68,6 +120,10 @@ export class TableElementHtml extends TableElement {
 
   html(): JSX.Element {
     return <div innerHTML={this.content}></div>
+  }
+
+  editor(): JSX.Element {
+    return <div>{JSON.stringify(this.data())}</div>
   }
 
   get isFull(): boolean {
@@ -89,16 +145,6 @@ export class TableElementText extends TableElement {
   }
 
   html(): JSX.Element {
-    // return (
-    //   <TableTextContent
-    //     content={this.content}
-    //     class="table-element-text"
-    //     style={{
-    //       fontSize: this.little_title ? '28px' : '22px',
-    //       width: this.full ? '992px' : '480px'
-    //     }}
-    //   />
-    // )
     return h(TableComponentTextContent, {
       class: 'table-element-text',
       style: {
@@ -107,6 +153,18 @@ export class TableElementText extends TableElement {
       },
       content: this.content
     })
+  }
+
+  editor(): JSX.Element {
+    return (
+      <>
+        <VTextarea v-model={this.content} hideDetails />
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <VSwitch label="小标题" v-model={this.little_title} hideDetails />
+          <VSwitch label="占据整行" v-model={this.full} hideDetails />
+        </div>
+      </>
+    )
   }
 
   get isFull(): boolean {

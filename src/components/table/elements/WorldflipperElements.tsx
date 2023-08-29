@@ -2,10 +2,11 @@ import table, { TableElement } from '@/components/table/table'
 import type { JSX } from 'vue/jsx-runtime'
 import { h } from 'vue'
 import TableComponentParty from '@/components/table/elements/TableComponentParty.vue'
-import { PartyRelease } from '@/anise/worldflipper/party'
+import { Party, PartyRelease } from "@/anise/worldflipper/party";
 import CharacterWikiCard from '@/components/worldflipper/character/CharacterWikiCard.vue'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import EquipmentWikiCard from '@/components/worldflipper/equipment/EquipmentWikiCard.vue'
+import TableEditorParty from '@/components/table/elements/TableEditorParty.vue'
 
 export class TableElementParty extends TableElement {
   readonly __type: string = 'Party'
@@ -16,7 +17,7 @@ export class TableElementParty extends TableElement {
   constructor(data: any) {
     super()
     // this.__data = data
-    this._party = data['party']
+    this._party = data['party'] || Party.empty().dump()
     this.title = data['title'] || ''
     this.subtitle = data['subtitle'] || ''
   }
@@ -25,6 +26,10 @@ export class TableElementParty extends TableElement {
   }
   html(): JSX.Element {
     return h(TableComponentParty, { element: this })
+  }
+
+  editor(): JSX.Element {
+    return h(TableEditorParty, { element: this })
   }
 }
 
@@ -58,6 +63,10 @@ export class TableElementWikiCard extends TableElement {
         lite: this.lite
       })
     }
+  }
+
+  editor(): JSX.Element {
+    return <div>{JSON.stringify(this.data())}</div>
   }
 }
 

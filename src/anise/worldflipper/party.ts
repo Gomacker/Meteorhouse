@@ -102,7 +102,7 @@ export class Party {
     return new Party(null, null, null)
   }
   static load(data: any): Party {
-    return new Party(data['union1'], data['union2'], data['union3'])
+    return data ? new Party(data['union1'], data['union2'], data['union3']) : Party.empty()
   }
   static loadOrigin(data: any): PartyRelease {
     const main_party_data = data['target_user_party']
@@ -272,6 +272,7 @@ export class PartyRelease {
   }
 
   static loadParams(data: any): PartyParam[] {
+    if (!data) return []
     const params: PartyParam[] = []
     if (data['manaboard2']) {
       const ppm2 = PartyParamManaboard2.load(data['manaboard2'])

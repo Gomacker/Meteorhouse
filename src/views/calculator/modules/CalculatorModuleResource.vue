@@ -3,7 +3,6 @@ import type { WorldflipperObject } from '@/stores/worldflipper'
 import { ele2color } from '@/stores/manager'
 import { computed } from 'vue'
 import { Character, Element, Equipment } from "@/anise/worldflipper/object";
-import EquipmentWikiCard from '@/components/worldflipper/equipment/EquipmentWikiCard.vue'
 
 const props = defineProps<{
   obj?: WorldflipperObject

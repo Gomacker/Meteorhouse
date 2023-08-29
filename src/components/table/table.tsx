@@ -1,5 +1,6 @@
 import chroma from 'chroma-js'
 import type { JSX } from 'vue/jsx-runtime'
+import { VBtn, VCard, VCardItem, VDivider, VMenu, VSelect } from "vuetify/components";
 
 class TableProperty {
   public title: string
@@ -76,6 +77,30 @@ export abstract class TableElement {
     return obj
   }
   abstract html(): JSX.Element
+  abstract editor(): JSX.Element
+
+  editorWrapped(onChangeType: (data: any)=>void): JSX.Element {
+    return (
+      <VCard style={{ width: this.isFull ? '100%' : '50%', margin: '4px 0', transition: 'all 0.4s ease' }}>
+        <VCardItem>
+          <div style="display: flex">
+            <VSelect
+              modelValue={this.__type}
+              items={Array.from(elementManager.items().keys())}
+              onUpdate:modelValue={(value) => {
+                return onChangeType({type: value, ...this._data()})
+              }}
+              hideDetails
+              density="compact"
+              label="类型"
+            />
+          </div>
+          <VDivider style={{ margin: '4px' }} />
+          <div>{this.editor()}</div>
+        </VCardItem>
+      </VCard>
+    )
+  }
   get isFull(): boolean {
     return false
   }
@@ -97,6 +122,14 @@ class TableElementError extends TableElement {
   html(): JSX.Element {
     return <div style={{ color: 'blue' }}>未解析的组件：{JSON.stringify(this.data())}</div>
   }
+
+  editor(): JSX.Element {
+    return (
+      <div style={{ color: 'blue' }}>
+        这是一个未解析的组件，当保存时，它将被保存为Type Error：{JSON.stringify(this.data())}
+      </div>
+    )
+  }
 }
 
 class ElementManager {
@@ -115,6 +148,12 @@ class ElementManager {
     const type = data['type']
     const E = this.elementMap.get(type)
     return E ? new E(data['data'] || {}) : new TableElementError(data['data'] || {})
+  }
+
+  items() {
+    return new Map(
+      Array.from(new Set(this.elementMap.values())).map((value) => [new value({}).__type, value])
+    )
   }
 }
 
@@ -334,6 +373,10 @@ export class Table {
     }
   }
 
+  changeValue(value: TableElement, newValue: TableElement) {
+    this.content[this.content.indexOf(value)] = newValue
+  }
+
   move_pre(index: number) {
     if (this.content[index - 1])
       this.content[index - 1] = this.content.splice(index, 1, this.content[index - 1])[0]
@@ -377,7 +420,9 @@ export function format_content(content: string): string {
   const ss = content.split('\n')
   for (const key in ss) {
     let s = ss[key]
-    replacements.forEach(([pattern, replacement]) => s = s.replace(pattern, replacement as string))
+    replacements.forEach(
+      ([pattern, replacement]) => (s = s.replace(pattern, replacement as string))
+    )
     ss[key] = s
   }
   return ss.map((value) => `<p>${value}</p>`).join('')
