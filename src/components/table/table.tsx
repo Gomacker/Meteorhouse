@@ -1,6 +1,6 @@
 import chroma from 'chroma-js'
 import type { JSX } from 'vue/jsx-runtime'
-import { VBtn, VCard, VCardItem, VDivider, VMenu, VSelect } from 'vuetify/components'
+import { VCard, VCardItem, VDivider, VMenu, VSelect } from 'vuetify/components'
 import TableEditorWrapperMenu from '@/components/table/elements/TableEditorWrapperMenu.vue'
 import { h } from 'vue'
 
@@ -22,6 +22,8 @@ class TableProperty {
     if (!data) data = {}
     this.name = data['name'] || ''
     this.image = data['image'] || ''
+    this.public = data['public'] || false
+    this.weight = data['weight'] || 0
     this.title = data['title'] || ''
     this._main_color = chroma(data['main_color'] || 'white')
     this._sub_color = chroma(data['sub_color'] || 'white')

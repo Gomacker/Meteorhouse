@@ -83,7 +83,7 @@ getTableList().then((value) => (tableList.value = value))
           </v-card-item>
         </v-card>
         <TableEditorContent :table="table as Table" />
-        <div>{{ table_data }}</div>
+        <div>{{ table.data() }}</div>
       </div>
       <div v-if="mixEdit" class="table-preview-wrapper">
         <SummaryTable :table="table as Table" />
