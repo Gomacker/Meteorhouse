@@ -18,6 +18,24 @@ export function useDefer() {
   }
 }
 
+interface Alert {
+  type: 'Success' | 'Warning' | 'Error' | 'Info'
+  content: string
+}
+
+class AlertManager {
+  public stack: Array<Alert>
+  constructor() {
+    this.stack = []
+  }
+}
+
+const am = new AlertManager()
+
+export function useAlert() {
+  return am
+}
+
 export class APIService {
   public async searchParty(partyId: string): Promise<PartyRelease | undefined> {
     const response = await axios.post(

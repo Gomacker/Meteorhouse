@@ -10,33 +10,33 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    // VitePWA({
-    //   manifest: {
-    //     name: 'Meteorhouse',
-    //     short_name: 'Meteorhouse',
-    //     description: '流星屋图书馆',
-    //     start_url: '/',
-    //     display: 'standalone',
-    //     background_color: '#fff',
-    //     theme_color: '#fff',
-    //     icons: [
-    //       {
-    //         src: '/static/favicon.ico',
-    //         sizes: '192x192',
-    //         type: 'image/x-icon'
-    //       }
-    //     ]
-    //   },
-    //   workbox: {
-    //     runtimeCaching: [
-    //       {
-    //         urlPattern: new RegExp('^https://meteorhouse.wiki'),
-    //         handler: 'NetworkFirst'
-    //       }
-    //     ],
-    //     cleanupOutdatedCaches: true
-    //   }
-    // })
+    VitePWA({
+      manifest: {
+        name: 'Meteorhouse',
+        short_name: 'Meteorhouse',
+        description: '流星屋图书馆',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#fff',
+        theme_color: '#fff',
+        icons: [
+          {
+            src: '/static/favicon.ico',
+            sizes: '64x64',
+            type: 'image/x-icon'
+          }
+        ]
+      },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: new RegExp('^https://meteorhouse.wiki'),
+            handler: 'NetworkFirst'
+          }
+        ],
+        cleanupOutdatedCaches: true
+      }
+    })
   ],
   resolve: {
     alias: {
@@ -48,7 +48,7 @@ export default defineConfig({
     port: 5174,
     proxy: {
       // '/api/v2': 'http://127.0.0.1:10317',
-      // '/api/v2': 'http://127.0.0.1:14044',
+      '/api/v2': 'http://127.0.0.1:14044',
       '/api': {
         // target: 'http://127.0.0.1:10317/api/',
         target: 'https://meteorhouse.wiki/api/',

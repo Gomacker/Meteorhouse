@@ -20,8 +20,17 @@ const menuOpen = ref(false)
           预览
         </v-btn>
         <v-textarea
-          :model-value="JSON.stringify(element.party.dump(), null, 2)"
-          on-update:model-value="() => {}"
+          style="width: 100%"
+          :model-value="(() => {
+            try{
+              return JSON.stringify(JSON.parse(element._party), null, 2)
+            }catch (e) {
+              return element._party
+            }
+          })()"
+          @input="(e: InputEvent) => {
+            element.setPartyFromJson(e.target?.['_value'])
+          }"
         >
         </v-textarea>
       </template>

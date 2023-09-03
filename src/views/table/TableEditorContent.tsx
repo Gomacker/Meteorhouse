@@ -11,8 +11,15 @@ export default defineComponent({
   setup(props) {
     return () => (
       <div>
-        {props.table.content.map((value) =>
-          value.editorWrapped((data) => props.table.changeValue(value, table.load(data)))
+        {props.table.content.map((value, index) =>
+          value.editorWrapped(
+            (data) => props.table.changeValue(value, table.load(data)),
+            () => {
+              const index = props.table.content.indexOf(value)
+              props.table.delete(index)
+            },
+            index % 2 ? '#fff' : 'lightgrey'
+          )
         )}
       </div>
     )

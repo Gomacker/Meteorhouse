@@ -10,20 +10,31 @@ import TableEditorParty from '@/components/table/elements/TableEditorParty.vue'
 
 export class TableElementParty extends TableElement {
   readonly __type: string = 'Party'
-  private _party: any
+  public _party: string
   public title: string
   public subtitle: string
 
   constructor(data: any) {
     super()
     // this.__data = data
-    this._party = data['party'] || Party.empty().dump()
+    const p = data['party']
+    if (typeof p === 'object') this._party = JSON.stringify(p)
+    else this._party = data['party'] || JSON.stringify(Party.empty().dump())
     this.title = data['title'] || ''
     this.subtitle = data['subtitle'] || ''
   }
   get party() {
-    return PartyRelease.load(this._party)
+    try {
+      return PartyRelease.load(JSON.parse(this._party))
+    }catch (e) {
+      return PartyRelease.empty()
+    }
   }
+
+  setPartyFromJson(value: string) {
+    this._party = value
+  }
+
   html(): JSX.Element {
     return h(TableComponentParty, { element: this })
   }
@@ -67,6 +78,25 @@ export class TableElementWikiCard extends TableElement {
 
   editor(): JSX.Element {
     return <div>{JSON.stringify(this.data())}</div>
+  }
+}
+
+export class TableElementAutoParty extends TableElement {
+  readonly __type: string = 'AutoParty'
+  private category: number;
+  private questId: number;
+  private size: number;
+
+  constructor(data: any) {
+    super();
+  }
+
+  html(): JSX.Element {
+    return <></>;
+  }
+
+  editor(): JSX.Element {
+    return <></>;
   }
 }
 

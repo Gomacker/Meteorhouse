@@ -1,6 +1,8 @@
 import chroma from 'chroma-js'
 import type { JSX } from 'vue/jsx-runtime'
-import { VBtn, VCard, VCardItem, VDivider, VMenu, VSelect } from "vuetify/components";
+import { VBtn, VCard, VCardItem, VDivider, VMenu, VSelect } from 'vuetify/components'
+import TableEditorWrapperMenu from '@/components/table/elements/TableEditorWrapperMenu.vue'
+import { h } from 'vue'
 
 class TableProperty {
   public title: string
@@ -11,9 +13,15 @@ class TableProperty {
   public banner: string
   public background: string
   public footer: string
+  public image: string;
+  public name: string;
+  public public: boolean;
+  public weight: number;
 
   constructor(data: any) {
     if (!data) data = {}
+    this.name = data['name'] || ''
+    this.image = data['image'] || ''
     this.title = data['title'] || ''
     this._main_color = chroma(data['main_color'] || 'white')
     this._sub_color = chroma(data['sub_color'] || 'white')
@@ -79,21 +87,29 @@ export abstract class TableElement {
   abstract html(): JSX.Element
   abstract editor(): JSX.Element
 
-  editorWrapped(onChangeType: (data: any)=>void): JSX.Element {
+  editorWrapped(onChangeType: (data: any) => void, onDelete: () => void, background: string = '#fff'): JSX.Element {
     return (
-      <VCard style={{ width: this.isFull ? '100%' : '50%', margin: '4px 0', transition: 'all 0.4s ease' }}>
+      <VCard
+        style={{
+          width: this.isFull ? '100%' : '50%',
+          margin: '4px 0',
+          transition: 'all 0.4s ease',
+          background: background
+        }}
+      >
         <VCardItem>
-          <div style="display: flex">
+          <div style="display: flex; align-items: center">
             <VSelect
               modelValue={this.__type}
               items={Array.from(elementManager.items().keys())}
               onUpdate:modelValue={(value) => {
-                return onChangeType({type: value, ...this._data()})
+                return onChangeType({ type: value, ...this._data() })
               }}
               hideDetails
               density="compact"
               label="类型"
             />
+            {h(TableEditorWrapperMenu, { element: this, delete: onDelete })}
           </div>
           <VDivider style={{ margin: '4px' }} />
           <div>{this.editor()}</div>
@@ -160,205 +176,10 @@ class ElementManager {
 export const elementManager = new ElementManager()
 export default elementManager
 
-// export class TableElementRow extends TableElement {
-//   public readonly elements: TableElement[]
-//   constructor(data: any) {
-//     super('Row')
-//     this.elements = data.hasOwnProperty('elements')
-//       ? Array.from(data['elements']).map((value) => TableElement.load(value))
-//       : new Array<TableElement>()
-//   }
-//   data(): object {
-//     return {
-//       type: this.type,
-//       data: {
-//         elements: this.elements.map((value) => value.data())
-//       }
-//     }
-//   }
-//
-//   html() {
-//     return (
-//       <div>
-//         {this.elements.map(value => value.html())}
-//       </div>
-//     )
-//   }
-//
-//   move_pre(index: number) {
-//     if (this.elements[index - 1])
-//       this.elements[index - 1] = this.elements.splice(index, 1, this.elements[index - 1])[0]
-//   }
-//   move_next(index: number) {
-//     if (this.elements[index + 1])
-//       this.elements[index + 1] = this.elements.splice(index, 1, this.elements[index + 1])[0]
-//   }
-//   insert_textarea(index: number) {
-//     this.elements.splice(index, 0, new TableElementTextArea({}))
-//   }
-//   delete(index: number) {
-//     this.elements.splice(index, 1)
-//   }
-// }
-
-// export class TableElementHtml extends TableElement {
-//   public readonly content: string
-//   constructor(data: any) {
-//     super('Html')
-//     this.content = typeof data['content'] === 'string' ? data['content'] : ''
-//   }
-//   data(): object {
-//     return {
-//       type: this.type,
-//       data: {
-//         content: this.content
-//       }
-//     }
-//   }
-//   get isFull(): boolean {
-//     return true
-//   }
-// }
-
-// export class TableElementParty extends TableElement {
-//   public readonly party_data: string
-//   public show_name: boolean
-//   public show_awaken: boolean
-//
-//   constructor(data: any) {
-//     super('Party')
-//     this.party_data = data['party']
-//       ? JSON.stringify(data['party'], null, 2)
-//       : JSON.stringify(PartyRelease.empty().data(), null, 2)
-//     this.show_name = data['show_name']
-//     this.show_awaken = data['show_awaken']
-//   }
-//
-//   get party() {
-//     try {
-//       // console.log(this.party_data);
-//       return PartyRelease.loads(JSON.parse(this.party_data))
-//     } catch (e) {
-//       // console.log('party_data_read_error');
-//       return PartyRelease.empty()
-//     }
-//   }
-//
-//   data(): object {
-//     return {
-//       type: this.type,
-//       data: {
-//         party: this.party.data(),
-//         show_name: this.show_name,
-//         show_awaken: this.show_awaken
-//       }
-//     }
-//   }
-// }
-
-// export class TableElementParty2 extends TableElementParty {
-//   public title: string
-//   public subtitle: string
-//   constructor(data: any) {
-//     super(data)
-//     this.type = 'Party2'
-//     this.title = data['title']
-//     this.subtitle = data['subtitle']
-//   }
-//
-//   data(): object {
-//     const obj: any = super.data()
-//     obj['data'] = Object.fromEntries(
-//       Object.entries(obj['data']).concat(
-//         Object.entries({
-//           title: this.title,
-//           subtitle: this.subtitle
-//         })
-//       )
-//     )
-//     return obj
-//   }
-// }
-
-// export class TableElementPartyUnion extends TableElementParty {
-//   public label: string
-//   public title: string
-//   public content: string
-//   constructor(data: any) {
-//     super(data)
-//     this.type = 'PartyUnion'
-//     this.label = data['label']
-//     this.title = data['title']
-//     this.content = data['content']
-//   }
-//
-//   get isFull(): boolean {
-//     return true
-//   }
-//
-//   data(): object {
-//     const obj: any = super.data()
-//     obj['data'] = Object.fromEntries(
-//       Object.entries(obj['data']).concat(
-//         Object.entries({
-//           label: this.label,
-//           title: this.title,
-//           content: this.content
-//         })
-//       )
-//     )
-//     return obj
-//   }
-// }
-
-// export class TableElementWikiCard extends TableElement {
-//   public object_type: 'Unit' | 'Armament'
-//   public object_id: number
-//   public lite: boolean
-//   constructor(data: any) {
-//     super('WikiCard')
-//     this.object_type = ['Unit', 'Armament'].includes(data['type']) ? data['type'] : 'Unit'
-//     this.object_id = typeof data['id'] === 'number' ? data['id'] : 0
-//     this.lite = typeof data['lite'] === 'boolean' ? data['lite'] : false
-//   }
-//
-//   get object(): Unit | Armament | undefined {
-//     if (this.object_type === 'Unit') return manager.unit_data.get(this.object_id)
-//     if (this.object_type === 'Armament') return manager.armament_data.get(this.object_id)
-//     return undefined
-//   }
-//
-//   data(): object {
-//     return {
-//       type: this.type,
-//       data: {
-//         type: this.object_type,
-//         id: this.object_id,
-//         lite: this.lite
-//       }
-//     }
-//   }
-// }
-
-// export class TableElementObjectMap extends TableElement {
-//   public id_list: string
-//
-//   constructor(data: any) {
-//     super('ObjectMap')
-//     this.id_list = typeof data['id_list'] == 'string' ? data['id_list'] : '["u1"]'
-//   }
-//
-//   data(): object {
-//     return {
-//       type: this.type,
-//       data: {}
-//     }
-//   }
-// }
-
 export class Table {
   public property: TableProperty
   public content: Array<TableElement>
+  public id: string = ''
 
   constructor(data: any) {
     this.property = new TableProperty(data['property'])

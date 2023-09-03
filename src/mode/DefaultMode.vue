@@ -80,6 +80,18 @@ const loading_images: Array<LoadingImage> = [
   {
     src: '/static/worldflipper/unit/pixelart/special/light_ballot23.gif',
     color: ele2color[Element.Light].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/special/mh/elesh_norn.gif',
+    color: ele2color[Element.Fire].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/special/mh/elesh_norn.gif',
+    color: ele2color[Element.Fire].hex()
+  },
+  {
+    src: '/static/worldflipper/unit/pixelart/special/mh/elesh_norn.gif',
+    color: ele2color[Element.Fire].hex()
   }
 ]
 const loading_img = loading_images[Math.floor(Math.random() * loading_images.length)]

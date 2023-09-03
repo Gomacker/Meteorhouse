@@ -8,11 +8,14 @@ const views: RouteRecordRaw[] = [
     name: 'home',
     component: HomeView
   },
-
   {
     path: '/partyEditor',
     name: 'partyEditor',
     component: () => import('@/views/calculator/CalculatorView.vue')
+  },
+  {
+    path: '/partyRecords',
+    component: () => import('@/views/PartyRecordsView.vue')
   },
   {
     path: '/partySearcher',

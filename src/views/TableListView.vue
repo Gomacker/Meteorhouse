@@ -2,31 +2,18 @@
 import { ref } from 'vue'
 import axios from 'axios'
 
-enum TableType {
-  DEFAULT = 0
-}
 
 interface TableProfile {
+  id: string
   name: string
-  img: string
-  type: TableType
+  image: string
+  weight: number
 }
 
-const table_list = ref<Map<string, TableProfile>>(new Map())
+const table_list = ref<Array<TableProfile>>()
 
-axios.post('/api/v1/table_list/').then((r) => {
-  table_list.value = new Map(
-    Object.entries(r.data['tables']).map((value: any) => {
-      return [
-        value[0],
-        {
-          name: value[1]['name'],
-          img: value[1]['img'],
-          type: TableType.DEFAULT
-        }
-      ]
-    })
-  )
+axios.post('/api/v2/worldflipper/table/list').then((r) => {
+  table_list.value = (r.data['tables'] as Array<TableProfile>).sort((a, b) => b.weight - a.weight)
 })
 </script>
 
@@ -43,9 +30,9 @@ axios.post('/api/v1/table_list/').then((r) => {
     >
       <v-card
         class="table-card elevation-4"
-        :key="table_profile[0]"
-        v-for="table_profile in table_list.entries()"
-        @click="$router.push(`/table/${table_profile[0]}`)"
+        :key="table_profile.id"
+        v-for="table_profile in table_list"
+        @click="$router.push(`/table/${table_profile.id}`)"
       >
         <v-img
           style="min-height: 60px; height: 100%"
@@ -53,8 +40,8 @@ axios.post('/api/v1/table_list/').then((r) => {
           :aspect-ratio="16 / 9"
           :cover="true"
           :src="
-            table_profile[1].img
-              ? table_profile[1].img
+            table_profile.image
+              ? table_profile.image
               : '/static/worldflipper/st/banner/world_flipper-1609036650079981568-img1.png'
           "
         />
@@ -68,7 +55,7 @@ axios.post('/api/v1/table_list/').then((r) => {
             width: 100%;
           "
         >
-          {{ table_profile[1].name }}
+          {{ table_profile.name }}
         </div>
       </v-card>
     </div>

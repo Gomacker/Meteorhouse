@@ -36,10 +36,18 @@ export class TableElementContainer extends TableElement {
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
           {this.elements.map((value) =>
             value.editorWrapped(
-              (data) => (this.elements[this.elements.indexOf(value)] = table.load(data))
+              (data) => (this.elements[this.elements.indexOf(value)] = table.load(data)),
+              () => this.elements.splice(this.elements.indexOf(value), 1)
             )
           )}
-          <div style={{ width: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div
+            style={{
+              width: '50%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
             <VBtn
               // @ts-ignore onClick在此处没有受到WebStorm支持
               onClick={() => {
