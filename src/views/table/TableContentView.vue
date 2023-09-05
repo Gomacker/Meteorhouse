@@ -13,7 +13,7 @@ const show_name = route.query.show_name?.toString().toLowerCase() === 'true'
 const show_awaken = route.query.show_awaken?.toString().toLowerCase() === 'true'
 
 onMounted(() => {
-  axios.post(`/api/v1/table/${route.params['table_id']}/data/`).then((r) => {
+  axios.post(`/api/v2/worldflipper/table/get/${route.params['table_id']}`).then((r) => {
     table_data.value = r.data
   })
 })

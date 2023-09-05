@@ -2,12 +2,12 @@
 import CalculatorPanel from '@/views/calculator/CalculatorPanel.vue'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import type { WorldflipperObject } from '@/stores/worldflipper'
-import { reactive, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import CalculatorModuleNotAvailable from '@/views/calculator/modules/CalculatorModuleNotAvailable.vue'
 import CalculatorModuleWikiCard from '@/views/calculator/modules/CalculatorModuleWikiCard.vue'
 import CalculatorModuleResource from '@/views/calculator/modules/CalculatorModuleResource.vue'
 import CalculatorModuleParty from '@/views/calculator/modules/CalculatorModuleParty.vue'
-import { Party, PartyEditor, PartyPosition, PartyRelease } from '@/anise/worldflipper/party'
+import { partyEditor, PartyEditor, PartyPosition, PartyRelease } from "@/anise/worldflipper/party";
 import { useDefer } from "@/utils";
 import CalculatorModuleUpdate from "@/views/calculator/modules/CalculatorModuleUpdate.vue";
 
@@ -18,11 +18,11 @@ const selected_module = ref<EditorModule>('Editor')
 
 const memory_object = ref<WorldflipperObject>(undefined)
 const panel_closed = ref<boolean>(false)
-const party_editor = reactive<PartyEditor>(new PartyEditor(PartyRelease.empty()))
+// const party_editor = reactive<PartyEditor>(new PartyEditor(PartyRelease.empty()))
 
 const defer = useDefer()
 
-watch(party_editor, (value) => {
+watch(partyEditor, (value) => {
   if (value.selected_object instanceof PartyPosition && value.party)
     memory_object.value = value.party.party.get(value.selected_object) || memory_object.value
   else if (value.selected_object) memory_object.value = value.selected_object as WorldflipperObject
@@ -64,12 +64,12 @@ watch(party_editor, (value) => {
         <v-window-item value="Editor" class="hidden-scroll" style="height: 100%">
           <CalculatorModuleParty
             v-if="defer(1)"
-            :party="party_editor.party as PartyRelease || PartyRelease.empty()"
-            :party_editor="party_editor as PartyEditor"
+            :party="partyEditor.party as PartyRelease || PartyRelease.empty()"
+            :party_editor="partyEditor as PartyEditor"
           />
         </v-window-item>
         <v-window-item value="Upload" style="height: 100%">
-          <CalculatorModuleUpdate :party_editor="party_editor as PartyEditor" />
+          <CalculatorModuleUpdate :party_editor="partyEditor as PartyEditor" />
         </v-window-item>
         <v-window-item value="Resources" style="height: 100%">
           <CalculatorModuleResource v-if="defer(3)" :obj="memory_object" />
@@ -97,7 +97,7 @@ watch(party_editor, (value) => {
       :class="panel_closed ? ['closed'] : []"
       :characters="worldflipper.characters"
       :equipments="worldflipper.equipments"
-      v-model="party_editor"
+      v-model="partyEditor"
     />
   </div>
 </template>

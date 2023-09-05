@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import table_data from './hlw.json'
 import '@/components/table/elements/BasicElements'
 import '@/components/table/elements/WorldflipperElements'
 import { Table } from '@/components/table/table'
@@ -7,83 +6,142 @@ import SummaryTable from '@/components/table/SummaryTable.vue'
 import { ref } from 'vue'
 import TableEditorContent from '@/views/table/TableEditorContent'
 import axios from 'axios'
-const table = ref(new Table(table_data))
+import type { TableProfile } from "@/components/table/table";
+
+const table = ref<Table | undefined>(undefined)
+const tableIdSelect = ref<string>()
+const tableIdLoaded = ref<string>()
+
+async function getTableData() {
+  if (!tableIdSelect.value) return
+  const response = await axios.post(`/api/v2/worldflipper/table/get/${tableIdSelect.value}`)
+  if (response.status !== 200) return
+  table.value = new Table(response.data)
+  tableIdLoaded.value = tableIdSelect.value
+}
+
+async function saveTableData() {
+  if (!tableIdLoaded.value) return
+  if (!table.value) return
+  const response = await axios.post(
+    `/api/v2/worldflipper/table/save/${tableIdLoaded.value}`,
+    {
+      table: table.value.data()
+    }
+  )
+  if (response.status !== 200) return
+}
 
 const mixEdit = ref(false)
 
 async function getTableList() {
-  const response = await axios.post('/api/v1/table_list/')
-  const tables = response.data['tables']
-  return Object.keys(tables).map((key) => {
-    return { index: key, ...tables[key] }
-  })
+  const response = await axios.post('/api/v2/worldflipper/table/list')
+  return (response.data['tables'] as Array<TableProfile>).sort((a, b) => b.weight - a.weight)
 }
 
 const tableList = ref<any>([])
-getTableList().then((value) => (tableList.value = value))
+getTableList().then((value) => (tableList.value = value as Array<TableProfile>))
 </script>
 
 <template>
   <div style="display: flex; flex-direction: column; height: 100%; max-height: 100%">
     <v-toolbar style="padding: 0 16px; flex: 1">
       <div>
-        <v-switch v-model="mixEdit" label="混合编辑" hide-details style="margin: 0 20px" />
+        <v-switch v-model="mixEdit" :disabled="!table" label="混合编辑" hide-details style="margin: 0 20px" />
       </div>
       <v-select
         hide-details
+        v-model="tableIdSelect"
         density="compact"
         style="max-width: 150px"
         :items="tableList"
         item-title="name"
+        item-value="id"
       >
         <template v-slot:item="{ item, props }">
           <v-list-item
             :style="{
-              background: `linear-gradient(0, #ffffff80, #ffffff80), url(${item['raw']['img']})`
+              background: `linear-gradient(0, #ffffff80, #ffffff80), url(${item['raw']['image']})`
             }"
             style="
               display: flex;
               justify-content: center;
               align-items: center;
-              aspect-ratio: 16/9;
+              aspect-ratio: 16/7;
               background-size: 100%;
               background-repeat: no-repeat;
               max-width: 150px;
               width: 150px;
+              border: #333 1px solid;
             "
             v-bind="props"
           >
+            <span style="display: flex; justify-content: center; color: #333">{{
+              item['raw']['id']
+            }}</span>
           </v-list-item>
         </template>
       </v-select>
-      <v-btn color="primary" variant="flat">读取</v-btn>
-      <v-btn color="success" variant="flat" prepend-icon="mdi-plus"> 新建一图 </v-btn>
+      <v-btn @click="getTableData" style="margin-left: 8px" color="primary" variant="elevated">读取</v-btn>
+      <v-btn @click="saveTableData" style="margin-left: 8px" color="warning" variant="elevated">保存</v-btn>
+      <v-btn style="margin-left: 8px" color="success" variant="elevated" prepend-icon="mdi-plus">
+        新建一图
+      </v-btn>
+      <a v-if="tableIdSelect" :href="`/card/table?table_id=${tableIdSelect}`"><v-btn style="margin-left: 8px" variant="elevated"  >独立Card页</v-btn></a>
     </v-toolbar>
     <div style="display: flex; flex: 1; height: calc(100% - 64px)">
       <div class="table-editor-wrapper" style="max-width: 1036px; flex: 1">
-        <v-card style="width: 100%">
-          <v-card-title> 基本信息 </v-card-title>
-          <v-card-item>
-            <v-text-field v-model="table.property.name" label="显示名称" hide-details />
-            <v-text-field v-model="table.property.image" label="图片" hide-details />
-            <v-switch v-model="table.property.public" label="公开" style="margin-left: 20px" hide-details color="success" />
-          </v-card-item>
-          <v-card-item>
-            <v-text-field v-model="table.property.title" label="标题" hide-details />
-            <v-text-field v-model="table.property.main_color" label="主颜色" hide-details />
-            <v-text-field v-model="table.property.sub_color" label="副颜色" hide-details />
-            <v-text-field
-              v-model="table.property.update_time"
-              label="更新时间(----/--/--)"
-              hide-details
-            />
-            <v-text-field v-model="table.property.little_about" label="小关于" hide-details />
-            <v-text-field v-model="table.property.banner" label="banner Css" hide-details />
-            <v-text-field v-model="table.property.background" label="background Css" hide-details />
-          </v-card-item>
-        </v-card>
-        <TableEditorContent :table="table as Table" />
-        <div>{{ table.data() }}</div>
+        <template v-if="table">
+          <v-card style="width: 100%">
+            <v-card-title> 基本信息 </v-card-title>
+            <v-card-item>
+              <v-text-field v-model="table.property.name" label="显示名称" hide-details />
+              <v-text-field v-model="table.property.image" label="图片" hide-details />
+              <v-switch
+                v-model="table.property.public"
+                label="公开"
+                style="margin-left: 20px"
+                hide-details
+                color="success"
+              />
+              <v-slider
+                v-model="table.property.weight"
+                :step="1"
+                :min="0"
+                :max="20"
+                show-ticks="always"
+                thumb-label
+                label="权重"
+                style="margin-left: 20px"
+                hide-details
+                color="red"
+              />
+            </v-card-item>
+            <v-card-item>
+              <v-text-field v-model="table.property.title" label="标题" hide-details />
+              <v-text-field v-model="table.property.main_color" label="主颜色" hide-details />
+              <v-text-field v-model="table.property.sub_color" label="副颜色" hide-details />
+              <v-text-field
+                v-model="table.property.update_time"
+                label="更新时间(----/--/--)"
+                hide-details
+              />
+              <v-text-field v-model="table.property.little_about" label="小关于" hide-details />
+              <v-text-field v-model="table.property.banner" label="banner Css" hide-details />
+              <v-text-field
+                v-model="table.property.background"
+                label="background Css"
+                hide-details
+              />
+            </v-card-item>
+          </v-card>
+          <TableEditorContent :table="table as Table" />
+          <v-card>
+            <v-card-item>
+              <v-textarea :rows="12" v-model="table.property.footer" label="Footer"/>
+            </v-card-item>
+          </v-card>
+        </template>
       </div>
       <div v-if="mixEdit" class="table-preview-wrapper">
         <SummaryTable :table="table as Table" />

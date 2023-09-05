@@ -1,5 +1,7 @@
 import { defineComponent } from 'vue'
 import table, { Table } from '@/components/table/table'
+import { VBtn } from "vuetify/components";
+import { TableElementText } from "@/components/table/elements/BasicElements";
 
 export default defineComponent({
   props: {
@@ -10,7 +12,7 @@ export default defineComponent({
   },
   setup(props) {
     return () => (
-      <div>
+      <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
         {props.table.content.map((value, index) =>
           value.editorWrapped(
             (data) => props.table.changeValue(value, table.load(data)),
@@ -21,6 +23,25 @@ export default defineComponent({
             index % 2 ? '#fff' : 'lightgrey'
           )
         )}
+        <div
+          style={{
+            width: '50%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <VBtn
+            // @ts-ignore onClick在此处没有受到WebStorm支持
+            onClick={() => {
+              // eslint-disable-next-line vue/no-mutating-props
+              props.table.content.push(new TableElementText({}))
+            }}
+            prependIcon="mdi-plus"
+          >
+            新增组件
+          </VBtn>
+        </div>
       </div>
     )
   }

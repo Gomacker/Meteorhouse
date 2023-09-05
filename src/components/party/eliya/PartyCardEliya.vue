@@ -5,7 +5,7 @@ import UnionComponent from '@/components/party/eliya/UnionComponent.vue'
 import { PartyEditor } from "@/anise/worldflipper/party";
 
 
-const props = defineProps<{
+defineProps<{
   party: PartyRelease
   always_show_replacements?: boolean
   show_name?: boolean

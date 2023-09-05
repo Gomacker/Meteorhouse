@@ -48,7 +48,8 @@ export default {
   },
   mounted() {
     const route = useRoute()
-    axios.post(`/api/v1/table/${route.query['table_id']}/data/`).then((r) => {
+    // axios.post(`/api/v1/table/${route.query['table_id']}/data/`).then((r) => {
+    axios.post(`/api/v2/worldflipper/table/get/${route.query['table_id']}`).then((r) => {
       table_data.value = r.data
     })
   },

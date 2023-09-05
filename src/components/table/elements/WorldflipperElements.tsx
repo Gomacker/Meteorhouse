@@ -2,11 +2,13 @@ import table, { TableElement } from '@/components/table/table'
 import type { JSX } from 'vue/jsx-runtime'
 import { h } from 'vue'
 import TableComponentParty from '@/components/table/elements/TableComponentParty.vue'
-import { Party, PartyRelease } from "@/anise/worldflipper/party";
+import { Party, PartyRelease } from '@/anise/worldflipper/party'
 import CharacterWikiCard from '@/components/worldflipper/character/CharacterWikiCard.vue'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import EquipmentWikiCard from '@/components/worldflipper/equipment/EquipmentWikiCard.vue'
 import TableEditorParty from '@/components/table/elements/TableEditorParty.vue'
+import { VTextField } from 'vuetify/components'
+import TableComponentAutoPartyRecent from '@/components/table/elements/TableComponentAutoPartyRecent.vue'
 
 export class TableElementParty extends TableElement {
   readonly __type: string = 'Party'
@@ -17,16 +19,16 @@ export class TableElementParty extends TableElement {
   constructor(data: any) {
     super()
     // this.__data = data
-    const p = data['party']
+    const p = data['party'] || data['_party']
     if (typeof p === 'object') this._party = JSON.stringify(p)
-    else this._party = data['party'] || JSON.stringify(Party.empty().dump())
+    else this._party = data['party'] || data['_party'] || JSON.stringify(Party.empty().dump())
     this.title = data['title'] || ''
     this.subtitle = data['subtitle'] || ''
   }
   get party() {
     try {
       return PartyRelease.load(JSON.parse(this._party))
-    }catch (e) {
+    } catch (e) {
       return PartyRelease.empty()
     }
   }
@@ -41,6 +43,14 @@ export class TableElementParty extends TableElement {
 
   editor(): JSX.Element {
     return h(TableEditorParty, { element: this })
+  }
+
+  protected _data(): object {
+    return {
+      party: this.party.dump(),
+      title: this.title,
+      subtitle: this.subtitle
+    }
   }
 }
 
@@ -77,26 +87,43 @@ export class TableElementWikiCard extends TableElement {
   }
 
   editor(): JSX.Element {
-    return <div>{JSON.stringify(this.data())}</div>
+    return (
+      <>
+        <VTextField v-model={this.id} hideDetails />
+        <VTextField v-model={this.id} hideDetails />
+      </>
+    )
   }
 }
 
-export class TableElementAutoParty extends TableElement {
-  readonly __type: string = 'AutoParty'
-  private category: number;
-  private questId: number;
-  private size: number;
+export class TableElementAutoPartyRecent extends TableElement {
+  readonly __type: string = 'AutoPartyRecent'
+  private category: string
+  private questId: string
+  private size: number
 
   constructor(data: any) {
-    super();
+    super()
+    this.category = data['category'] || 0
+    this.questId = data['questId'] || 0
+    this.size = data['size'] || 0
   }
 
   html(): JSX.Element {
-    return <></>;
+    return h(TableComponentAutoPartyRecent, { category: this.category, questId: this.questId })
   }
 
   editor(): JSX.Element {
-    return <></>;
+    return (
+      <>
+        <VTextField v-model={this.category} label="category" />
+        <VTextField v-model={this.questId} label="questId" />
+      </>
+    )
+  }
+
+  get isFull(): boolean {
+    return true;
   }
 }
 
@@ -104,3 +131,5 @@ table.register('Party', TableElementParty)
 table.register('Party2', TableElementParty)
 
 table.register('WikiCard', TableElementWikiCard)
+
+table.register('AutoPartyRecent', TableElementAutoPartyRecent)

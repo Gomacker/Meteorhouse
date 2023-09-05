@@ -2,8 +2,9 @@
 import type { Table } from '@/components/table/table'
 import TableComponentTextContent from '@/components/table/elements/TableComponentTextContent.vue'
 import SummaryTableContent from '@/components/table/SummaryTableContent'
-import './elements/BasicElements'
-import './elements/WorldflipperElements'
+
+import '@/components/table/elements/BasicElements'
+import '@/components/table/elements/WorldflipperElements'
 import './table.css'
 
 const props = defineProps<{ table: Table }>()

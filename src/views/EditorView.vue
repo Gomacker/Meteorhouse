@@ -4,8 +4,8 @@ import { useWorldflipperDataStore } from "@/stores/worldflipper";
 const worldflipper = useWorldflipperDataStore()
 </script>
 <template>
-  <div style="display: flex; justify-content: center; align-items: center; height: 100%">
-    <div style="display: grid; grid-template-columns: repeat(4, auto)">
+  <div style="display: flex; place-content: center; flex-direction: column; height: 100%">
+    <div style="display: grid; grid-template-columns: repeat(4, auto); place-content: center">
       <v-card class="editor-select active" @click="$router.push('/editor/character')">
         <p style="font-size: 28px; font-weight: 600">角色</p>
         <p>已加载 {{ worldflipper.characters.size }} 个角色</p>

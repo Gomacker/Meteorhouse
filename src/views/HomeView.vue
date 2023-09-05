@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useWorldflipperDataStore } from '@/stores/worldflipper'
-import CharacterWikiCard from '@/components/worldflipper/character/CharacterWikiCard.vue'
-import type { Character } from '@/anise/worldflipper/object'
-
-const show_mainpage = ref([0])
-
-const worldflipper = useWorldflipperDataStore()
 const router = useRouter()
 </script>
 

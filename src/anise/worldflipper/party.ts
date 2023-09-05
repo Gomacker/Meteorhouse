@@ -1,6 +1,7 @@
 import { Character, Equipment } from '@/anise/worldflipper/object'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import type { WorldflipperObject } from '@/stores/worldflipper'
+import { reactive } from "vue";
 
 const worldflipper = useWorldflipperDataStore()
 
@@ -391,7 +392,7 @@ export class PartyEditor {
       repeat: Set<PartyPosition>
     }
     const repeater = indexes.reduce(
-      (acc: TempRepeater, val, index) => {
+      (acc: TempRepeater, val) => {
         const v = this.party.party.get(val)
         if (v !== undefined) {
           if (acc.cache.includes(v)) {
@@ -484,13 +485,13 @@ export class PartyParamManaboard2 extends PartyParam {
 
   static load(data: any): PartyParam | undefined {
     const loadFunc = (value: Array<number | undefined>) => {
-      const m4 =
+      const a4 =
         typeof value[0] === 'number' && value[0] <= 5 && value[0] >= 0 ? value[0] : undefined
-      const m5 =
+      const a5 =
         typeof value[1] === 'number' && value[1] <= 5 && value[1] >= 0 ? value[1] : undefined
-      const m6 =
+      const a6 =
         typeof value[2] === 'number' && value[2] <= 5 && value[2] >= 0 ? value[2] : undefined
-      return { ability4: value[0], ability5: value[1], ability6: value[2] }
+      return { ability4: a4, ability5: a5, ability6: a6 }
     }
     const ppm2 = new PartyParamManaboard2(
       (data['union1'] as Array<Array<number | undefined>>).map(loadFunc),
@@ -512,3 +513,6 @@ export class PartyParamManaboard2 extends PartyParam {
     })
   }
 }
+
+
+export const partyEditor =  reactive<PartyEditor>(new PartyEditor(PartyRelease.empty()))

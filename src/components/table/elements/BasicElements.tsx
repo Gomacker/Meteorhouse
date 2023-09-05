@@ -3,6 +3,8 @@ import type { JSX } from 'vue/jsx-runtime'
 import { h } from 'vue'
 import TableComponentTextContent from '@/components/table/elements/TableComponentTextContent.vue'
 import { VBtn, VCard, VSwitch, VTextarea, VTextField } from 'vuetify/components'
+import TableCard from '@/views/table/TableCard.vue'
+import type { TableProfile } from "@/components/table/table";
 
 export class TableElementContainer extends TableElement {
   readonly __type: string = 'Container'
@@ -11,6 +13,12 @@ export class TableElementContainer extends TableElement {
   constructor(data: any) {
     super()
     this.elements = ((data['elements'] || []) as any[]).map((value) => table.load(value))
+  }
+
+  protected _data(): object {
+    return {
+      elements: this.elements.map((value) => value.data())
+    }
   }
 
   html(): JSX.Element {
@@ -180,6 +188,24 @@ export class TableElementText extends TableElement {
   }
 }
 
+export class TableElementTableCard extends TableElement {
+  readonly __type: string = 'TableCard'
+  tableProfile: TableProfile
+
+  constructor(data: any) {
+    super()
+    this.tableProfile = data['tableProfile'] || {}
+  }
+
+  editor(): JSX.Element {
+    return <div>{JSON.stringify(this.data())}</div>
+  }
+
+  html(): JSX.Element {
+    return h(TableCard, { tableProfile: this.tableProfile })
+  }
+}
+
 table.register('Container', TableElementContainer)
 table.register('Row', TableElementContainer)
 
@@ -192,3 +218,5 @@ table.register('Origin', TableElementHtml)
 table.register('Text', TableElementText)
 table.register('TextArea', TableElementText)
 table.register('TextRegion', TableElementText)
+
+table.register('TableCard', TableElementTableCard)

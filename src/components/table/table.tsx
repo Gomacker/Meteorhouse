@@ -1,8 +1,15 @@
 import chroma from 'chroma-js'
 import type { JSX } from 'vue/jsx-runtime'
-import { VCard, VCardItem, VDivider, VMenu, VSelect } from 'vuetify/components'
+import { VCard, VCardItem, VDivider, VSelect } from 'vuetify/components'
 import TableEditorWrapperMenu from '@/components/table/elements/TableEditorWrapperMenu.vue'
 import { h } from 'vue'
+
+export interface TableProfile {
+  id: string
+  name: string
+  image: string
+  weight: number
+}
 
 class TableProperty {
   public title: string
@@ -60,6 +67,10 @@ class TableProperty {
 
   data() {
     return {
+      name: this.name,
+      image: this.image,
+      public: this.public,
+      weight: this.weight,
       title: this.title,
       main_color: this.main_color,
       sub_color: this.sub_color,
@@ -163,7 +174,9 @@ class ElementManager {
   }
 
   load(data: any): TableElement {
-    const type = data['type']
+    import('@/components/table/elements/BasicElements')
+    import('@/components/table/elements/WorldflipperElements')
+    const type = data['__type'] || data['type']
     const E = this.elementMap.get(type)
     return E ? new E(data['data'] || {}) : new TableElementError(data['data'] || {})
   }
@@ -208,8 +221,8 @@ export class Table {
     if (this.content[index + 1])
       this.content[index + 1] = this.content.splice(index, 1, this.content[index + 1])[0]
   }
-  insert_row(index: number) {
-    // this.content.splice(index, 0, new TableElementContainer({}))
+  insert_pre(index: number, element: TableElement) {
+    this.content.splice(index, 0, element)
   }
   delete(index: number) {
     this.content.splice(index, 1)
