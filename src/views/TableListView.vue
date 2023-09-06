@@ -1,38 +1,56 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import axios from "axios";
-import TableCard from "@/views/table/TableCard.vue";
-import type { TableProfile } from "@/components/table/table";
+import { computed, ref } from 'vue'
+import axios from 'axios'
+import TableCard from '@/views/table/TableCard.vue'
+import type { TableProfile } from '@/components/table/table'
 
-
-const table_list = ref<Array<TableProfile>>()
+const tableList = ref<Array<TableProfile>>()
 
 axios.post('/api/v2/worldflipper/table/list').then((r) => {
-  table_list.value = (r.data['tables'] as Array<TableProfile>).sort((a, b) => b.weight - a.weight)
+  tableList.value = (r.data['tables'] as Array<TableProfile>).sort((a, b) => b.weight - a.weight)
+})
+
+const tableListSorted = computed(() => {
+  const tl: any = {}
+  tableList.value?.forEach((value) => {
+    if (!(tl[value.weight] instanceof Array)) tl[value.weight] = [] as Array<TableProfile>
+    ;(tl[value.weight] as Array<any>).push(value)
+  })
+  return tl
 })
 </script>
 
 <template>
   <div>
-    <div
-      style="
-        margin: 32px 0;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, 320px);
-        grid-gap: 16px;
-        justify-content: center;
-      "
+    <template
+      v-for="weight in Object.keys(tableListSorted).sort((a, b) => parseInt(b) - parseInt(a))"
+      :key="weight"
     >
-      <template :key="table_profile.id" v-for="table_profile in table_list">
-        <TableCard :table-profile="table_profile" />
-      </template>
-    </div>
+      <div class="table-list">
+        <template :key="table_profile.id" v-for="table_profile in tableListSorted[weight]">
+          <TableCard :table-profile="table_profile" />
+        </template>
+      </div>
+      <div style="display: flex; place-content: center">
+        <v-divider :thickness="3" length="90%" />
+      </div>
+    </template>
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'TableListView'
+<style>
+.table-list {
+  margin: 32px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 320px);
+  grid-gap: 16px;
+  justify-content: center;
 }
-</script>
 
+@media(max-width: 670px) {
+  .table-list {
+    margin: 16px 0;
+    grid-template-columns: repeat(auto-fill, 240px);
+  }
+}
+</style>

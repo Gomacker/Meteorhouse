@@ -1,8 +1,8 @@
-import chroma from 'chroma-js'
-import type { JSX } from 'vue/jsx-runtime'
-import { VCard, VCardItem, VDivider, VSelect } from 'vuetify/components'
-import TableEditorWrapperMenu from '@/components/table/elements/TableEditorWrapperMenu.vue'
-import { h } from 'vue'
+import chroma from "chroma-js";
+import type { JSX } from "vue/jsx-runtime";
+import { VCard, VCardItem, VDivider, VSelect } from "vuetify/components";
+import TableEditorWrapperMenu from "@/components/table/elements/TableEditorWrapperMenu.vue";
+import { h } from "vue";
 
 export interface TableProfile {
   id: string

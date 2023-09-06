@@ -45,7 +45,11 @@ export class APIService {
     )
     if (response.status === 200) {
       const partyData = response.data
-      if (partyData) return PartyRelease.load(partyData)
+      if (partyData) {
+        const pr = PartyRelease.load(partyData)
+        console.log(pr);
+        return pr
+      }
     }
     return undefined
   }

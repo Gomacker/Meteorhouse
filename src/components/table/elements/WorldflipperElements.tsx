@@ -7,7 +7,7 @@ import CharacterWikiCard from '@/components/worldflipper/character/CharacterWiki
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import EquipmentWikiCard from '@/components/worldflipper/equipment/EquipmentWikiCard.vue'
 import TableEditorParty from '@/components/table/elements/TableEditorParty.vue'
-import { VTextField } from 'vuetify/components'
+import { VSelect, VSwitch, VTextField } from "vuetify/components";
 import TableComponentAutoPartyRecent from '@/components/table/elements/TableComponentAutoPartyRecent.vue'
 
 export class TableElementParty extends TableElement {
@@ -57,12 +57,13 @@ export class TableElementParty extends TableElement {
 export class TableElementWikiCard extends TableElement {
   readonly __type: string = 'WikiCard'
   private type: 'Character' | 'Equipment'
-  private id: number
+  private id: string
   private lite: boolean
   constructor(data: any) {
     super()
+    console.log(data);
     this.type = ['Armament', 'Equipment'].includes(data['type']) ? 'Equipment' : 'Character'
-    this.id = data['id'] || 0
+    this.id = String(data['id']) || '0'
     this.lite = data['lite'] || false
   }
 
@@ -70,7 +71,7 @@ export class TableElementWikiCard extends TableElement {
     const worldflipper = useWorldflipperDataStore()
     if (this.type === 'Character') {
       return h<typeof CharacterWikiCard>(CharacterWikiCard, {
-        obj: worldflipper.characters.get(String(this.id)),
+        obj: worldflipper.characters.get(this.id),
         lite: this.lite,
         style: {
           margin: '10px',
@@ -80,7 +81,7 @@ export class TableElementWikiCard extends TableElement {
       })
     } else {
       return h(EquipmentWikiCard, {
-        obj: worldflipper.equipments.get(String(this.id)),
+        obj: worldflipper.equipments.get(this.id),
         lite: this.lite
       })
     }
@@ -89,8 +90,9 @@ export class TableElementWikiCard extends TableElement {
   editor(): JSX.Element {
     return (
       <>
-        <VTextField v-model={this.id} hideDetails />
-        <VTextField v-model={this.id} hideDetails />
+        <VSelect v-model={this.type} label="类型" items={['Character', 'Equipment']} hideDetails />
+        <VTextField v-model={this.id} label="id" hideDetails />
+        <VSwitch v-model={this.lite} label="Lite" hideDetails />
       </>
     )
   }

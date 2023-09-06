@@ -5,7 +5,6 @@ import { PartyRelease } from '@/anise/worldflipper/party'
 import PartyReleaseCard from '@/components/card/PartyReleaseCard.vue'
 import { apiService } from '@/utils'
 
-const id = ref<string | undefined>()
 const complete = ref<boolean>(false)
 
 async function getParty(id: string) {
@@ -16,6 +15,7 @@ async function getParty(id: string) {
 onMounted(() => {
   const route = useRoute()
   const id = route.query['id'] as string
+  console.log(`getting party ${id}`);
   getParty(id)
     .then((e) => (complete.value = true))
     .catch(() => (complete.value = true))

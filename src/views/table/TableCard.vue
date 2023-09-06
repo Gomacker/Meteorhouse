@@ -47,4 +47,10 @@ defineProps<{
   transform: scale(1.05);
   z-index: 1;
 }
+
+@media(max-width: 670px) {
+  .table-card {
+    max-width: 240px;
+  }
+}
 </style>

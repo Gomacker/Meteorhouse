@@ -45,7 +45,7 @@ getTableList().then((value) => (tableList.value = value as Array<TableProfile>))
 
 <template>
   <div style="display: flex; flex-direction: column; height: 100%; max-height: 100%">
-    <v-toolbar style="padding: 0 16px; flex: 1">
+    <v-toolbar style="height: min-content; padding: 0 16px">
       <div>
         <v-switch v-model="mixEdit" :disabled="!table" label="混合编辑" hide-details style="margin: 0 20px" />
       </div>
