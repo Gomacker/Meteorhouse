@@ -20,6 +20,14 @@ export default defineComponent({
               const index = props.table.content.indexOf(value)
               props.table.delete(index)
             },
+            () => {
+              const index = props.table.content.indexOf(value)
+              props.table.move_pre(index)
+            },
+            () => {
+              const index = props.table.content.indexOf(value)
+              props.table.move_next(index)
+            },
             index % 2 ? '#fff' : 'lightgrey'
           )
         )}

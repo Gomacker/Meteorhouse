@@ -106,6 +106,10 @@ const router = createRouter({
       component: () => import('@/views/party/PartyReleaseView.vue')
     },
     {
+      path: '/editor/character',
+      component: () => import('@/views/editor/CharacterEditorView.vue')
+    },
+    {
       path: '/editor/table',
       name: 'table_editor',
       component: () => import('@/views/table/TableEditorView.vue')

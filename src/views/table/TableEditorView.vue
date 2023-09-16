@@ -6,7 +6,7 @@ import SummaryTable from '@/components/table/SummaryTable.vue'
 import { ref } from 'vue'
 import TableEditorContent from '@/views/table/TableEditorContent'
 import axios from 'axios'
-import type { TableProfile } from "@/components/table/table";
+import type { TableProfile } from '@/components/table/table'
 
 const table = ref<Table | undefined>(undefined)
 const tableIdSelect = ref<string>()
@@ -23,19 +23,20 @@ async function getTableData() {
 async function saveTableData() {
   if (!tableIdLoaded.value) return
   if (!table.value) return
-  const response = await axios.post(
-    `/api/v2/worldflipper/table/save/${tableIdLoaded.value}`,
-    {
-      table: table.value.data()
-    }
-  )
+  const response = await axios.post(`/api/v2/worldflipper/table/save/${tableIdLoaded.value}`, {
+    table: table.value.data()
+  })
   if (response.status !== 200) return
 }
 
 const mixEdit = ref(false)
 
 async function getTableList() {
-  const response = await axios.post('/api/v2/worldflipper/table/list')
+  const response = await axios.post(
+    '/api/v2/worldflipper/table/list',
+    {},
+    { params: { show_hidden: true } }
+  )
   return (response.data['tables'] as Array<TableProfile>).sort((a, b) => b.weight - a.weight)
 }
 
@@ -47,7 +48,13 @@ getTableList().then((value) => (tableList.value = value as Array<TableProfile>))
   <div style="display: flex; flex-direction: column; height: 100%; max-height: 100%">
     <v-toolbar style="height: min-content; padding: 0 16px">
       <div>
-        <v-switch v-model="mixEdit" :disabled="!table" label="混合编辑" hide-details style="margin: 0 20px" />
+        <v-switch
+          v-model="mixEdit"
+          :disabled="!table"
+          label="混合编辑"
+          hide-details
+          style="margin: 0 20px"
+        />
       </div>
       <v-select
         hide-details
@@ -76,18 +83,24 @@ getTableList().then((value) => (tableList.value = value as Array<TableProfile>))
             "
             v-bind="props"
           >
-            <span style="display: flex; justify-content: center; color: #333">{{
-              item['raw']['id']
-            }}</span>
+            <span style="display: flex; justify-content: center; color: #333">
+              {{ item['raw']['id'] }}
+            </span>
           </v-list-item>
         </template>
       </v-select>
-      <v-btn @click="getTableData" style="margin-left: 8px" color="primary" variant="elevated">读取</v-btn>
-      <v-btn @click="saveTableData" style="margin-left: 8px" color="warning" variant="elevated">保存</v-btn>
+      <v-btn @click="getTableData" style="margin-left: 8px" color="primary" variant="elevated">
+        读取
+      </v-btn>
+      <v-btn @click="saveTableData" style="margin-left: 8px" color="warning" variant="elevated">
+        保存
+      </v-btn>
       <v-btn style="margin-left: 8px" color="success" variant="elevated" prepend-icon="mdi-plus">
         新建一图
       </v-btn>
-      <a v-if="tableIdSelect" :href="`/card/table?table_id=${tableIdSelect}`"><v-btn style="margin-left: 8px" variant="elevated"  >独立Card页</v-btn></a>
+      <a v-if="tableIdSelect" :href="`/card/table?table_id=${tableIdSelect}`">
+        <v-btn style="margin-left: 8px" variant="elevated">独立Card页</v-btn>
+      </a>
     </v-toolbar>
     <div style="display: flex; flex: 1; height: calc(100% - 64px)">
       <div class="table-editor-wrapper" style="max-width: 1036px; flex: 1">
@@ -127,6 +140,7 @@ getTableList().then((value) => (tableList.value = value as Array<TableProfile>))
                 hide-details
               />
               <v-text-field v-model="table.property.little_about" label="小关于" hide-details />
+              <v-switch v-model="table.property.hideBanner" label="隐藏banner" hide-details />
               <v-text-field v-model="table.property.banner" label="banner Css" hide-details />
               <v-text-field
                 v-model="table.property.background"
@@ -138,7 +152,7 @@ getTableList().then((value) => (tableList.value = value as Array<TableProfile>))
           <TableEditorContent :table="table as Table" />
           <v-card>
             <v-card-item>
-              <v-textarea :rows="12" v-model="table.property.footer" label="Footer"/>
+              <v-textarea :rows="12" v-model="table.property.footer" label="Footer" />
             </v-card-item>
           </v-card>
         </template>

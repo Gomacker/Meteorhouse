@@ -24,8 +24,8 @@ const props = defineProps<{ table: Table }>()
   >
     <div class="table-header" style="background: white">
       <div
-        :style="table.property.banner"
-        style="height: 540px; display: flex; flex-direction: column; align-items: center"
+        :style="table.property.hideBanner ? '' : table.property.banner + 'height: 540px'"
+        style="display: flex; flex-direction: column; align-items: center"
       >
         <div class="table-title">
           <TableComponentTextContent class="table-title-text" :content="table.property.title" />

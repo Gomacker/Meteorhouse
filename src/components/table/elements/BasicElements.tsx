@@ -4,7 +4,7 @@ import { h } from 'vue'
 import TableComponentTextContent from '@/components/table/elements/TableComponentTextContent.vue'
 import { VBtn, VCard, VSwitch, VTextarea, VTextField } from 'vuetify/components'
 import TableCard from '@/views/table/TableCard.vue'
-import type { TableProfile } from "@/components/table/table";
+import type { TableProfile } from '@/components/table/table'
 
 export class TableElementContainer extends TableElement {
   readonly __type: string = 'Container'
@@ -19,6 +19,15 @@ export class TableElementContainer extends TableElement {
     return {
       elements: this.elements.map((value) => value.data())
     }
+  }
+
+  movePre(index: number) {
+    if (this.elements[index - 1])
+      this.elements[index - 1] = this.elements.splice(index, 1, this.elements[index - 1])[0]
+  }
+  moveNext(index: number) {
+    if (this.elements[index + 1])
+      this.elements[index + 1] = this.elements.splice(index, 1, this.elements[index + 1])[0]
   }
 
   html(): JSX.Element {
@@ -45,7 +54,9 @@ export class TableElementContainer extends TableElement {
           {this.elements.map((value) =>
             value.editorWrapped(
               (data) => (this.elements[this.elements.indexOf(value)] = table.load(data)),
-              () => this.elements.splice(this.elements.indexOf(value), 1)
+              () => this.elements.splice(this.elements.indexOf(value), 1),
+              () => this.movePre(this.elements.indexOf(value)),
+              () => this.moveNext(this.elements.indexOf(value))
             )
           )}
           <div
@@ -127,7 +138,7 @@ export class TableElementTitle extends TableElement {
 
 export class TableElementHtml extends TableElement {
   readonly __type: string = 'Html'
-  private content: string
+  public content: string
 
   constructor(data: any) {
     super()
@@ -139,7 +150,11 @@ export class TableElementHtml extends TableElement {
   }
 
   editor(): JSX.Element {
-    return <div>{JSON.stringify(this.data())}</div>
+    return (
+      <div>
+        <VTextField v-model={this.content}></VTextField>
+      </div>
+    )
   }
 
   get isFull(): boolean {

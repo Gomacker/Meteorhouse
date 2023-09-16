@@ -7,20 +7,21 @@ defineProps<{
 </script>
 
 <template>
-  <v-card class="table-card elevation-4" @click="$router.push(`/table/${tableProfile.id}`)">
-    <v-img
-      style="min-height: 60px; height: 100%"
-      @dragstart.prevent
-      :aspect-ratio="16 / 9"
-      :cover="true"
-      :src="
+  <div style="display: flex; place-content: center">
+    <v-card class="table-card elevation-4" @click="$router.push(`/table/${tableProfile.id}`)">
+      <v-img
+        style="min-height: 60px; height: 100%"
+        @dragstart.prevent
+        :aspect-ratio="16 / 9"
+        :cover="true"
+        :src="
               tableProfile.image
                 ? tableProfile.image
                 : '/static/worldflipper/st/banner/world_flipper-1609036650079981568-img1.png'
             "
-    />
-    <div
-      style="
+      />
+      <div
+        style="
               text-align: center;
               margin-top: -24px;
               height: 24px;
@@ -28,10 +29,11 @@ defineProps<{
               background-color: rgba(255, 255, 255, 0.9);
               width: 100%;
             "
-    >
-      {{ tableProfile.name }}
-    </div>
-  </v-card>
+      >
+        {{ tableProfile.name || '--' }}
+      </div>
+    </v-card>
+  </div>
 </template>
 <style scoped>
 .table-card {
@@ -41,6 +43,7 @@ defineProps<{
   font-size: 16px;
   max-width: 320px;
   transition: transform 0.4s ease;
+  width: 320px;
 }
 
 .table-card:hover {

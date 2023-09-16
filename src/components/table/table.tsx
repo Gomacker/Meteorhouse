@@ -1,8 +1,8 @@
-import chroma from "chroma-js";
-import type { JSX } from "vue/jsx-runtime";
-import { VCard, VCardItem, VDivider, VSelect } from "vuetify/components";
-import TableEditorWrapperMenu from "@/components/table/elements/TableEditorWrapperMenu.vue";
-import { h } from "vue";
+import chroma from 'chroma-js'
+import type { JSX } from 'vue/jsx-runtime'
+import { VCard, VCardItem, VDivider, VSelect } from 'vuetify/components'
+import TableEditorWrapperMenu from '@/components/table/elements/TableEditorWrapperMenu.vue'
+import { h } from 'vue'
 
 export interface TableProfile {
   id: string
@@ -20,10 +20,12 @@ class TableProperty {
   public banner: string
   public background: string
   public footer: string
-  public image: string;
-  public name: string;
-  public public: boolean;
-  public weight: number;
+  public image: string
+  public name: string
+  public public: boolean
+  public weight: number
+
+  public hideBanner: boolean
 
   constructor(data: any) {
     if (!data) data = {}
@@ -39,6 +41,7 @@ class TableProperty {
     this.banner = data['banner'] || ''
     this.background = data['background'] || ''
     this.footer = data['footer'] || ''
+    this.hideBanner = data['hideBanner'] || false
   }
 
   get main_color(): string {
@@ -78,7 +81,8 @@ class TableProperty {
       little_about: this.little_about,
       banner: this.banner,
       background: this.background,
-      footer: this.footer
+      footer: this.footer,
+      hideBanner: this.hideBanner
     }
   }
 }
@@ -100,7 +104,13 @@ export abstract class TableElement {
   abstract html(): JSX.Element
   abstract editor(): JSX.Element
 
-  editorWrapped(onChangeType: (data: any) => void, onDelete: () => void, background: string = '#fff'): JSX.Element {
+  editorWrapped(
+    onChangeType: (data: any) => void,
+    onDelete: () => void,
+    movePre: () => void,
+    moveNext: () => void,
+    background: string = '#fff'
+  ): JSX.Element {
     return (
       <VCard
         style={{
@@ -122,7 +132,7 @@ export abstract class TableElement {
               density="compact"
               label="类型"
             />
-            {h(TableEditorWrapperMenu, { element: this, delete: onDelete })}
+            {h(TableEditorWrapperMenu, { element: this, delete: onDelete, movePre: movePre, moveNext: moveNext })}
           </div>
           <VDivider style={{ margin: '4px' }} />
           <div>{this.editor()}</div>
