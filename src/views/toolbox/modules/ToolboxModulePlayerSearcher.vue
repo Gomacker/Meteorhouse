@@ -91,7 +91,7 @@ async function searchPlayer(player_id: string) {
 <!--            <PartyCardEliya :party="playerProfile.party || PartyRelease.empty()" />-->
 <!--          </div>-->
           <v-divider
-            :color="ele2color[playerProfile.party?.party?.union1.main?.element || Element.All].hex()"
+            :color="ele2color[playerProfile.party?.party?.union1.main?.element || Element.None].hex()"
             thickness="2"
             style="width: 95%"
           />

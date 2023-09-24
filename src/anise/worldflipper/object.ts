@@ -1,7 +1,7 @@
 import { GameObject } from '@/anise/object'
 
 export enum Element {
-  All = -1,
+  None = -1,
   Fire,
   Water,
   Thunder,

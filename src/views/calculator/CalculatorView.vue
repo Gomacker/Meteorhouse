@@ -64,12 +64,11 @@ watch(partyEditor, (value) => {
         <v-window-item value="Editor" class="hidden-scroll" style="height: 100%">
           <CalculatorModuleParty
             v-if="defer(1)"
-            :party="partyEditor.party as PartyRelease || PartyRelease.empty()"
-            :party_editor="partyEditor as PartyEditor"
+            :partyEditor="partyEditor as PartyEditor"
           />
         </v-window-item>
         <v-window-item value="Upload" style="height: 100%">
-          <CalculatorModuleUpdate :party_editor="partyEditor as PartyEditor" />
+          <CalculatorModuleUpdate :partyEditor="partyEditor as PartyEditor" />
         </v-window-item>
         <v-window-item value="Resources" style="height: 100%">
           <CalculatorModuleResource v-if="defer(3)" :obj="memory_object" />

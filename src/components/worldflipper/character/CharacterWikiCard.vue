@@ -12,7 +12,7 @@ const props = defineProps<{ obj: Character; lite?: boolean }>()
 const alpha = 0.8
 
 const ele2color = {
-  [Element.All]: chroma('rgb(105,105,105)').alpha(alpha),
+  [Element.None]: chroma('rgb(105,105,105)').alpha(alpha),
   [Element.Fire]: chroma('rgb(234,53,75)').alpha(alpha),
   [Element.Water]: chroma('rgb(68,137,255)').alpha(alpha),
   [Element.Thunder]: chroma('rgb(244,204,36)').alpha(alpha),

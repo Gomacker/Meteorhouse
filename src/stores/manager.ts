@@ -27,7 +27,7 @@ export const race2zh: any = {
   Undead: '不死'
 }
 export const ele2color = {
-  [Element.All]: chroma('rgb(68,68,68)'),
+  [Element.None]: chroma('rgb(68,68,68)'),
   [Element.Fire]: chroma('rgb(234,53,75)'),
   [Element.Water]: chroma('rgb(68,137,255)'),
   [Element.Thunder]: chroma('rgb(244,204,36)'),
@@ -36,7 +36,7 @@ export const ele2color = {
   [Element.Dark]: chroma('rgb(90,57,95)')
 }
 export const ele2name = {
-  [Element.All]: '无属性',
+  [Element.None]: '无属性',
   [Element.Fire]: '火属性',
   [Element.Water]: '水属性',
   [Element.Thunder]: '雷属性',
@@ -45,7 +45,7 @@ export const ele2name = {
   [Element.Dark]: '暗属性'
 }
 export const ele_id2ele = {
-  [Element.All]: 'none',
+  [Element.None]: 'none',
   [Element.Fire]: 'fire',
   [Element.Water]: 'water',
   [Element.Thunder]: 'thunder',

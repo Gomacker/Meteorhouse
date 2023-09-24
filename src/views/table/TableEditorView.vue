@@ -26,7 +26,7 @@ async function saveTableData() {
   const response = await axios.post(`/api/v2/worldflipper/table/save/${tableIdLoaded.value}`, {
     table: table.value.data()
   })
-  if (response.status !== 200) return
+  if (response.status == 200) savedTooltip.value = true
 }
 
 const mixEdit = ref(false)
@@ -42,10 +42,24 @@ async function getTableList() {
 
 const tableList = ref<any>([])
 getTableList().then((value) => (tableList.value = value as Array<TableProfile>))
+
+
+const savedTooltip = ref(false)
 </script>
 
 <template>
   <div style="display: flex; flex-direction: column; height: 100%; max-height: 100%">
+
+    <v-snackbar
+      v-model="savedTooltip"
+      color="green-lighten-4"
+      location="top"
+      style="top: 72px"
+      close-on-content-click
+    >
+      <v-icon icon="mdi-check-circle-outline" color="green" />
+      已保存
+    </v-snackbar>
     <v-toolbar style="height: min-content; padding: 0 16px">
       <div>
         <v-switch
@@ -89,17 +103,17 @@ getTableList().then((value) => (tableList.value = value as Array<TableProfile>))
           </v-list-item>
         </template>
       </v-select>
-      <v-btn @click="getTableData" style="margin-left: 8px" color="primary" variant="elevated">
+      <v-btn :disabled="!tableIdSelect || tableIdSelect == tableIdLoaded" @click="getTableData" style="margin-left: 8px" color="primary" variant="elevated">
         读取
       </v-btn>
-      <v-btn @click="saveTableData" style="margin-left: 8px" color="warning" variant="elevated">
+      <v-btn :disabled="!tableIdLoaded" @click="saveTableData" style="margin-left: 8px" color="warning" variant="elevated">
         保存
       </v-btn>
-      <v-btn style="margin-left: 8px" color="success" variant="elevated" prepend-icon="mdi-plus">
-        新建一图
-      </v-btn>
-      <a v-if="tableIdSelect" :href="`/card/table?table_id=${tableIdSelect}`">
-        <v-btn style="margin-left: 8px" variant="elevated">独立Card页</v-btn>
+<!--      <v-btn style="margin-left: 8px" color="success" variant="elevated" prepend-icon="mdi-plus">-->
+<!--        新建一图-->
+<!--      </v-btn>-->
+      <a :href="`/card/table?table_id=${tableIdLoaded}`" target="_blank">
+        <v-btn :disabled="!tableIdLoaded" style="margin-left: 8px" variant="elevated">独立Card页</v-btn>
       </a>
     </v-toolbar>
     <div style="display: flex; flex: 1; height: calc(100% - 64px)">

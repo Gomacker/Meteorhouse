@@ -279,6 +279,7 @@ export class PartyRelease {
       const ppm2 = PartyParamManaboard2.load(data['manaboard2'])
       if (ppm2) params.push(ppm2)
     }
+    if (data['replacement']) { /* empty */ }
     return params
   }
 
@@ -305,6 +306,10 @@ export class PartyEditor {
     this.party = party
   }
 
+  init() {
+    this.selected_object = undefined
+    this.party = PartyRelease.empty()
+  }
   select(obj: WorldflipperObject | PartyPosition) {
     const ppm2 = this.party.getParam('manaboard2') as PartyParamManaboard2 | undefined
     if (obj instanceof PartyPosition) {

@@ -133,6 +133,7 @@ function mb_string(v: number | undefined): string {
     <div
       v-ripple="!!party_editor"
       class="wfo-slot core"
+      style=""
       :class="[
         party_editor?.verifyPosition(make_position(union_index, 3)) ? 'selected' : undefined
       ]"
@@ -270,6 +271,8 @@ function mb_string(v: number | undefined): string {
 }
 
 .core {
+  background: transparent;
+  border-color: transparent;
   box-shadow: none;
   width: 60px;
   height: 76px;

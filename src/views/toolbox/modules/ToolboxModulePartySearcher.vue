@@ -56,7 +56,7 @@ const party = ref<PartyRelease | undefined | null>()
           <PartyCardEliya :party="party" />
           <v-divider
             :color="
-              ele2color[party.party?.union1.main?.element || Element.All].hex()
+              ele2color[party.party?.union1.main?.element || Element.None].hex()
             "
             thickness="2"
             style="width: 95%"

@@ -80,7 +80,7 @@ const partyCode = ref<string | undefined | null>()
           {{ partyCode }}
           <v-divider
             :color="
-              ele2color[party?.party?.union1.main?.element || Element.All].hex()
+              ele2color[party?.party?.union1.main?.element || Element.None].hex()
             "
             thickness="2"
             style="width: 95%"

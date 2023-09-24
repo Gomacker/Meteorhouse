@@ -7,7 +7,7 @@ import axios from "axios";
 
 const user = useUserStore()
 
-const props = defineProps<{ party_editor: PartyEditor }>()
+const props = defineProps<{ partyEditor: PartyEditor }>()
 async function updateParty(partyRelease: PartyRelease) {
   const r = await axios.post('/api/v1/party/upload/', partyRelease.dump(true))
   if (r.status === 200) {
@@ -16,26 +16,28 @@ async function updateParty(partyRelease: PartyRelease) {
 }
 const alerts = computed(() => {
   const list = []
-  if (props.party_editor.getRepeats().size) {
+  if (props.partyEditor.getRepeats().size) {
     list.push('包含重复的角色')
   }
   return list
 })
+const p = computed(() => props.partyEditor.party)
 </script>
 
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
     <div style="height: 36px" />
-    <PartyReleaseCard :party_release="party_editor.party" />
+    <PartyReleaseCard :party_release="partyEditor.party" />
     <div style="height: 36px" />
     <div style="display: flex; justify-content: center">
       <v-card v-if="user.is_login()" class="elevation-6" style="width: 480px">
         <v-card-title style="font-weight: bold">上传(Legacy)</v-card-title>
         <v-card-item>
-          <v-textarea v-model="party_editor.party.title" :rows="2" label="标题" maxlength="40" no-resize />
+          <v-textarea v-model="p.title" :rows="2" label="标题" maxlength="40" no-resize />
           <template v-if="alerts.length">
             <v-alert
               v-for="alert in alerts"
+              :key="alert"
               type="warning"
               density="compact"
               style="margin-bottom: 16px"
@@ -46,7 +48,7 @@ const alerts = computed(() => {
           <v-alert v-else type="success" density="compact" style="margin-bottom: 16px">
             队伍没有错误
           </v-alert>
-          <v-btn :disabled="!!alerts.length" color="blue" style="float: right" @click="updateParty(party_editor.party)"
+          <v-btn :disabled="!!alerts.length" color="blue" style="float: right" @click="updateParty(partyEditor.party)"
             >
             上传
           </v-btn

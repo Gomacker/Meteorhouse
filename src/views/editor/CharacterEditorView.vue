@@ -8,7 +8,7 @@ character.value = new Character(
   '',
   [''],
   0,
-  Element.All,
+  Element.None,
   SpecialityType.Knight,
   '',
   '',

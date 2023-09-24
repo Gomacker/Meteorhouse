@@ -28,6 +28,14 @@ const views: RouteRecordRaw[] = [
     component: () => import('@/views/ToolboxView.vue')
   },
   {
+    path: '/lab',
+    component: () => import('@/views/LabView.vue')
+  },
+  {
+    path: '/lab/character',
+    component: () => import('@/views/lab/CharacterLabView.vue')
+  },
+  {
     path: '/events',
     name: 'events',
     component: () => import('@/views/EventsView.vue')

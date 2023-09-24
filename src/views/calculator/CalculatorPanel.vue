@@ -42,7 +42,7 @@ class Filter {
   race: Array<string> = []
   defaults = {
     element: () => [
-      Element.All,
+      Element.None,
       Element.Fire,
       Element.Water,
       Element.Thunder,
@@ -119,6 +119,8 @@ class Filter {
 
 const filter = reactive(new Filter())
 const worldflipper = useWorldflipperDataStore()
+
+const touchStarted = ref(false)
 </script>
 
 <template>
@@ -168,7 +170,7 @@ const worldflipper = useWorldflipperDataStore()
         >
           <v-btn
             v-for="(ele, id_) in {
-                  [Element.All]: 'none',
+                  [Element.None]: 'none',
                   [Element.Fire]: 'fire',
                   [Element.Water]: 'water',
                   [Element.Thunder]: 'thunder',
@@ -236,7 +238,7 @@ const worldflipper = useWorldflipperDataStore()
         class="wfo"
         :class="isSelected(null) ? ['selected'] : []"
         :size="82"
-        :style="{ '--element-color': ele2color[Element.All] }"
+        :style="{ '--element-color': ele2color[Element.None] }"
         @click="isSelected(null) ? updateValue(undefined) : updateValue(null)"
       />
       <template v-if="type === 'Character'">
@@ -254,7 +256,16 @@ const worldflipper = useWorldflipperDataStore()
             :obj="c[1]"
             :size="82"
             :style="{ '--element-color': ele2color[c[1].element] }"
-            @click="isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])"
+            @touchstart="() => {
+              // event.preventDefault()
+              touchStarted = true
+              isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])
+            }"
+            oncontextmenu="return false;"
+            @click="() => {
+              if (!touchStarted) isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])
+              touchStarted = false
+            }"
           />
         </template>
       </template>

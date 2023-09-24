@@ -56,7 +56,7 @@ function setManaboard(abilityIndex: 4 | 5 | 6, level: number) {
           "
         >
           <div style="display: flex; align-items: center">
-            <span class="manaboard2-editor-ability-text">❹</span>
+            <span class="manaboard2-editor-ability-text">4</span>
             <v-slider
               :model-value="manaboardValues.ability4 ?? -1"
               @update:model-value="(v) => setManaboard(4, v)"
@@ -71,7 +71,7 @@ function setManaboard(abilityIndex: 4 | 5 | 6, level: number) {
             />
           </div>
           <div style="display: flex; align-items: center">
-            <span class="manaboard2-editor-ability-text">❺</span>
+            <span class="manaboard2-editor-ability-text">5</span>
             <v-slider
               :model-value="manaboardValues.ability5 ?? -1"
               @update:model-value="(v) => setManaboard(5, v)"
@@ -86,7 +86,7 @@ function setManaboard(abilityIndex: 4 | 5 | 6, level: number) {
             />
           </div>
           <div style="display: flex; align-items: center">
-            <span class="manaboard2-editor-ability-text">❻</span>
+            <span class="manaboard2-editor-ability-text">6</span>
             <v-slider
               :model-value="manaboardValues.ability6 ?? -1"
               @update:model-value="(v) => setManaboard(6, v)"
@@ -122,10 +122,11 @@ function setManaboard(abilityIndex: 4 | 5 | 6, level: number) {
 
 <style scoped>
 .manaboard2-editor-ability-text {
-  color: rgb(47, 195, 183);
+  color: white;
+  text-align: center;
   width: 21px;
   height: 21px;
   font-size: 15px;
-  background: radial-gradient(white 50%, transparent 50%);
+  background: radial-gradient(rgb(47, 195, 183) 60%, transparent 65%);
 }
 </style>

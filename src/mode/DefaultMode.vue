@@ -178,19 +178,20 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
             @click="$router.push('/toolbox')"
           />
           <v-list-item
+            v-if="user.is_login()"
+            prepend-icon="mdi-flask-empty-outline"
+            color="pink"
+            title="Lab"
+            value="lab"
+            @click="$router.push('/lab')"
+          />
+          <v-list-item
             prepend-icon="mdi-calendar"
             color="purple"
             title="Events"
             value="calendar"
             @click="$router.push('/calendar')"
           />
-          <!--          <v-list-item-->
-          <!--            prepend-icon="mdi-calendar"-->
-          <!--            color="purple"-->
-          <!--            title="Events2"-->
-          <!--            value="calendar"-->
-          <!--            @click="$router.push('/events')"-->
-          <!--          />-->
           <v-list-item
             prepend-icon="mdi-table"
             color="blue"
@@ -234,24 +235,15 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
     </v-navigation-drawer>
     <v-app-bar
       style="
-        background: linear-gradient(
-            110deg,
-            transparent 220px,
-            yellow 220px,
-            yellow 240px,
-            transparent 240px,
-            transparent 250px,
-            yellow 250px,
-            yellow 260px,
-            transparent 260px
-          ),
+        background:
           linear-gradient(120deg, rgba(132, 250, 176, 0.6) 0%, rgba(143, 211, 244, 0.6) 100%);
-        background-blend-mode: overlay, normal;
+        background-blend-mode: normal;
         backdrop-filter: blur(5px);
       "
       :order="-1"
+      density="comfortable"
     >
-      <v-app-bar-nav-icon @click="sidebar_hidden = !sidebar_hidden"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="sidebar_hidden = !sidebar_hidden" density="comfortable" />
       <v-toolbar-title>
         <a @click="$router.push('/')" style="cursor: pointer; font-weight: 600; color: #5a31ff">
           流星屋图书馆
