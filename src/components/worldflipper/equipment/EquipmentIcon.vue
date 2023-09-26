@@ -9,7 +9,8 @@ const props = defineProps({
     default: 240,
     required: false
   },
-  awakened: Boolean
+  awakened: Boolean,
+  eager: Boolean
 })
 
 const frame_width = computed(() => (props.size * 14) / 240)
@@ -71,7 +72,7 @@ const sizeFixed = computed(() => Math.floor(props.size))
         />
       </g>
     </svg>
-    <v-img :width="background_size" :height="background_size" :src="url"></v-img>
+    <v-img :eager="eager" :width="background_size" :height="background_size" :src="url"></v-img>
   </div>
 </template>
 

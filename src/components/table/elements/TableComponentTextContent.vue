@@ -75,23 +75,27 @@ const worldflipper = useWorldflipperDataStore()
             class="icon-wfo-obj"
             :size="90"
             :obj="worldflipper.characters.get(s.substring(10, s.length - 1))"
+            eager
           />
           <CharacterIcon
             v-else-if="s.startsWith('[icon:u')"
             class="icon-wfo-obj"
             :size="60"
             :obj="worldflipper.characters.get(s.substring(7, s.length - 1))"
+            eager
           />
           <EquipmentIcon
             v-else-if="s.startsWith('[bigicon:a')"
             class="icon-wfo-obj"
             :size="90"
             :obj="worldflipper.equipments.get(s.substring(10, s.length - 1))"
+            eager
           />
           <EquipmentIcon
             v-else-if="s.startsWith('[icon:a')"
             :size="60"
             :obj="worldflipper.equipments.get(s.substring(7, s.length - 1))"
+            eager
           />
           <img
             @dragstart.prevent
