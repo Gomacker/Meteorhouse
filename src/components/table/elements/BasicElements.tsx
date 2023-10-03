@@ -29,6 +29,12 @@ export class TableElementContainer extends TableElement {
     if (this.elements[index + 1])
       this.elements[index + 1] = this.elements.splice(index, 1, this.elements[index + 1])[0]
   }
+  insertPre(index: number, element: TableElement) {
+    this.elements.splice(index, 0, element)
+  }
+  insertNext(index: number, element: TableElement) {
+    this.elements.splice(index + 1, 0, element)
+  }
 
   html(): JSX.Element {
     return (
@@ -49,14 +55,16 @@ export class TableElementContainer extends TableElement {
 
   editor(): JSX.Element {
     return (
-      <VCard style={{ background: '#0f0', padding: '4px' }}>
+      <VCard style={{ background: '#333', padding: '2px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
           {this.elements.map((value) =>
             value.editorWrapped(
               (data) => (this.elements[this.elements.indexOf(value)] = table.load(data)),
               () => this.elements.splice(this.elements.indexOf(value), 1),
               () => this.movePre(this.elements.indexOf(value)),
-              () => this.moveNext(this.elements.indexOf(value))
+              () => this.moveNext(this.elements.indexOf(value)),
+              () => this.insertPre(this.elements.indexOf(value), new TableElementText({})),
+              () => this.insertNext(this.elements.indexOf(value), new TableElementText({})),
             )
           )}
           <div

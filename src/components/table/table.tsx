@@ -109,6 +109,8 @@ export abstract class TableElement {
     onDelete: () => void,
     movePre: () => void,
     moveNext: () => void,
+    insertPre: () => void,
+    insertNext: () => void,
     background: string = '#fff'
   ): JSX.Element {
     return (
@@ -132,7 +134,14 @@ export abstract class TableElement {
               density="compact"
               label="类型"
             />
-            {h(TableEditorWrapperMenu, { element: this, delete: onDelete, movePre: movePre, moveNext: moveNext })}
+            {h(TableEditorWrapperMenu, {
+              element: this,
+              delete: onDelete,
+              movePre: movePre,
+              moveNext: moveNext,
+              insertPre: insertPre,
+              insertNext: insertNext
+            })}
           </div>
           <VDivider style={{ margin: '4px' }} />
           <div>{this.editor()}</div>
@@ -223,16 +232,19 @@ export class Table {
     this.content[this.content.indexOf(value)] = newValue
   }
 
-  move_pre(index: number) {
+  movePre(index: number) {
     if (this.content[index - 1])
       this.content[index - 1] = this.content.splice(index, 1, this.content[index - 1])[0]
   }
-  move_next(index: number) {
+  moveNext(index: number) {
     if (this.content[index + 1])
       this.content[index + 1] = this.content.splice(index, 1, this.content[index + 1])[0]
   }
-  insert_pre(index: number, element: TableElement) {
+  insertPre(index: number, element: TableElement) {
     this.content.splice(index, 0, element)
+  }
+  insertNext(index: number, element: TableElement) {
+    this.content.splice(index + 1, 0, element)
   }
   delete(index: number) {
     this.content.splice(index, 1)

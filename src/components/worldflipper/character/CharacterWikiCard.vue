@@ -96,7 +96,7 @@ const translated_type = computed(() => type2zh[props.obj?.type])
                 alt=""
               />
             </div>
-            <CharacterIcon :obj="obj" :size="120" />
+            <CharacterIcon :obj="obj" :size="120" eager />
             <div style="display: flex; flex-wrap: wrap; width: 100%; justify-content: space-between">
               <div style="padding: 8px 16px; font-size: 20px">
                 <p style="font-size: 20px; font-family: '黑体', serif; font-weight: 600">
