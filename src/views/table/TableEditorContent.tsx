@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue'
 import table, { Table } from '@/components/table/table'
 import { VBtn } from "vuetify/components";
-import { TableElementText } from "@/components/table/elements/BasicElements";
+import { TableElementContainer, TableElementText } from "@/components/table/elements/BasicElements";
 
 export default defineComponent({
   props: {
@@ -22,11 +22,19 @@ export default defineComponent({
             },
             () => {
               const index = props.table.content.indexOf(value)
-              props.table.move_pre(index)
+              props.table.movePre(index)
             },
             () => {
               const index = props.table.content.indexOf(value)
-              props.table.move_next(index)
+              props.table.moveNext(index)
+            },
+            () => {
+              const index = props.table.content.indexOf(value)
+              props.table.insertPre(index, new TableElementContainer({}))
+            },
+            () => {
+              const index = props.table.content.indexOf(value)
+              props.table.insertNext(index, new TableElementContainer({}))
             },
             index % 2 ? '#fff' : 'lightgrey'
           )

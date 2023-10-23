@@ -6,6 +6,8 @@ const props = defineProps<{
   delete: () => void
   movePre: () => void
   moveNext: () => void
+  insertPre: () => void
+  insertNext: () => void
 }>()
 </script>
 
@@ -15,14 +17,12 @@ const props = defineProps<{
       <v-btn v-bind="props" icon="mdi-menu" style="margin: 0 4px" size="small" />
     </template>
     <v-list style="padding: 0">
-      <v-list-item style="padding: 0">
-        <v-btn @click="props.movePre"> 前移一格 </v-btn>
-      </v-list-item>
-      <v-list-item style="padding: 0">
-        <v-btn @click="props.moveNext"> 后移一格 </v-btn>
-      </v-list-item>
-      <v-list-item style="padding: 0">
-        <v-btn color="error" prepend-icon="mdi-delete" @click="props.delete"> 删除 </v-btn>
+      <v-list-item @click="props.movePre"> 前移一格 </v-list-item>
+      <v-list-item @click="props.moveNext"> 后移一格 </v-list-item>
+      <v-list-item @click="props.insertPre"> 在前方插入 </v-list-item>
+      <v-list-item @click="props.insertNext"> 在后方插入 </v-list-item>
+      <v-list-item @click="props.delete" base-color="red" append-icon="mdi-delete">
+        删除
       </v-list-item>
     </v-list>
   </v-menu>
