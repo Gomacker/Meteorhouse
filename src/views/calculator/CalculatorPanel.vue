@@ -256,12 +256,6 @@ const touchStarted = ref(false)
             :obj="c[1]"
             :size="82"
             :style="{ '--element-color': ele2color[c[1].element] }"
-            @touchstart="() => {
-              // event.preventDefault()
-              touchStarted = true
-              isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])
-            }"
-            oncontextmenu="return false;"
             @click="() => {
               if (!touchStarted) isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])
               touchStarted = false

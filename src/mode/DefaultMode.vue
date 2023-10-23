@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from "vue";
 import { useUserStore } from '@/stores/user'
 import axios from 'axios'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
@@ -95,6 +95,17 @@ const loading_images: Array<LoadingImage> = [
   }
 ]
 const loading_img = loading_images[Math.floor(Math.random() * loading_images.length)]
+
+// const ltest = Array(8).fill([true]).flat()
+//
+// class MessageManager {
+//   public message: Array<boolean>
+//   add() {
+//     //TODO
+//     this.message.push()
+//   }
+// }
+
 </script>
 
 <template>
@@ -135,6 +146,18 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
         </div>
       </div>
     </transition>
+<!--    <template v-for="(b, i) in ltest" :key="i">-->
+<!--      <v-snackbar-->
+<!--        v-model="ltest[i]"-->
+<!--        color="green-lighten-4"-->
+<!--        location="top"-->
+<!--        :style="{top: `${72 + i * 20}px`}"-->
+<!--        close-on-content-click-->
+<!--        @click="console.log(ltest)"-->
+<!--      >-->
+<!--        aa{{i}}-->
+<!--      </v-snackbar>-->
+<!--    </template>-->
     <v-snackbar
       v-model="worldflipper_updated"
       color="green-lighten-4"
@@ -178,7 +201,7 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
             @click="$router.push('/toolbox')"
           />
           <v-list-item
-            v-if="user.is_login()"
+            v-if="user.isLogin()"
             prepend-icon="mdi-flask-empty-outline"
             color="pink"
             title="Lab"
@@ -200,7 +223,7 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
             @click="$router.push('/table')"
           />
           <v-list-item
-            v-if="user.is_login()"
+            v-if="user.isLogin()"
             prepend-icon="mdi-pencil"
             color="brown"
             title="编辑面板"
@@ -215,7 +238,7 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
             @click="$router.push('/about')"
           />
         </v-list>
-        <template v-if="user.is_login()">
+        <template v-if="user.isLogin()">
           <v-spacer />
           <v-divider />
           <v-list>

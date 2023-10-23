@@ -62,7 +62,7 @@ const worldflipper = useWorldflipperDataStore()
         <a href="https://worldflipper.jp/">弹射世界官网</a>
       </p>
     </div>
-    <div v-if="user.is_login()">
+    <div v-if="user.isLogin()">
       <v-switch color="orange" v-model="worldflipper.mhMode" label="Meteorhouse Mode！"/>
     </div>
     <v-card>

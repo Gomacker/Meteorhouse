@@ -6,6 +6,7 @@ import { Party, PartyEditor, PartyPosition, PartyRelease, Union } from '@/anise/
 import { computed, ref } from 'vue'
 import PartyStatus from '@/views/calculator/modules/party/PartyStatus.vue'
 import PartyManaboard2Editor from '@/views/calculator/modules/party/PartyManaboard2Editor.vue'
+import PartyExEditor from '@/views/calculator/modules/party/PartyExEditor.vue'
 
 const props = defineProps<{ partyEditor: PartyEditor }>()
 
@@ -161,7 +162,50 @@ function make_position(unionIndex: number, positionIndex: number) {
         </div>
       </div>
     </v-card>
-    <v-card v-if="false" color="warning" style="width: 480px; margin-top: 36px" class="elevation-4">
+    <v-card style="overflow: visible; width: 480px; margin-top: 36px" class="elevation-4">
+      <div style="display: grid; padding: 4px; grid-template-columns: repeat(3, 158px)">
+        <div>
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            :party-editor="partyEditor"
+            :position="make_position(1, 0)"
+          />
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            style="margin-top: 4px"
+            :party-editor="partyEditor"
+            :position="make_position(1, 1)"
+          />
+        </div>
+        <div>
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            :party-editor="partyEditor"
+            :position="make_position(2, 0)"
+          />
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            style="margin-top: 4px"
+            :party-editor="partyEditor"
+            :position="make_position(2, 1)"
+          />
+        </div>
+        <div>
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            :party-editor="partyEditor"
+            :position="make_position(3, 0)"
+          />
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            style="margin-top: 4px"
+            :party-editor="partyEditor"
+            :position="make_position(3, 1)"
+          />
+        </div>
+      </div>
+    </v-card>
+    <v-card color="warning" style="width: 480px; margin-top: 36px" class="elevation-4">
       <v-card-item>
         <v-textarea
           style="margin-top: 8px"

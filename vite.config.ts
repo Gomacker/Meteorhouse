@@ -49,6 +49,7 @@ export default defineConfig({
     proxy: {
       // '/api/v2': 'http://127.0.0.1:10317',
       // '/api/v2': 'http://127.0.0.1:14044',
+      '/auth': 'http://127.0.0.1:14044',
       '/api': {
         // target: 'http://127.0.0.1:10317/api/',
         target: 'https://meteorhouse.wiki/api/',

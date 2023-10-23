@@ -30,7 +30,7 @@ const p = computed(() => props.partyEditor.party)
     <PartyReleaseCard :party_release="partyEditor.party" />
     <div style="height: 36px" />
     <div style="display: flex; justify-content: center">
-      <v-card v-if="user.is_login()" class="elevation-6" style="width: 480px">
+      <v-card v-if="user.isLogin()" class="elevation-6" style="width: 480px">
         <v-card-title style="font-weight: bold">上传(Legacy)</v-card-title>
         <v-card-item>
           <v-textarea v-model="p.title" :rows="2" label="标题" maxlength="40" no-resize />

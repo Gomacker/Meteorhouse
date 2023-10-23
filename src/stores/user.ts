@@ -1,27 +1,31 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import axios from "axios";
 
-export function check_anonymous() {
-  const user = useUserStore()
-  if (!user.anonymous_token) {
-  }
-}
 
 export const useUserStore = defineStore('userStore', {
   state(): {
+    nickname: string | undefined
     username: string | undefined
     token: string | undefined
-    anonymous_token: string | undefined
+    _isLogin: boolean
   } {
     return {
+      nickname: undefined,
       username: undefined,
       token: undefined,
-      anonymous_token: undefined
+      _isLogin: false
     }
   },
   actions: {
-    is_login(): boolean {
-      return !!this.username
+    isLogin(): boolean { return this._isLogin; },
+    async authenticate() {
+      const response = await axios.post('/auth/authenticate')
+      if (response.status === 200) {
+        this.username = response.data['username']
+        this.nickname = response.data['nickname']
+        this._isLogin = true
+        return this
+      }
     },
     login(username: string, token: string): void {
       this.username = username
@@ -33,7 +37,7 @@ export const useUserStore = defineStore('userStore', {
   },
   persist: {
     enabled: true,
-    strategies: [{ key: 'user', storage: localStorage, paths: ['username', 'token', 'anonymous_token'] }]
+    strategies: [{ key: 'user', storage: localStorage, paths: ['token'] }]
   }
 })
 
