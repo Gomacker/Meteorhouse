@@ -40,7 +40,7 @@ interface LoadingImage {
   color: string
 }
 
-const loading_images: Array<LoadingImage> = [
+const loadingImages: Array<LoadingImage> = [
   {
     src: '/static/worldflipper/unit/pixelart/special/lion_boy.gif',
     color: ele2color[Element.Thunder].hex()
@@ -94,18 +94,7 @@ const loading_images: Array<LoadingImage> = [
     color: ele2color[Element.Fire].hex()
   }
 ]
-const loading_img = loading_images[Math.floor(Math.random() * loading_images.length)]
-
-// const ltest = Array(8).fill([true]).flat()
-//
-// class MessageManager {
-//   public message: Array<boolean>
-//   add() {
-//     //TODO
-//     this.message.push()
-//   }
-// }
-
+const loadingImage = loadingImages[Math.floor(Math.random() * loadingImages.length)]
 </script>
 
 <template>
@@ -125,7 +114,7 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
           <div>Loading...</div>
           <div
             class="loading-page-special-effect"
-            :style="{ '--loading-special-effect-color': loading_img.color }"
+            :style="{ '--loading-special-effect-color': loadingImage.color }"
           />
           <div
             style="
@@ -138,7 +127,7 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
               filter: drop-shadow(0 0 4px rgba(0 0 0 / 50%));
             "
           >
-            <img style="scale: 2; image-rendering: pixelated" :src="loading_img.src" alt="" />
+            <img style="scale: 2; image-rendering: pixelated" :src="loadingImage.src" alt="" />
           </div>
         </div>
         <div style="margin-bottom: 36px; color: grey">
@@ -146,24 +135,12 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
         </div>
       </div>
     </transition>
-<!--    <template v-for="(b, i) in ltest" :key="i">-->
-<!--      <v-snackbar-->
-<!--        v-model="ltest[i]"-->
-<!--        color="green-lighten-4"-->
-<!--        location="top"-->
-<!--        :style="{top: `${72 + i * 20}px`}"-->
-<!--        close-on-content-click-->
-<!--        @click="console.log(ltest)"-->
-<!--      >-->
-<!--        aa{{i}}-->
-<!--      </v-snackbar>-->
-<!--    </template>-->
     <v-snackbar
       v-model="worldflipper_updated"
       color="green-lighten-4"
       location="top"
       style="top: 72px"
-      close-on-content-click
+      close-on-content-click=""
     >
       <v-icon icon="mdi-check-circle-outline" color="green" />
       已更新数据：worldflipper
@@ -244,7 +221,6 @@ const loading_img = loading_images[Math.floor(Math.random() * loading_images.len
           <v-list>
             <v-list-item>
               Login Debug: <span style="color: orange">{{ user.token }}</span>
-              <!--              <v-textarea :model-value="user.token" hide-details />-->
             </v-list-item>
           </v-list>
           <v-list>

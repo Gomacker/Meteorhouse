@@ -137,9 +137,6 @@ const font_color = computed(() =>
   font-size: 22px;
   font-family: '黑体', sans-serif;
 }
-.v-toolbar {
-  transition: background-color 0.2s ease;
-}
 .resource-card {
   width: 512px;
   height: 512px;

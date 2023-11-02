@@ -257,12 +257,6 @@ const touchStarted = ref(false)
             :size="82"
             :style="{ '--element-color': ele2color[c[1].element] }"
 
-            @touchend="
-            () => {
-              // event.preventDefault()
-              // touchStarted = true
-              // isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])
-            }"
             @click="() => {
               if (!touchStarted) isSelected(c[1]) ? updateValue(undefined) : updateValue(c[1])
               touchStarted = false
@@ -320,6 +314,8 @@ const touchStarted = ref(false)
   overflow-y: scroll;
   height: 100%;
   padding: 8px;
+
+  text-decoration: dashed;
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.4),
@@ -329,7 +325,6 @@ const touchStarted = ref(false)
   border-radius: 12px 12px 0 0;
   margin: 8px;
 }
-
 .wfo-list::-webkit-scrollbar {
   background: rgba(255 255 255 / 0.1);
   width: 8px;

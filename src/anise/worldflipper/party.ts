@@ -1,7 +1,7 @@
 import { Character, Equipment } from '@/anise/worldflipper/object'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import type { WorldflipperObject } from '@/stores/worldflipper'
-import { reactive } from "vue";
+import { reactive } from 'vue'
 
 const worldflipper = useWorldflipperDataStore()
 
@@ -245,7 +245,7 @@ export class PartyRelease {
     public id?: string,
     public updater_id?: string
   ) {
-    params.filter(value => value).forEach(value => this.setParam(value))
+    params.filter((value) => value).forEach((value) => this.setParam(value))
   }
 
   getParam(id_: string): PartyParam | undefined {
@@ -279,17 +279,18 @@ export class PartyRelease {
       const ppm2 = PartyParamManaboard2.load(data['manaboard2'])
       if (ppm2) params.push(ppm2)
     }
-    if (data['replacement']) { /* empty */ }
+    if (data['ex']) {
+      const ppe = PartyParamEx.load(data['ex'])
+    }
+    if (data['replacement']) {
+      /* empty */
+    }
     return params
   }
 
   dump(for_update: boolean = false): any {
     const base = {
       party: this.party.dump(),
-      // params: this.params.reduce((obj: any, value) => {
-      //   obj[value.__type] = value.dump()
-      //   return obj
-      // }, {})
       params: Array.from(this.params.values()).reduce((obj: any, value) => {
         obj[value.__type] = value.dump()
         return obj
@@ -368,11 +369,7 @@ export class PartyEditor {
   }
 
   verifyPosition(position: PartyPosition): boolean {
-    return (
-      this.selected_object instanceof PartyPosition &&
-      this.selected_object.unionIndex === position.unionIndex &&
-      this.selected_object.positionIndex === position.positionIndex
-    )
+    return this.selected_object instanceof PartyPosition && this.selected_object.equals(position)
   }
 
   getRepeats() {
@@ -519,5 +516,16 @@ export class PartyParamManaboard2 extends PartyParam {
   }
 }
 
+export class PartyParamEx extends PartyParam {
+  readonly __type: string = 'ex'
 
-export const partyEditor =  reactive<PartyEditor>(new PartyEditor(PartyRelease.empty()))
+  dump(): any {
+    return 
+  }
+
+  isEmpty(): boolean {
+    return false
+  }
+}
+
+export const partyEditor = reactive<PartyEditor>(new PartyEditor(PartyRelease.empty()))

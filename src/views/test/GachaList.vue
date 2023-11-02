@@ -15,7 +15,7 @@ interface Event {
   id: string
 }
 
-interface EventSet {
+interface EventSet  {
   time: number
   main_event: Event
   gacha_events: Array<GachaEvent>

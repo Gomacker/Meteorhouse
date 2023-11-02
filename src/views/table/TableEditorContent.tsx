@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue'
 import table, { Table } from '@/components/table/table'
-import { VBtn } from "vuetify/components";
-import { TableElementContainer, TableElementText } from "@/components/table/elements/BasicElements";
+import { VBtn } from 'vuetify/components'
+import { TableElementContainer, TableElementText } from '@/components/table/elements/BasicElements'
 
 export default defineComponent({
   props: {
@@ -12,7 +12,7 @@ export default defineComponent({
   },
   setup(props) {
     return () => (
-      <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+      <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
         {props.table.content.map((value, index) =>
           value.editorWrapped(
             (data) => props.table.changeValue(value, table.load(data)),

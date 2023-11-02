@@ -29,7 +29,7 @@ const id_copied = ref(false)
 const party_copied = ref(false)
 
 function copy_release_id(id_: string) {
-  const cb = new Clipboard(`#copy-id-${id_}`, {text: elem => props.party_release.id || ''})
+  const cb = new Clipboard(`#copy-id-${id_}`, { text: (elem) => props.party_release.id || '' })
   cb.on('success', (e) => {
     id_copied.value = true
     cb.destroy()
@@ -37,7 +37,9 @@ function copy_release_id(id_: string) {
 }
 
 function copy_party(id_: string) {
-  const cb = new Clipboard(`#copy-${id_}`, {text: elem => JSON.stringify(props.party_release.dump())})
+  const cb = new Clipboard(`#copy-${id_}`, {
+    text: (elem) => JSON.stringify(props.party_release.dump())
+  })
   cb.on('success', (e) => {
     party_copied.value = true
     cb.destroy()
@@ -100,10 +102,8 @@ const show_dialog = ref(false)
           </v-chip>
         </div>
         <div>
-          <div v-if="hideTools" style="font-size: 12px">
-            Powered by <a>Meteorhouse.wiki</a>
-          </div>
-          <v-menu v-else open-delay="0" location="end" open-on-hover>
+          <div v-if="hideTools" style="font-size: 12px">Powered by <a>Meteorhouse.wiki</a></div>
+          <v-menu v-else open-delay="0" location="end" open-on-hover=''>
             <template v-slot:activator="{ props }">
               <div v-bind="props" class="party-card-source-tag">
                 <v-icon icon="mdi-magnify"></v-icon>
@@ -134,7 +134,7 @@ const show_dialog = ref(false)
         <div>
           <v-btn-group style="height: 28px" variant="flat" density="compact">
             <v-btn disabled="" size="small" color="pink">❤ 0</v-btn>
-            <v-menu open-on-click :close-on-content-click="false">
+            <v-menu open-on-click='' :close-on-content-click="false">
               <template v-slot:activator="{ props }">
                 <v-btn disabled="" v-bind="props" size="small">
                   添加记录
@@ -151,7 +151,7 @@ const show_dialog = ref(false)
             color="green-lighten-4"
             location="top"
             style="top: 72px"
-            close-on-content-click
+            close-on-content-click=''
           >
             <v-icon icon="mdi-check-circle-outline" color="green" />
             已复制

@@ -54,11 +54,11 @@ onMounted(() => {
   const route = useRoute()
   const query = route.query
   console.log(query)
-  if (query.hasOwnProperty('q')) {
+  if (query['q']) {
     search_content.value = String(query.q)
     search_content_applied.value = search_content.value
   }
-  if (query.hasOwnProperty('page')) {
+  if (query['page']) {
     const page = parseInt(String(query.page))
     if (page) current_page.value = page
   }
@@ -73,12 +73,23 @@ onMounted(() => {
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: space-between;
       height: 100%;
-      padding: 16px 0;
+      /*padding: 16px 0;*/
+      position: relative;
     "
   >
-    <div style="margin: 16px 32px 8px; display: flex; align-items: center">
+    <div
+      style="
+        z-index: 1;
+        margin: 16px 32px 8px;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        width: 80%;
+      "
+    >
       <v-text-field
         label="搜索鸭"
         variant="solo"
@@ -100,8 +111,16 @@ onMounted(() => {
     <v-card
       :loading="loading"
       class="elevation-0 party-searcher-wrapper"
-      style="background: transparent; height: 100%; padding: 8px; margin: 0 16px"
-      ><div
+      style="
+        background: transparent;
+        height: 100%;
+        padding: 8px;
+        margin: 0 16px;
+        position: relative;
+      "
+    >
+      <div style="height: 64px" />
+      <div
         style="
           display: flex;
           flex-direction: row;
@@ -120,15 +139,19 @@ onMounted(() => {
           </template>
         </template>
       </div>
+      <div style="height: 64px" />
     </v-card>
-    <div class="party-searcher-pagination-wrapper">
+    <v-card
+      style="position: absolute; bottom: 0; z-index: 1; border-radius: 16px"
+      class="party-searcher-pagination-wrapper"
+    >
       <v-pagination
         v-model="current_page"
         :length="Math.ceil(party_count / 12)"
         @update:model-value="get_data(current_page, search_content_applied)"
         class="party-searcher-pagination"
       />
-    </div>
+    </v-card>
   </div>
 </template>
 
@@ -142,7 +165,7 @@ onMounted(() => {
 }
 
 .party-searcher-pagination-wrapper {
-  margin: 16px;
+  margin: 8px;
   display: flex;
   justify-content: center;
 }

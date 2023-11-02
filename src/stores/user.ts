@@ -17,7 +17,7 @@ export const useUserStore = defineStore('userStore', {
     }
   },
   actions: {
-    isLogin(): boolean { return this._isLogin; },
+    isLogin(): boolean { return !!this.username; },
     async authenticate() {
       const response = await axios.post('/auth/authenticate')
       if (response.status === 200) {
@@ -37,7 +37,7 @@ export const useUserStore = defineStore('userStore', {
   },
   persist: {
     enabled: true,
-    strategies: [{ key: 'user', storage: localStorage, paths: ['token'] }]
+    strategies: [{ key: 'user', storage: localStorage, paths: ['username', 'token'] }]
   }
 })
 

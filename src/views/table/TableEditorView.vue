@@ -55,7 +55,7 @@ const savedTooltip = ref(false)
       color="green-lighten-4"
       location="top"
       style="top: 72px"
-      close-on-content-click
+      close-on-content-click=''
     >
       <v-icon icon="mdi-check-circle-outline" color="green" />
       已保存

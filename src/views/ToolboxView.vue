@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import ToolboxModuleNotAvailable from '@/views/toolbox/modules/ToolboxModuleNotAvailable.vue'
 import ToolboxModulePlayerSearcher from "@/views/toolbox/modules/ToolboxModulePlayerSearcher.vue";
 import ToolboxModulePartySearcher from "@/views/toolbox/modules/ToolboxModulePartySearcher.vue";
-import ToolboxModulePartyPublishTest from "@/views/toolbox/modules/ToolboxModulePartyPublishTest.vue";
 
 enum Modules {
   PLAYER_SEARCHER,

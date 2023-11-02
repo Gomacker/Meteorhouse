@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Character, Equipment } from '@/anise/worldflipper/object'
 import CharacterWikiCard from "@/components/worldflipper/character/CharacterWikiCard.vue";
-import EquipmentIcon from "@/components/worldflipper/equipment/EquipmentIcon.vue";
 import { WorldflipperObject } from "@/stores/worldflipper";
 import EquipmentWikiCard from "@/components/worldflipper/equipment/EquipmentWikiCard.vue";
 

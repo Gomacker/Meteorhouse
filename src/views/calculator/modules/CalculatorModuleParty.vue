@@ -2,7 +2,7 @@
 import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
 import { ele2color } from '@/stores/manager'
 import { Element } from '@/anise/worldflipper/object'
-import { Party, PartyEditor, PartyPosition, PartyRelease, Union } from '@/anise/worldflipper/party'
+import { Party, PartyEditor, PartyPosition, Union } from '@/anise/worldflipper/party'
 import { computed, ref } from 'vue'
 import PartyStatus from '@/views/calculator/modules/party/PartyStatus.vue'
 import PartyManaboard2Editor from '@/views/calculator/modules/party/PartyManaboard2Editor.vue'
@@ -205,7 +205,7 @@ function make_position(unionIndex: number, positionIndex: number) {
         </div>
       </div>
     </v-card>
-    <v-card color="warning" style="width: 480px; margin-top: 36px" class="elevation-4">
+    <v-card v-if='false' color="warning" style="width: 480px; margin-top: 36px" class="elevation-4">
       <v-card-item>
         <v-textarea
           style="margin-top: 8px"

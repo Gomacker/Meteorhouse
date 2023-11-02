@@ -43,7 +43,6 @@ export const useWorldflipperDataStore = defineStore('worldflipperData', {
   },
   getters: {
     characters: (state) => {
-      const keys = Object.keys(state.__characters)
       const characterEntries = Object.keys(state.__characters).map((key) => [
         key,
         plainToInstance(Character, { ...state.__characters[key], id: key } as object)

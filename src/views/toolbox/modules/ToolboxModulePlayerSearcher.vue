@@ -3,8 +3,6 @@ import PlayerCard from '@/components/card/PlayerCard.vue'
 import type { PlayerProfile } from '@/components/card/PlayerCard.vue'
 import { ref } from 'vue'
 import axios from 'axios'
-import { Party, PartyRelease } from '@/anise/worldflipper/party'
-import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
 import { ele2color } from '@/stores/manager'
 import { Element } from '@/anise/worldflipper/object'
 
