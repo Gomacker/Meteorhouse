@@ -7,7 +7,7 @@ import '@/components/table/elements/BasicElements'
 import '@/components/table/elements/WorldflipperElements'
 import './table.css'
 
-const props = defineProps<{ table: Table }>()
+defineProps<{ table: Table }>()
 </script>
 
 <template>

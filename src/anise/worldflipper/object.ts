@@ -114,51 +114,56 @@ export class Character extends GameObject {
   }
 
   get_status(level: number): [number, number] {
-    const status_data = this.__status_data
-    let mhp = 0
-    let atk = 0
-    level = Math.max(0, Math.min(100, level))
+    try {
 
-    if (level >= 80 && level <= 100) {
-      const sd1 = status_data['80'].map((x) => Math.floor(x))
-      const sd2 = status_data['100'].map((x) => Math.floor(x))
-      mhp = this._calculate_status(
-        sd1[0],
-        sd2[0],
-        80,
-        100,
-        level,
-        Math.floor(Character.EVOLUTION_STATUS[String(this.rarity)][1])
-      )
-      atk = this._calculate_status(
-        sd1[1],
-        sd2[1],
-        80,
-        100,
-        level,
-        Math.floor(Character.EVOLUTION_STATUS[String(this.rarity)][0])
-      )
-    } else if (level >= 10 && level < 80) {
-      const sd1 = status_data['10'].map((x) => Math.floor(x))
-      const sd2 = status_data['80'].map((x) => Math.floor(x))
-      const evolutionStatusRarity1 =
-        level >= this.nature_max_level
-          ? Math.floor(Character.EVOLUTION_STATUS[String(this.rarity)][1])
-          : 0
-      const evolutionStatusRarity0 =
-        level >= this.nature_max_level
-          ? Math.floor(Character.EVOLUTION_STATUS[String(this.rarity)][0])
-          : 0
-      mhp = this._calculate_status(sd1[0], sd2[0], 10, 80, level, evolutionStatusRarity1)
-      atk = this._calculate_status(sd1[1], sd2[1], 10, 80, level, evolutionStatusRarity0)
-    } else if (level >= 1 && level < 10) {
-      const sd1 = status_data['1'].map((x) => Math.floor(x))
-      const sd2 = status_data['10'].map((x) => Math.floor(x))
-      mhp = this._calculate_status(sd1[0], sd2[0], 1, 10, level, 0)
-      atk = this._calculate_status(sd1[1], sd2[1], 1, 10, level, 0)
+      const status_data = this.__status_data
+      let mhp = 0
+      let atk = 0
+      level = Math.max(0, Math.min(100, level))
+
+      if (level >= 80 && level <= 100) {
+        const sd1 = status_data['80'].map((x) => Math.floor(x))
+        const sd2 = status_data['100'].map((x) => Math.floor(x))
+        mhp = this._calculate_status(
+          sd1[0],
+          sd2[0],
+          80,
+          100,
+          level,
+          Math.floor(Character.EVOLUTION_STATUS[String(this.rarity)][1])
+        )
+        atk = this._calculate_status(
+          sd1[1],
+          sd2[1],
+          80,
+          100,
+          level,
+          Math.floor(Character.EVOLUTION_STATUS[String(this.rarity)][0])
+        )
+      } else if (level >= 10 && level < 80) {
+        const sd1 = status_data['10'].map((x) => Math.floor(x))
+        const sd2 = status_data['80'].map((x) => Math.floor(x))
+        const evolutionStatusRarity1 =
+          level >= this.nature_max_level
+            ? Math.floor(Character.EVOLUTION_STATUS[String(this.rarity)][1])
+            : 0
+        const evolutionStatusRarity0 =
+          level >= this.nature_max_level
+            ? Math.floor(Character.EVOLUTION_STATUS[String(this.rarity)][0])
+            : 0
+        mhp = this._calculate_status(sd1[0], sd2[0], 10, 80, level, evolutionStatusRarity1)
+        atk = this._calculate_status(sd1[1], sd2[1], 10, 80, level, evolutionStatusRarity0)
+      } else if (level >= 1 && level < 10) {
+        const sd1 = status_data['1'].map((x) => Math.floor(x))
+        const sd2 = status_data['10'].map((x) => Math.floor(x))
+        mhp = this._calculate_status(sd1[0], sd2[0], 1, 10, level, 0)
+        atk = this._calculate_status(sd1[1], sd2[1], 1, 10, level, 0)
+      }
+
+      return [mhp, atk]
+    }catch (e) {
+      return [0, 0]
     }
-
-    return [mhp, atk]
   }
 }
 
