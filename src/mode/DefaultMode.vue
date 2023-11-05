@@ -148,20 +148,20 @@ const loadingImage = loadingImages[Math.floor(Math.random() * loadingImages.leng
     <v-navigation-drawer width="200" v-model="sidebar_hidden" temporary="">
       <div style="display: flex; flex-direction: column; height: 100%">
         <v-list density="compact" :nav="true">
-          <v-list-item
-            prepend-icon="mdi-star-four-points-outline"
-            color="teal-lighten-1"
-            height="60px"
-            title="主页"
-            value="myfiles"
-            @click="$router.push('/')"
-          />
+<!--          <v-list-item-->
+<!--            prepend-icon="mdi-star-four-points-outline"-->
+<!--            color="teal-lighten-1"-->
+<!--            height="60px"-->
+<!--            title="主页"-->
+<!--            value="myfiles"-->
+<!--            @click="$router.push('/')"-->
+<!--          />-->
           <v-list-item
             prepend-icon="mdi-calculator"
             color="blue"
             title="组盘器"
             value="partyeditor"
-            @click="$router.push('/partyEditor')"
+            @click="$router.push('/')"
           />
           <v-list-item
             prepend-icon="mdi-magnify"

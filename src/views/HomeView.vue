@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import CalculatorView from "@/views/calculator/CalculatorView.vue";
+// const CalculatorView = import("@/views/calculator/CalculatorView.vue")
 const router = useRouter()
 </script>
 
@@ -13,6 +15,7 @@ const router = useRouter()
       height: 100%;
     "
   >
+    <CalculatorView/>
     <div
       style="
         display: grid;

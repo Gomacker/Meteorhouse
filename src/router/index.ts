@@ -1,12 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
+// import HomeView from '@/views/HomeView.vue'
 
 const views: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    // component: HomeView,
+    // component: () => import('@/views/HomeView.vue')
+    component: () => import('@/views/calculator/CalculatorView.vue')
   },
   {
     path: '/partyEditor',
@@ -93,7 +95,7 @@ const cards: RouteRecordRaw[] = [
   }
 ]
 
-const router = createRouter({
+const index = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     ...views,
@@ -145,4 +147,4 @@ const router = createRouter({
   ]
 })
 
-export default router
+export default index
