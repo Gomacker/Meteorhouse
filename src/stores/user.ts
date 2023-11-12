@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from "axios";
-
+import axios from 'axios'
 
 export const useUserStore = defineStore('userStore', {
   state(): {
@@ -17,7 +16,9 @@ export const useUserStore = defineStore('userStore', {
     }
   },
   actions: {
-    isLogin(): boolean { return !!this.username; },
+    isLogin(): boolean {
+      return !!this.username
+    },
     async authenticate() {
       const response = await axios.post('/auth/authenticate')
       if (response.status === 200) {
@@ -27,17 +28,21 @@ export const useUserStore = defineStore('userStore', {
         return this
       }
     },
-    login(username: string, token: string): void {
-      this.username = username
-      this.token = token
+    tokenLogin(token: string): void {
+      axios.post('/auth/tokenLogin', { token }).then((response) => {
+        console.log(response)
+      })
     },
-    anonymous(): void {
-
-    }
+    login(username: string, password: string): void {
+      axios.post('/auth/login', { username, password }).then((response) => {
+        if (response.status == 200) {
+        }
+      })
+    },
+    anonymous(): void {}
   },
   persist: {
     enabled: true,
     strategies: [{ key: 'user', storage: localStorage, paths: ['username', 'token'] }]
   }
 })
-

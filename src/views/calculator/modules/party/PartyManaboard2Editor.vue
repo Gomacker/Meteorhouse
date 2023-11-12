@@ -113,6 +113,7 @@ function setManaboard(abilityIndex: 4 | 5 | 6, level: number) {
         color: grey;
         justify-content: center;
         align-items: center;
+        user-select: none;
       "
     >
       ×

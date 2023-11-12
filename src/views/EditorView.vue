@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useWorldflipperDataStore } from "@/stores/worldflipper";
+import { useWorldflipperDataStore } from '@/stores/worldflipper'
 
 const worldflipper = useWorldflipperDataStore()
 </script>
@@ -28,7 +28,7 @@ const worldflipper = useWorldflipperDataStore()
         <p style="font-size: 28px; font-weight: 600">昵称表</p>
         <p>0 个昵称表</p>
       </v-card>
-      <v-card class="editor-select"> 查询表</v-card>
+      <v-card class="editor-select active" @click="$router.push('/editor/query')"> 查询表</v-card>
       <v-card class="editor-select"> 副本</v-card>
       <v-card class="editor-select active" @click="$router.push('/editor/event')"> 事件</v-card>
       <v-card class="editor-select"> 资源</v-card>

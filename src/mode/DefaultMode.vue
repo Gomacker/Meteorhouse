@@ -1,11 +1,13 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from 'vue'
 import { useUserStore } from '@/stores/user'
 import axios from 'axios'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import { useDefer } from '@/utils'
 import { Element } from '@/anise/worldflipper/object'
 import { ele2color } from '@/stores/manager'
+import { useSettings } from '@/stores/settings'
+import { useRoute } from 'vue-router'
 
 const sidebar_hidden = ref(false)
 const user = useUserStore()
@@ -28,7 +30,7 @@ onMounted(() => {
     })
     .then((r) => {
       if (r.data['username'] && user.token) {
-        user.login('username', user.token)
+        user.tokenLogin(user.token)
       }
     })
 })
@@ -95,10 +97,13 @@ const loadingImages: Array<LoadingImage> = [
   }
 ]
 const loadingImage = loadingImages[Math.floor(Math.random() * loadingImages.length)]
+
+const settings = useSettings()
+const route = useRoute()
 </script>
 
 <template>
-  <v-app style="--v-theme-background: 247,246,250, 0">
+  <v-app style="--v-theme-background: 247, 246, 250, 0">
     <transition name="loading" mode="out-in">
       <div v-if="defer(60, true)" key="element" class="loading-page">
         <div />
@@ -148,14 +153,6 @@ const loadingImage = loadingImages[Math.floor(Math.random() * loadingImages.leng
     <v-navigation-drawer width="200" v-model="sidebar_hidden" temporary="">
       <div style="display: flex; flex-direction: column; height: 100%">
         <v-list density="compact" :nav="true">
-<!--          <v-list-item-->
-<!--            prepend-icon="mdi-star-four-points-outline"-->
-<!--            color="teal-lighten-1"-->
-<!--            height="60px"-->
-<!--            title="主页"-->
-<!--            value="myfiles"-->
-<!--            @click="$router.push('/')"-->
-<!--          />-->
           <v-list-item
             prepend-icon="mdi-calculator"
             color="blue"
@@ -183,6 +180,7 @@ const loadingImage = loadingImages[Math.floor(Math.random() * loadingImages.leng
             color="pink"
             title="Lab"
             value="lab"
+            :active="route.matched[0]?.name === 'lab'"
             @click="$router.push('/lab')"
           />
           <v-list-item
@@ -190,12 +188,14 @@ const loadingImage = loadingImages[Math.floor(Math.random() * loadingImages.leng
             color="purple"
             title="Events"
             value="calendar"
+            :active="route.matched[0]?.name === 'calendar'"
             @click="$router.push('/calendar')"
           />
           <v-list-item
             prepend-icon="mdi-table"
             color="blue"
             title="一图流"
+            :active="route.matched[0]?.name === 'table'"
             value="tablelist"
             @click="$router.push('/table')"
           />
@@ -205,6 +205,7 @@ const loadingImage = loadingImages[Math.floor(Math.random() * loadingImages.leng
             color="brown"
             title="编辑面板"
             value="editor"
+            :active="route.matched[0]?.name === 'editor'"
             @click="$router.push('/editor')"
           />
           <v-list-item
@@ -234,8 +235,11 @@ const loadingImage = loadingImages[Math.floor(Math.random() * loadingImages.leng
     </v-navigation-drawer>
     <v-app-bar
       style="
-        background:
-          linear-gradient(120deg, rgba(132, 250, 176, 0.6) 0%, rgba(143, 211, 244, 0.6) 100%);
+        background: linear-gradient(
+          130deg,
+          rgba(141, 150, 255, 0.6) 0%,
+          rgba(255, 231, 231, 0.6) 100%
+        );
         background-blend-mode: normal;
         backdrop-filter: blur(5px);
       "
@@ -244,8 +248,16 @@ const loadingImage = loadingImages[Math.floor(Math.random() * loadingImages.leng
     >
       <v-app-bar-nav-icon @click="sidebar_hidden = !sidebar_hidden" density="comfortable" />
       <v-toolbar-title>
-        <a @click="$router.push('/')" style="cursor: pointer; font-weight: 600; color: #5a31ff">
-          流星屋图书馆
+        <a
+          @click="$router.push('/')"
+          style="
+            cursor: pointer;
+            font-family: Castellar, sans-serif;
+            font-weight: 600;
+            color: #5a31ff;
+          "
+        >
+          Meteorhouse Library
         </a>
       </v-toolbar-title>
     </v-app-bar>
@@ -258,7 +270,7 @@ const loadingImage = loadingImages[Math.floor(Math.random() * loadingImages.leng
       oncontextmenu="return false;"
       style="z-index: -1"
     >
-      <div class="bg-magic-circle" />
+      <div class="bg-magic-circle" :class="settings.showMagicCircle && 'rotate'" />
     </div>
   </v-app>
 </template>
@@ -346,9 +358,13 @@ const loadingImage = loadingImages[Math.floor(Math.random() * loadingImages.leng
 
   width: 992px;
   height: 992px;
-  animation: rotation 16s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
   user-select: none;
+  transform: rotate(36deg);
 }
+.bg-magic-circle.rotate {
+  animation: rotation 16s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
 @keyframes rotation {
   0% {
     transform: rotate(36deg);

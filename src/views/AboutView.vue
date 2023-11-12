@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useWorldflipperDataStore } from "@/stores/worldflipper";
 import { useUserStore } from "@/stores/user";
+import { useSettings } from '@/stores/settings'
 
 const user = useUserStore()
 const worldflipper = useWorldflipperDataStore()
+const settings = useSettings()
 </script>
 
 <template>
@@ -21,7 +23,7 @@ const worldflipper = useWorldflipperDataStore()
       <p>
         <v-btn color="orange" @click="$router.push('/login')">后台登录</v-btn>
       </p>
-      <p>Meteorhouse Version：<span style="color: coral">v1.0-pre7</span></p>
+      <p>Meteorhouse Version：<span style="color: coral">v1.0</span></p>
       <p>
         Author：
         <a href="https://space.bilibili.com/11466987" target="_blank">
@@ -62,8 +64,9 @@ const worldflipper = useWorldflipperDataStore()
         <a href="https://worldflipper.jp/">弹射世界官网</a>
       </p>
     </div>
-    <div v-if="user.isLogin()">
-      <v-switch color="orange" v-model="worldflipper.mhMode" label="Meteorhouse Mode！"/>
+    <div>
+      <v-switch v-if="user.isLogin()" hide-details color="orange" v-model="worldflipper.mhMode" label="Meteorhouse Mode！"/>
+      <v-switch hide-details color="orange" v-model="settings.showMagicCircle" label="开启魔法阵背景旋转"/>
     </div>
     <v-card>
       <v-card-item>

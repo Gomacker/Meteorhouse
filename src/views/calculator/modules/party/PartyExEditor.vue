@@ -2,8 +2,9 @@
 import type { Manaboard2Values, PartyEditor } from '@/anise/worldflipper/party'
 import { PartyParamManaboard2, PartyPosition } from '@/anise/worldflipper/party'
 import type { Character } from '@/anise/worldflipper/object'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { ele2color } from '@/stores/manager'
+import PartyExEditorSelector from '@/views/calculator/modules/party/PartyExEditorSelector.vue'
 
 const props = defineProps<{
   partyEditor: PartyEditor
@@ -31,6 +32,9 @@ function setManaboard(abilityIndex: 4 | 5 | 6, level: number) {
   ;(ppm2 as PartyParamManaboard2).set(props.position, value)
   props.partyEditor.party.setParam(ppm2)
 }
+
+const exA = ref()
+const exB = ref()
 </script>
 
 <template>
@@ -58,8 +62,26 @@ function setManaboard(abilityIndex: 4 | 5 | 6, level: number) {
             height: 72px;
           "
         >
-          <v-icon size="32px" icon="mdi-selection" />
-          <v-icon size="32px" icon="mdi-selection" />
+          <v-menu location="bottom center">
+            <template v-slot:activator="{ props }">
+              <v-icon
+                size="32px"
+                icon="mdi-selection"
+                v-bind='props'
+              />
+            </template>
+            <PartyExEditorSelector v-model='exA' />
+          </v-menu>
+          <v-menu location="bottom center">
+            <template v-slot:activator="{ props }">
+              <v-icon
+                size="32px"
+                icon="mdi-selection"
+                v-bind='props'
+              />
+            </template>
+            <PartyExEditorSelector v-model='exB' />
+          </v-menu>
         </div>
       </div>
     </div>
@@ -73,6 +95,7 @@ function setManaboard(abilityIndex: 4 | 5 | 6, level: number) {
         color: grey;
         justify-content: center;
         align-items: center;
+        user-select: none;
       "
     >
       ×

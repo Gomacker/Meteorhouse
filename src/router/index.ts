@@ -120,6 +120,10 @@ const index = createRouter({
       component: () => import('@/views/editor/CharacterEditorView.vue')
     },
     {
+      path: '/editor/query',
+      component: () => import('@/views/editor/QueryEditorView.vue')
+    },
+    {
       path: '/editor/table',
       name: 'table_editor',
       component: () => import('@/views/table/TableEditorView.vue')

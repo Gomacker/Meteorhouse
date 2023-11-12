@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import axios from 'axios'
 
 enum EventType {
@@ -19,21 +19,22 @@ class Event {
 
 }
 
-// const events = ref<Map<string, Event>>(new Map())
-const events = ref<Map<string, object>>(new Map())
+const testData = ref()
 
-axios.post('/api/v1/data/event/').then((r) => {
-  events.value = new Map(Object.entries(r.data['events']))
+onMounted(() => {
+  axios.get('https://wf-calendar.miaowm5.com/data/info.json').then(
+    response => {
+      if (response.status === 200) {
+        testData.value = response.data
+      }
+    }
+  )
 })
-const page = ref(1)
-const opp = ref(40)
 </script>
 
 <template>
   <div style="display: flex; flex-direction: column; height: 100%">
-    <div v-for="e in events" :key="e[0]">
-      <v-textarea :model-value="JSON.stringify(e[1], null, 2)"></v-textarea>
-    </div>
+    {{ testData }}
   </div>
 </template>
 
