@@ -2,18 +2,20 @@
 import { PartyEditor, PartyRelease } from '@/anise/worldflipper/party'
 import PartyReleaseCard from '@/components/card/PartyReleaseCard.vue'
 import { useUserStore } from '@/stores/user'
-import { computed, ref } from 'vue'
-import axios from "axios";
+import { computed } from 'vue'
+import axios from 'axios'
 
 const user = useUserStore()
 
 const props = defineProps<{ partyEditor: PartyEditor }>()
+
 async function updateParty(partyRelease: PartyRelease) {
   const r = await axios.post('/api/v1/party/upload/', partyRelease.dump(true))
   if (r.status === 200) {
-    console.log(r.data);
+    console.log(r.data)
   }
 }
+
 const alerts = computed(() => {
   const list = []
   if (props.partyEditor.getRepeats().size) {
@@ -48,15 +50,21 @@ const p = computed(() => props.partyEditor.party)
           <v-alert v-else type="success" density="compact" style="margin-bottom: 16px">
             队伍没有错误
           </v-alert>
-          <v-btn :disabled="!!alerts.length" color="blue" style="float: right" @click="updateParty(partyEditor.party)"
-            >
-            上传
-          </v-btn
+          <v-btn
+            :disabled="!!alerts.length"
+            color="blue"
+            style="float: right"
+            @click="updateParty(partyEditor.party)"
           >
+            上传
+          </v-btn>
         </v-card-item>
       </v-card>
       <div v-else style="font-size: 24px; color: grey; text-align: center">
-        <p><v-icon icon="mdi-package-variant" />This is a module for update</p>
+        <p>
+          <v-icon icon="mdi-package-variant" />
+          This is a module for update
+        </p>
         <p>Available in next or login for debug</p>
       </div>
     </div>

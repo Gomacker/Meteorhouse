@@ -34,7 +34,27 @@ interface LeaderAbility {
   description: string
 }
 
-export class Character extends GameObject {
+export interface CharacterData {
+  resource_id: string
+  id: string
+  names: string[]
+  rarity: number
+  element: Element
+  type: SpecialityType
+  race: string
+  gender: string
+  status_data: string
+  leader_ability: LeaderAbility
+  skill: Skill
+  abilities: string[]
+  cv: string
+  description: string
+  obtain: string
+  tags: string[]
+  server?: string
+}
+
+export class Character extends GameObject implements CharacterData {
   readonly __type_id: string = 'worldflipper/unit'
   static readonly LEVEL_CAP: any = {
     '1': ['40', '12', '5', '0.4', '0.4'],
@@ -51,33 +71,55 @@ export class Character extends GameObject {
     '5': ['60', '300', '0', '0']
   }
 
-  constructor(
-    public id: string,
-    resource_id: string,
-    public names: string[],
-    public rarity: number,
-    public element: Element,
-    public type: SpecialityType,
-    public race: string, // 未优化
-    public gender: string, // 未优化
-    // public stance: number, // 未优化
+  public id: string = ''
+  public names: string[] = []
+  public rarity: number = 0
+  public element: Element = Element.None
+  public type: SpecialityType = SpecialityType.Fighter
+  public race: string = ''
+  public gender: string = ''
+  public status_data: string = ''
+  public leader_ability: { name: string; description: string } = { name: '', description: '' }
+  public skill: { name: string; weight: number; description: string } = { name: '', weight: 0, description: '' }
+  public abilities: string[] = []
+  public cv: string = ''
+  public description: string = ''
+  public obtain: string = ''
+  public tags: string[] = []
+  public server?: string
 
-    // public status_data: StatusData,
-    public status_data: string,
-
-    public leader_ability: LeaderAbility,
-    public skill: Skill,
-
-    public abilities: Array<string>,
-    public description: string,
-    public obtain: string,
-    public tags: Array<string>,
-
-    public cv: string,
-    public server: string | null
-  ) {
-    super(resource_id)
+  constructor(data: CharacterData) {
+    super(data['resource_id'])
+    Object.assign(this, data)
   }
+
+  // constructor(
+  //   public id: string,
+  //   resource_id: string,
+  //   public names: string[],
+  //   public rarity: number,
+  //   public element: Element,
+  //   public type: SpecialityType,
+  //   public race: string, // 未优化
+  //   public gender: string, // 未优化
+  //   // public stance: number, // 未优化
+  //
+  //   // public status_data: StatusData,
+  //   public status_data: string,
+  //
+  //   public leader_ability: LeaderAbility,
+  //   public skill: Skill,
+  //
+  //   public abilities: Array<string>,
+  //   public description: string,
+  //   public obtain: string,
+  //   public tags: Array<string>,
+  //
+  //   public cv: string,
+  //   public server?: string
+  // ) {
+  //   super(resource_id)
+  // }
 
 
   get nature_max_level(): number {
@@ -161,7 +203,7 @@ export class Character extends GameObject {
       }
 
       return [mhp, atk]
-    }catch (e) {
+    } catch (e) {
       return [0, 0]
     }
   }
@@ -181,7 +223,6 @@ export class Equipment extends GameObject {
     public description: string,
     public obtain: string,
     public tags: string[],
-
     public server: string | null
   ) {
     super(resource_id)

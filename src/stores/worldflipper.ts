@@ -1,7 +1,8 @@
-import { defineStore } from "pinia";
-import { Character, Equipment } from "@/anise/worldflipper/object";
-import axios from "axios";
-import { plainToInstance } from "class-transformer";
+import { defineStore } from 'pinia'
+import { Character, Equipment } from '@/anise/worldflipper/object'
+import axios from 'axios'
+import { plainToInstance } from 'class-transformer'
+import worldflipperService from '@/services/worldflipperService'
 
 export type WorldflipperObject = Character | Equipment | null | undefined
 
@@ -21,32 +22,35 @@ export const useWorldflipperDataStore = defineStore('worldflipperData', {
   },
   actions: {
     async init() {
-      if (!(await this.check_update())) {
-        return await this.update()
-      }
-      return false
+      return !(await this.check_update()) && await this.update()
     },
     async check_update() {
-      const rsp = await axios.post('/api/v2/worldflipper/version')
-      return rsp.status == 200 && rsp.data['version'] === this.version
+      const rsp = await worldflipperService.fetchDataVersion()
+      return rsp['version'] === this.version
     },
     async update() {
-      const rsp = await axios.post('/api/v2/worldflipper/data')
-      if (rsp.status == 200) {
-        this.__characters = rsp.data['character']
-        this.__equipments = rsp.data['equipment']
-        this.version = rsp.data['version']
-        return true
+      try {
+
+        const rsp = await worldflipperService.fetchBasicData()
+        this.__characters = rsp['character']
+        this.__equipments = rsp['equipment']
+        this.version = rsp['version']
+        return rsp['version']
+      }catch (err) {
+        return null
       }
-      return false
     }
   },
   getters: {
     characters: (state) => {
-      const characterEntries = Object.keys(state.__characters).map((key) => [
-        key,
-        plainToInstance(Character, { ...state.__characters[key], id: key } as object)
-      ]) as [string, Character][]
+      const characterEntries = Object.keys(state.__characters).map((key) => {
+
+        return [
+          key,
+          new Character({ ...state.__characters[key], id: key })
+          // plainToInstance(Character, {data: { ...state.__characters[key], id: key }} as object)
+        ]
+      }) as [string, Character][]
       return new Map<string, Character>(characterEntries)
     },
     equipments: (state) => {
