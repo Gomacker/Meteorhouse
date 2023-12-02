@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Character, Equipment } from '@/anise/worldflipper/object'
 import type { CharacterData } from '@/anise/worldflipper/object'
+import type { PartyRelease } from '@/anise/worldflipper/party'
 
 async function postResponse(endpoint: string): Promise<any> {
   try {
@@ -21,6 +22,12 @@ interface WorldflipperBasicData extends WorldflipperDataVersion {
   equipment: { [key: string]: Equipment }
 }
 
+interface PostUpdatePartyRequestData {
+  party: {
+    party: object,
+    params: object,
+  }
+}
 class WorldflipperService {
   constructor() {}
 
@@ -44,6 +51,18 @@ class WorldflipperService {
       character: characters,
       equipment: data.equipment
     }
+  }
+
+  async updateParty(party: PartyRelease) {
+    const request: PostUpdatePartyRequestData = {
+      party: {
+        party: party,
+        params: {}
+      }
+    }
+    const response = await axios.post('/api/v2/party', )
+    const d: { result: boolean, release_id: string } = response.data
+    return d
   }
 }
 

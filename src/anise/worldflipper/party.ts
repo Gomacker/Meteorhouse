@@ -5,6 +5,8 @@ import { reactive } from 'vue'
 
 const worldflipper = useWorldflipperDataStore()
 
+
+
 export class Union {
   constructor(
     private _main: number | null,
@@ -104,59 +106,6 @@ export class Party {
   }
   static load(data: any): Party {
     return data ? new Party(data['union1'], data['union2'], data['union3']) : Party.empty()
-  }
-  static loadOrigin(data: any): PartyRelease {
-    const main_party_data = data['target_user_party']
-    const character_data: Array<any> = data['user_character_list']
-    const union1 = new Union(
-      main_party_data['character_ids'][0],
-      main_party_data['unison_character_ids'][0],
-      main_party_data['equipments'][0]['equipment_id'],
-      character_data.filter(
-        (value) => value['character_id'] === main_party_data['character_ids'][0]
-      )[0]['ability_soul_slot_1']
-    )
-    const union2 = new Union(
-      main_party_data['character_ids'][1],
-      main_party_data['unison_character_ids'][1],
-      main_party_data['equipments'][1]['equipment_id'],
-      character_data.filter(
-        (value) => value['character_id'] === main_party_data['character_ids'][1]
-      )[0]['ability_soul_slot_1']
-    )
-    const union3 = new Union(
-      main_party_data['character_ids'][2],
-      main_party_data['unison_character_ids'][2],
-      main_party_data['equipments'][2]['equipment_id'],
-      character_data.filter(
-        (value) => value['character_id'] === main_party_data['character_ids'][2]
-      )[0]['ability_soul_slot_1']
-    )
-    const user_character_mana_node_list: any = data['user_character_mana_node_list']
-    const u1m_mb2 = this.readOriginMb2(
-      user_character_mana_node_list[String(union1.main?.id)] as Array<any>
-    )
-    const u1u_mb2 = this.readOriginMb2(
-      user_character_mana_node_list[String(union1.unison?.id)] as Array<any>
-    )
-    const u2m_mb2 = this.readOriginMb2(
-      user_character_mana_node_list[String(union2.main?.id)] as Array<any>
-    )
-    const u2u_mb2 = this.readOriginMb2(
-      user_character_mana_node_list[String(union2.unison?.id)] as Array<any>
-    )
-    const u3m_mb2 = this.readOriginMb2(
-      user_character_mana_node_list[String(union3.main?.id)] as Array<any>
-    )
-    const u3u_mb2 = this.readOriginMb2(
-      user_character_mana_node_list[String(union3.unison?.id)] as Array<any>
-    )
-    const ppm2 = new PartyParamManaboard2(
-      [u1m_mb2, u1u_mb2],
-      [u2m_mb2, u2u_mb2],
-      [u3m_mb2, u3u_mb2]
-    )
-    return new PartyRelease(new Party(union1, union2, union3), [ppm2])
   }
 
   static readOriginMb2(data: Array<any>): Manaboard2Values {

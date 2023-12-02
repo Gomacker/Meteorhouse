@@ -139,11 +139,6 @@ const index = createRouter({
       component: () => import('@/views/test/GachaList.vue')
     },
     {
-      path: '/test/room',
-      name: 'test_room',
-      component: () => import('@/views/TestRoomView.vue')
-    },
-    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/LoginView.vue')

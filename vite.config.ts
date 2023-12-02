@@ -6,37 +6,38 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
+
 export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    // VitePWA({
-    //   manifest: {
-    //     name: 'Meteorhouse',
-    //     short_name: 'Meteorhouse',
-    //     description: '流星屋图书馆',
-    //     start_url: '/',
-    //     display: 'standalone',
-    //     background_color: '#fff',
-    //     theme_color: '#fff',
-    //     icons: [
-    //       {
-    //         src: '/static/favicon.ico',
-    //         sizes: '64x64',
-    //         type: 'image/x-icon'
-    //       }
-    //     ]
-    //   },
-    //   workbox: {
-    //     runtimeCaching: [
-    //       {
-    //         urlPattern: new RegExp('^https://meteorhouse.wiki'),
-    //         handler: 'NetworkFirst'
-    //       }
-    //     ],
-    //     cleanupOutdatedCaches: true
-    //   }
-    // })
+    VitePWA({
+      manifest: {
+        name: 'Meteorhouse',
+        short_name: 'Meteorhouse',
+        description: '流星屋图书馆',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#fff',
+        theme_color: '#fff',
+        icons: [
+          {
+            src: '/static/favicon.ico',
+            sizes: '64x64',
+            type: 'image/x-icon'
+          }
+        ]
+      },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: new RegExp('^https://meteorhouse.wiki'),
+            handler: 'NetworkFirst'
+          }
+        ],
+        cleanupOutdatedCaches: true
+      }
+    })
   ],
   resolve: {
     alias: {
@@ -63,5 +64,5 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/static/, '')
       }
     }
-  }
+  },
 })
