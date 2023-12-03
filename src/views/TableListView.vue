@@ -3,12 +3,14 @@ import { computed, ref } from 'vue'
 import axios from 'axios'
 import TableCard from '@/views/table/TableCard.vue'
 import type { TableProfile } from '@/components/table/table'
+import worldflipperService from "@/services/worldflipperService";
 
 const tableList = ref<Array<TableProfile>>()
 
-axios.post('/api/v2/worldflipper/table/list').then((r) => {
-  tableList.value = (r.data['tables'] as Array<TableProfile>).sort((a, b) => b.weight - a.weight)
-})
+// axios.post('/api/v2/worldflipper/table/list').then((r) => {
+//   tableList.value = (r.data['tables'] as Array<TableProfile>).sort((a, b) => b.weight - a.weight)
+// })
+worldflipperService.fetchTableList().then(value => tableList.value = value)
 
 const tableListSorted = computed(() => {
   const tl: any = {}
@@ -21,11 +23,12 @@ const tableListSorted = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div style="height: 100%">
     <template
       v-for="weight in Object.keys(tableListSorted).sort((a, b) => parseInt(b) - parseInt(a))"
       :key="weight"
     >
+
       <div class="table-list">
         <template :key="table_profile.id" v-for="table_profile in tableListSorted[weight]">
           <TableCard :table-profile="table_profile" />

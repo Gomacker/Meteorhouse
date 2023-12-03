@@ -42,7 +42,7 @@ interface LoadingImage {
   color: string
 }
 
-const loadingImages: Array<LoadingImage> = [
+const loadingImages: LoadingImage[] = [
   {
     src: '/static/worldflipper/unit/pixelart/special/lion_boy.gif',
     color: ele2color[Element.Thunder].hex()

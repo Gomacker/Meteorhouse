@@ -6,7 +6,6 @@ import { reactive } from 'vue'
 const worldflipper = useWorldflipperDataStore()
 
 
-
 export class Union {
   constructor(
     private _main: number | null,

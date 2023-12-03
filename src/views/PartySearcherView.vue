@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
 import { PartyRelease } from '@/anise/worldflipper/party'
+import worldflipperService from "@/services/worldflipperService";
 
 const page_party_list = ref(new Map())
 
@@ -18,12 +19,12 @@ defineProps<{ eager?: boolean }>()
 function get_data(page_index: number, search_content = '') {
   const params = {
     page_index: page_index,
-    search_text: '',
+    search_text: search_content || '',
     ppp: 12
   }
-  if (search_content) params.search_text = search_content
   page_party_list.value.clear()
   loading.value = true
+  worldflipperService.fetchPartyPage(page_index, search_content)
   axios
     .post(
       '/api/v1/party/page/',

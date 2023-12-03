@@ -4,6 +4,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { Table } from '@/components/table/table'
+import worldflipperService from "@/services/worldflipperService";
 
 const table_data = ref<any>()
 
@@ -25,9 +26,10 @@ const renderOption: RenderOption = {
 }
 
 onMounted(() => {
-  axios.post(`/api/v2/worldflipper/table/get/${route.params['table_id']}`).then((r) => {
-    table_data.value = r.data
-  })
+  const tableId: string = route.params['table_id'].toString()
+  if (tableId) {
+    worldflipperService.fetchTableData(tableId).then(value => table_data.value = value)
+  }
 })
 
 onUnmounted(() => {
