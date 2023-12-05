@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Armament } from '@/stores/manager'
 
 // let width = 240;
 // let height = 240;

@@ -56,14 +56,8 @@ class WorldflipperService {
     };
   }
 
-  async updateParty(party: PartyRelease) {
-    const request: PostUpdatePartyRequestData = {
-      party: {
-        party: party,
-        params: {}
-      }
-    };
-    const response = await axios.post("/api/v2/party");
+  async updateParty(release: PartyRelease) {
+    const response = await axios.post("/api/v1/party/upload/", release.dump(true));
     const d: { result: boolean; release_id: string } = response.data;
     return d;
   }

@@ -5,7 +5,7 @@ import UnionComponent from '@/components/party/eliya/UnionComponent.vue'
 import { PartyEditor } from "@/anise/worldflipper/party";
 
 
-defineProps<{
+const props = defineProps<{
   party: PartyRelease
   always_show_replacements?: boolean
   show_name?: boolean
@@ -17,6 +17,7 @@ defineProps<{
 }>()
 const show_replacements = ref(false)
 
+console.log(props)
 </script>
 <template>
   <div class="party" @mouseenter="show_replacements = true" @mouseleave="show_replacements = false">

@@ -35,7 +35,7 @@ onMounted(() => {
     })
 })
 
-const defer = useDefer()
+const defer = useDefer(60)
 
 interface LoadingImage {
   src: string

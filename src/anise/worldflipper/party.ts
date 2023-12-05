@@ -5,14 +5,14 @@ import { reactive } from 'vue'
 
 const worldflipper = useWorldflipperDataStore()
 
-
 export class Union {
   constructor(
     private _main: number | null,
     private _unison: number | null,
     private _equipment: number | null,
     private _core: number | null
-  ) {}
+  ) {
+  }
 
   static load(data: number[]): Union {
     return new this(data[0] || null, data[1] || null, data[2] || null, data[3] || null)
@@ -59,18 +59,18 @@ export class Union {
   }
 }
 
-export class PartyPosition {
-  constructor(public unionIndex: number, public positionIndex: number) {}
-
-  equals(position: PartyPosition) {
-    return this.unionIndex === position.unionIndex && this.positionIndex === position.positionIndex
-  }
+export interface PartyPosition {
+  // constructor(public unionIndex: number, public positionIndex: number) {
+  // }
+  unionIndex: number
+  positionIndex: number
 }
 
 export class Party {
   public union1: Union
   public union2: Union
   public union3: Union
+
   constructor(
     union1: Union | Array<number> | null,
     union2: Union | Array<number> | null,
@@ -103,6 +103,7 @@ export class Party {
   static empty(): Party {
     return new Party(null, null, null)
   }
+
   static load(data: any): Party {
     return data ? new Party(data['union1'], data['union2'], data['union3']) : Party.empty()
   }
@@ -183,9 +184,11 @@ export class Party {
     }
   }
 }
+
 export class PartyRelease {
   protected params: Map<string, PartyParam> = new Map<string, PartyParam>()
   public partyCode: string | undefined
+
   constructor(
     public party: Party,
     params: Array<PartyParam>,
@@ -211,11 +214,13 @@ export class PartyRelease {
   static empty(): PartyRelease {
     return new PartyRelease(Party.empty(), [])
   }
+
   static load(data: any): PartyRelease {
     const party = Party.load(data['party'])
     const pr = new PartyRelease(party, this.loadParams(data['params']))
     pr.title = data['title'] || ''
     pr.id = data['id']
+    pr.updater_id = data['updater_id']
     pr.party = Party.load(data['party'])
     return pr
   }
@@ -249,65 +254,26 @@ export class PartyRelease {
 }
 
 export class PartyEditor {
-  selected_object: WorldflipperObject | PartyPosition
-  party: PartyRelease
-  constructor(party: PartyRelease) {
-    this.party = party
+  selectedObject: WorldflipperObject
+  selectedPosition?: PartyPosition
+  release: PartyRelease
+
+  constructor(release: PartyRelease) {
+    this.release = release
   }
 
   init() {
-    this.selected_object = undefined
-    this.party = PartyRelease.empty()
-  }
-  select(obj: WorldflipperObject | PartyPosition) {
-    const ppm2 = this.party.getParam('manaboard2') as PartyParamManaboard2 | undefined
-    if (obj instanceof PartyPosition) {
-      if (this.verifyPosition(new PartyPosition(obj.unionIndex, obj.positionIndex)))
-        this.selected_object = undefined
-      else {
-        if (this.selected_object instanceof PartyPosition) {
-          if (
-            this.party.party.get(this.selected_object) === undefined &&
-            this.party.party.get(obj) === undefined
-          ) {
-            this.selected_object = obj
-          } else if (
-            [0, 1].includes(this.selected_object.positionIndex) &&
-            [0, 1].includes(obj.positionIndex)
-          ) {
-            this.exchangePosition(this.selected_object, obj)
-            this.selected_object = undefined
-          } else if (
-            [2, 3].includes(this.selected_object.positionIndex) &&
-            [2, 3].includes(obj.positionIndex)
-          ) {
-            this.exchangePosition(this.selected_object, obj)
-            this.selected_object = undefined
-          } else this.selected_object = obj
-        } else if (this.selected_object || this.selected_object === null) {
-          if (this.party.party.set(obj, this.selected_object)) {
-            ppm2 && ppm2.set(obj, {})
-            this.selected_object = undefined
-          } else this.selected_object = new PartyPosition(obj.unionIndex, obj.positionIndex)
-        } else this.selected_object = new PartyPosition(obj.unionIndex, obj.positionIndex)
-      }
-    } else {
-      if (this.selected_object instanceof PartyPosition) {
-        if (this.party.party.set(this.selected_object, obj)) {
-          ppm2 && ppm2.set(this.selected_object, {})
-          this.selected_object = undefined
-        } else this.selected_object = obj
-      } else this.selected_object = obj
-    }
+    this.selectedObject = undefined
+    this.release = PartyRelease.empty()
   }
 
   exchangePosition(position1: PartyPosition, position2: PartyPosition) {
-    const p = this.party.party
-    const obj1 = p.get(position1)
-    const obj2 = p.get(position2)
-    p.set(position2, obj1)
-    p.set(position1, obj2)
-    const ppm2 = this.party.getParam('manaboard2') as PartyParamManaboard2 | undefined
+    const party = this.release.party
+    const obj1 = party.get(position1)
+    const obj2 = party.get(position2)
+    party.set(position2, obj1)
+    party.set(position1, obj2)
+    const ppm2 = this.release.getParam('manaboard2') as PartyParamManaboard2 | undefined
     if (ppm2) {
       const mb1 = ppm2.get(position1)
       const mb2 = ppm2.get(position2)
@@ -316,34 +282,145 @@ export class PartyEditor {
     }
   }
 
+  clearSelection() {
+    this.selectedObject = undefined
+    this.selectedPosition = undefined
+  }
+
+  private isSameType(position1: PartyPosition, position2: PartyPosition) {
+    return ((position1.positionIndex & 2) >> 1) === ((position2.positionIndex & 2) >> 1)
+    // return ((a & 2) >> 1) === ((b & 2) >> 1)
+    // return position1.positionIndex / 2
+  }
+
+  selectPosition(position: PartyPosition) {
+    if (this.selectedPosition) {
+      if (this.verifyPosition(position)) this.selectedPosition = undefined
+      else {
+        if (this.isSameType(this.selectedPosition, position)) {
+          const obj1 = this.release.party.get(this.selectedPosition)
+          const obj2 = this.release.party.get(position)
+          if (obj1 || obj2) {
+            this.exchangePosition(this.selectedPosition, position)
+            this.clearSelection()
+          }else {
+            this.selectedPosition = position
+          }
+        }
+        else this.selectedPosition = position
+
+      }
+    } else {
+      if (this.selectedObject === undefined) {
+        this.selectedPosition = position
+      } else {
+        this.release.party.set(position, this.selectedObject)
+        this.clearSelection()
+      }
+    }
+  }
+
+  selectObject(object: WorldflipperObject) {
+    if (this.selectedObject || this.selectedObject === null) {
+      if (this.selectedObject === object) this.selectedObject = undefined
+      else this.selectedObject = object
+    } else {
+      if (!this.selectedPosition) {
+        this.selectedObject = object
+      } else {
+        this.release.party.set(this.selectedPosition, object)
+        this.selectedPosition = undefined
+      }
+    }
+  }
+
+  // select(obj?: WorldflipperObject, position?: PartyPosition) {
+  //   const ppm2 = this.release.getParam('manaboard2') as PartyParamManaboard2 | undefined
+  //
+  //   if (!obj && !position) return
+  //
+  //   if (position) {
+  //     if (this.verifyPosition(position)) this.selectedObject = undefined
+  //     else {
+  //       if (this.selectedObject instanceof PartyPosition) {
+  //         if (
+  //           this.release.party.get(this.selectedObject) === undefined &&
+  //           this.release.party.get(obj) === undefined
+  //         ) {
+  //           this.selectedObject = obj
+  //         } else if (
+  //           [0, 1].includes(this.selectedObject.positionIndex) &&
+  //           [0, 1].includes(obj.positionIndex)
+  //         ) {
+  //           this.exchangePosition(this.selectedObject, obj)
+  //           this.selectedObject = undefined
+  //         } else if (
+  //           [2, 3].includes(this.selectedObject.positionIndex) &&
+  //           [2, 3].includes(obj.positionIndex)
+  //         ) {
+  //           this.exchangePosition(this.selectedObject, obj)
+  //           this.selectedObject = undefined
+  //         } else this.selectedObject = obj
+  //       } else if (this.selectedObject || this.selectedObject === null) {
+  //         if (this.release.party.set(obj, this.selectedObject)) {
+  //           ppm2 && ppm2.set(obj, {})
+  //           this.selectedObject = undefined
+  //         } else
+  //           this.selectedObject = {
+  //             positionIndex: position.positionIndex,
+  //             unionIndex: position.unionIndex
+  //           }
+  //       } else
+  //         this.selectedObject = {
+  //           positionIndex: position.positionIndex,
+  //           unionIndex: position.unionIndex
+  //         }
+  //     }
+  //   } else if (obj) {
+  //     if (this.selectedObject instanceof PartyPosition) {
+  //       if (this.release.party.set(this.selectedObject, obj)) {
+  //         ppm2 && ppm2.set(this.selectedObject, {})
+  //         this.selectedObject = undefined
+  //       } else this.selectedObject = obj
+  //     } else this.selectedObject = obj
+  //   }
+  // }
+
+
   verifyPosition(position: PartyPosition): boolean {
-    return this.selected_object instanceof PartyPosition && this.selected_object.equals(position)
+    return !!(
+      this.selectedPosition &&
+      this.selectedPosition.positionIndex === position.positionIndex &&
+      this.selectedPosition.unionIndex === position.unionIndex
+    )
   }
 
   getRepeats() {
     const characterRepeat = [
-      this.party.party.union1.main?.id,
-      this.party.party.union2.main?.id,
-      this.party.party.union3.main?.id,
-      this.party.party.union1.unison?.id,
-      this.party.party.union2.unison?.id,
-      this.party.party.union3.unison?.id
+      this.release.party.union1.main?.id,
+      this.release.party.union2.main?.id,
+      this.release.party.union3.main?.id,
+      this.release.party.union1.unison?.id,
+      this.release.party.union2.unison?.id,
+      this.release.party.union3.unison?.id
     ]
     const indexes = [
-      new PartyPosition(1, 0),
-      new PartyPosition(2, 0),
-      new PartyPosition(3, 0),
-      new PartyPosition(1, 1),
-      new PartyPosition(2, 1),
-      new PartyPosition(3, 1)
+      { unionIndex: 1, positionIndex: 0 },
+      { unionIndex: 2, positionIndex: 0 },
+      { unionIndex: 3, positionIndex: 0 },
+      { unionIndex: 1, positionIndex: 1 },
+      { unionIndex: 2, positionIndex: 1 },
+      { unionIndex: 3, positionIndex: 1 }
     ]
+
     interface TempRepeater {
       cache: WorldflipperObject[]
       repeat: Set<PartyPosition>
     }
+
     const repeater = indexes.reduce(
       (acc: TempRepeater, val) => {
-        const v = this.party.party.get(val)
+        const v = this.release.party.get(val)
         if (v !== undefined) {
           if (acc.cache.includes(v)) {
             acc.repeat.add(val)
@@ -357,14 +434,19 @@ export class PartyEditor {
     )
     return repeater.repeat
   }
+
+
 }
 
 export abstract class PartyParam {
   abstract readonly __type: string
+
   abstract dump(): any
+
   static load(data: any): PartyParam | undefined {
     return undefined
   }
+
   abstract isEmpty(): boolean
 }
 
@@ -373,11 +455,13 @@ export interface Manaboard2Values {
   ability5?: number
   ability6?: number
 }
+
 export class PartyParamManaboard2 extends PartyParam {
   readonly __type: string = 'manaboard2'
   private readonly union1: Manaboard2Values[]
   private readonly union2: Manaboard2Values[]
   private readonly union3: Manaboard2Values[]
+
   constructor(
     union1?: Manaboard2Values[],
     union2?: Manaboard2Values[],
@@ -451,6 +535,7 @@ export class PartyParamManaboard2 extends PartyParam {
     if (!ppm2 || ppm2.isEmpty()) return undefined
     else return ppm2
   }
+
   isEmpty(): boolean {
     const unions = [this.union1, this.union2, this.union3]
 
@@ -468,7 +553,7 @@ export class PartyParamEx extends PartyParam {
   readonly __type: string = 'ex'
 
   dump(): any {
-    return 
+    return
   }
 
   isEmpty(): boolean {

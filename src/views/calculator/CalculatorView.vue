@@ -20,12 +20,12 @@ const memory_object = ref<WorldflipperObject>(undefined)
 const panel_closed = ref<boolean>(false)
 // const party_editor = reactive<PartyEditor>(new PartyEditor(PartyRelease.empty()))
 
-const defer = useDefer()
+const defer = useDefer(3)
 
 watch(partyEditor, (value) => {
-  if (value.selected_object instanceof PartyPosition && value.party)
-    memory_object.value = value.party.party.get(value.selected_object) || memory_object.value
-  else if (value.selected_object) memory_object.value = value.selected_object as WorldflipperObject
+  if (value.selectedPosition && value.release)
+    memory_object.value = value.release.party.get(value.selectedPosition) || memory_object.value
+  else if (value.selectedObject) memory_object.value = value.selectedObject as WorldflipperObject
 }, {deep: true})
 </script>
 
@@ -59,7 +59,7 @@ watch(partyEditor, (value) => {
           <CalculatorModuleNotAvailable />
         </v-window-item>
         <v-window-item value="WikiCard" style="height: 100%">
-          <CalculatorModuleWikiCard v-if="defer(3)" :obj="memory_object" />
+          <CalculatorModuleWikiCard v-if="defer(3)" :obj="memory_object as WorldflipperObject" />
         </v-window-item>
         <v-window-item value="Editor" class="hidden-scroll" style="height: 100%">
           <CalculatorModuleParty
@@ -71,7 +71,7 @@ watch(partyEditor, (value) => {
           <CalculatorModuleUpdate :partyEditor="partyEditor as PartyEditor" />
         </v-window-item>
         <v-window-item value="Resources" style="height: 100%">
-          <CalculatorModuleResource v-if="defer(3)" :obj="memory_object" />
+          <CalculatorModuleResource v-if="defer(3)" :obj="memory_object as WorldflipperObject" />
         </v-window-item>
       </v-window>
     </div>

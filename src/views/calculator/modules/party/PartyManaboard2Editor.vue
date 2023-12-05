@@ -11,16 +11,16 @@ const props = defineProps<{
 }>()
 
 const character = computed(
-  () => props.partyEditor.party.party.get(props.position) as Character | undefined
+  () => props.partyEditor.release.party.get(props.position) as Character | undefined
 )
 const manaboardValues = computed(() => {
-  const ppm2 = props.partyEditor.party.getParam('manaboard2')
+  const ppm2 = props.partyEditor.release.getParam('manaboard2')
   return ppm2 instanceof PartyParamManaboard2
     ? (ppm2.get(props.position) as Manaboard2Values)
     : { ability4: undefined, ability5: undefined, ability6: undefined }
 })
 function setManaboard(abilityIndex: 4 | 5 | 6, level: number) {
-  let ppm2 = props.partyEditor.party.getParam('manaboard2')
+  let ppm2 = props.partyEditor.release.getParam('manaboard2')
   if (!(ppm2 instanceof PartyParamManaboard2)) {
     ppm2 = new PartyParamManaboard2()
   }
@@ -29,7 +29,7 @@ function setManaboard(abilityIndex: 4 | 5 | 6, level: number) {
     [`ability${abilityIndex}`]: level === -1 ? undefined : level
   }
   ;(ppm2 as PartyParamManaboard2).set(props.position, value)
-  props.partyEditor.party.setParam(ppm2)
+  props.partyEditor.release.setParam(ppm2)
 }
 </script>
 

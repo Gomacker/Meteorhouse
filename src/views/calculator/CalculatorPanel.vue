@@ -25,11 +25,11 @@ watch(props, () => {
 })
 
 const updateValue = (obj: WorldflipperObject) => {
-  props.modelValue.select(obj)
+  props.modelValue.selectObject(obj)
 }
 
 function isSelected(obj: WorldflipperObject) {
-  return props.modelValue.selected_object === obj
+  return props.modelValue.selectedObject === obj
 }
 
 const type = ref<'Character' | 'Equipment' | 'Filter'>('Character')

@@ -23,13 +23,13 @@ const alerts = computed(() => {
   }
   return list
 })
-const p = computed(() => props.partyEditor.party)
+const p = computed(() => props.partyEditor.release)
 </script>
 
 <template>
   <div style="display: flex; flex-direction: column; align-items: center">
     <div style="height: 36px" />
-    <PartyReleaseCard :party_release="partyEditor.party" />
+    <PartyReleaseCard :party_release="partyEditor.release" />
     <div style="height: 36px" />
     <div style="display: flex; justify-content: center">
       <v-card v-if="user.isLogin()" class="elevation-6" style="width: 480px">
@@ -54,7 +54,7 @@ const p = computed(() => props.partyEditor.party)
             :disabled="!!alerts.length"
             color="blue"
             style="float: right"
-            @click="updateParty(partyEditor.party)"
+            @click="updateParty(partyEditor.release)"
           >
             上传
           </v-btn>

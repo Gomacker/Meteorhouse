@@ -66,7 +66,7 @@ const settings = useSettings()
     </div>
     <div>
       <v-switch v-if="user.isLogin()" hide-details color="orange" v-model="worldflipper.mhMode" label="Meteorhouse Mode！"/>
-      <v-switch hide-details color="orange" v-model="settings.showMagicCircle" label="开启魔法阵背景旋转"/>
+      <v-switch hide-details color="orange" v-model="settings.showMagicCircle" label="开启背景旋转"/>
     </div>
     <v-card>
       <v-card-item>

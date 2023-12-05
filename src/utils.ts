@@ -2,13 +2,15 @@ import { onUnmounted, ref } from 'vue'
 import axios from 'axios'
 import { PartyRelease } from "@/anise/worldflipper/party";
 
-export function useDefer() {
+export function useDefer(maxFrame: number = -1) {
   const frameCount = ref(0)
   let rafId = 0
   function updateFrameCount() {
     rafId = requestAnimationFrame(() => {
       frameCount.value++
-      updateFrameCount()
+      // console.log(frameCount.value)
+      if (maxFrame > 0 && maxFrame < frameCount.value) cancelAnimationFrame(rafId)
+      else updateFrameCount()
     })
   }
   updateFrameCount()

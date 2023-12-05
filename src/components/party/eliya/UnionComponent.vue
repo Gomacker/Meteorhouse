@@ -1,9 +1,8 @@
-<script setup lang="ts">
+<script setup lang='ts'>
 import {
   Manaboard2Values,
   PartyEditor,
   PartyParamManaboard2,
-  PartyPosition,
   PartyRelease,
   Union
 } from '@/anise/worldflipper/party'
@@ -29,17 +28,20 @@ const unisonName = computed(() => {
 })
 
 function make_position(unionIndex: number, positionIndex: number) {
-  return new PartyPosition(unionIndex, positionIndex)
+  return { unionIndex, positionIndex }
+  // return new PartyPosition(unionIndex, positionIndex)
 }
+
 const param_manaboard2 = computed(
   () => (props.party?.getParam('manaboard2') as PartyParamManaboard2) || new PartyParamManaboard2()
 )
 const main_manaboard2 = computed(() =>
-  param_manaboard2.value.get(make_position(props.union_index, 0))
+  param_manaboard2.value.get({ unionIndex: props.union_index, positionIndex: 0 })
 )
 const unison_manaboard2 = computed(() =>
-  param_manaboard2.value.get(make_position(props.union_index, 1))
+  param_manaboard2.value.get({ unionIndex: props.union_index, positionIndex: 1 })
 )
+
 function is_manaboard2_empty(mb2: Manaboard2Values) {
   return !(
     typeof mb2.ability4 === 'number' ||
@@ -55,96 +57,96 @@ function mb_string(v: number | undefined): string {
 </script>
 
 <template>
-  <div class="union">
+  <div class='union'>
     <div
-      v-ripple="!!party_editor"
-      class="wfo-slot party-slot-main"
+      v-ripple='!!party_editor'
+      class='wfo-slot party-slot-main'
       :class="[
         modelValue.main ? `ele-${Element[modelValue.main.element].toLowerCase()}` : undefined,
         party_editor?.verifyPosition(make_position(union_index, 0)) ? 'selected' : undefined
       ]"
-      @click="party_editor?.select(make_position(union_index, 0))"
+      @click='party_editor?.selectPosition({unionIndex: union_index, positionIndex: 0})'
     >
       <v-img
         :src="
           modelValue.main?.res(show_awaken ? 'square212x/awakened' : 'square212x/base') ||
           '/static/worldflipper/unit/blank.png'
         "
-        :eager="eager || false"
+        :eager='eager || false'
         @dragstart.prevent
       />
       <div
-        v-if="main_manaboard2 ? !is_manaboard2_empty(main_manaboard2) : false"
-        class="party-card-manaboard2-wrapper"
+        v-if='main_manaboard2 ? !is_manaboard2_empty(main_manaboard2) : false'
+        class='party-card-manaboard2-wrapper'
       >
-        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).ability4) }}</div>
-        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).ability5) }}</div>
-        <div>{{ mb_string((main_manaboard2 as Manaboard2Values).ability6) }}</div>
+        <div>{{ mb_string(main_manaboard2?.ability4) }}</div>
+        <div>{{ mb_string(main_manaboard2?.ability5) }}</div>
+        <div>{{ mb_string(main_manaboard2?.ability6) }}</div>
       </div>
-      <div style="text-align: center">
+      <div style='text-align: center'>
         {{ mainName }}
       </div>
     </div>
     <div
-      v-ripple="!!party_editor"
-      class="wfo-slot party-slot-equipment"
+      v-ripple='!!party_editor'
+      class='wfo-slot party-slot-equipment'
       :class="[
         party_editor?.verifyPosition(make_position(union_index, 2)) ? 'selected' : undefined
       ]"
-      @click="party_editor?.select(make_position(union_index, 2))"
+      @click='party_editor?.selectPosition(make_position(union_index, 2))'
     >
       <v-img
         :src="modelValue.equipment?.res('normal') || '/static/worldflipper/unit/blank.png'"
-        :eager="eager || false"
+        :eager='eager || false'
         @dragstart.prevent
       />
-      <div style="text-align: center">装备</div>
+      <div style='text-align: center'>装备</div>
     </div>
     <div
-      v-ripple="!!party_editor"
-      class="wfo-slot party-slot-unison"
+      v-ripple='!!party_editor'
+      class='wfo-slot party-slot-unison'
       :class="[
         modelValue.unison ? `ele-${Element[modelValue.unison.element].toLowerCase()}` : undefined,
         party_editor?.verifyPosition(make_position(union_index, 1)) ? 'selected' : undefined
       ]"
-      @click="party_editor?.select(make_position(union_index, 1))"
+      @click='party_editor?.selectPosition(make_position(union_index, 1))'
     >
       <v-img
         :src="
           modelValue.unison?.res(show_awaken ? 'square212x/awakened' : 'square212x/base') ||
           '/static/worldflipper/unit/blank.png'
         "
-        :eager="eager || false"
+        :eager='eager || false'
         @dragstart.prevent
       />
 
       <div
-        v-if="unison_manaboard2 ? !is_manaboard2_empty(unison_manaboard2) : false"
-        class="party-card-manaboard2-wrapper"
+        v-if='unison_manaboard2 ? !is_manaboard2_empty(unison_manaboard2) : false'
+        class='party-card-manaboard2-wrapper'
       >
-        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).ability4) }}</div>
-        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).ability5) }}</div>
-        <div>{{ mb_string((unison_manaboard2 as Manaboard2Values).ability6) }}</div>
+        <div>{{ mb_string(unison_manaboard2?.ability4) }}</div>
+        <div>{{ mb_string(unison_manaboard2?.ability5) }}</div>
+        <div>{{ mb_string(unison_manaboard2?.ability6) }}</div>
       </div>
-      <div style="text-align: center">
+      <div style='text-align: center'>
         {{ unisonName }}
       </div>
     </div>
     <div
-      v-ripple="!!party_editor"
-      class="wfo-slot core"
-      style=""
+      v-ripple='!!party_editor'
+      class='wfo-slot core'
+      style=''
       :class="[
         party_editor?.verifyPosition(make_position(union_index, 3)) ? 'selected' : undefined
       ]"
-      @click="party_editor?.select(make_position(union_index, 3))"
+      @click='party_editor?.selectPosition(make_position(union_index, 3))'
     >
       <v-img
         :src="modelValue.core?.res('soul') || '/static/worldflipper/unit/blank.png'"
-        :eager="eager || false"
+        :eager='eager || false'
         @dragstart.prevent
       />
-      <div style="text-align: center">魂珠</div>
+      <div style='text-align: center'>魂珠</div>
     </div>
   </div>
 </template>
@@ -294,6 +296,7 @@ function mb_string(v: number | undefined): string {
   bottom: 16px;
   border-top-right-radius: 6px;
 }
+
 .party-card-manaboard2-wrapper > div {
   width: 16px;
   text-align: center;
