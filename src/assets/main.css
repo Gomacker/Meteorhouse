@@ -1,8 +1,9 @@
 @import './base.css';
 
-/*#app {*/
-/*  font-weight: normal;*/
-/*}*/
+#app {
+  /*font-weight: normal;*/
+  overflow: hidden;
+}
 
 a,
 .green {

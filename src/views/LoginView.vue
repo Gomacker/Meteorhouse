@@ -38,7 +38,8 @@ function login() {
   //   .catch(() => {
   //     // ElMessage.error('失败(失败)')
   //   })
-  user.login(username_input.value, password_input.value)
+  const result = user.login(username_input.value, password_input.value)
+  result.then(value => alert('登录成功')).catch(reason => alert('登录失败'))
 }
 </script>
 <template>

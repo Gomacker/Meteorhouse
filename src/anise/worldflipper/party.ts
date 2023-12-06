@@ -288,7 +288,7 @@ export class PartyEditor {
   }
 
   private isSameType(position1: PartyPosition, position2: PartyPosition) {
-    return ((position1.positionIndex & 2) >> 1) === ((position2.positionIndex & 2) >> 1)
+    return (position1.positionIndex & 2) === (position2.positionIndex & 2)
     // return ((a & 2) >> 1) === ((b & 2) >> 1)
     // return position1.positionIndex / 2
   }

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import router from '@/router'
 
 export const useUserStore = defineStore('userStore', {
   state(): {
@@ -33,13 +34,18 @@ export const useUserStore = defineStore('userStore', {
         console.log(response)
       })
     },
-    login(username: string, password: string): void {
-      axios.post('/auth/login', { username, password }).then((response) => {
-        if (response.status == 200) {
-        }
+    login(username: string, password: string): Promise<void> {
+      // axios.post('/auth/login', { username, password }).then((response) => {
+      return new Promise((resolve, reject) => {
+        axios.post('/api/v1/login/', { username, password }).then((response) => {
+          response.status == 200 ? resolve() : reject()
+        }).catch(() => {
+          reject()
+        })
       })
     },
-    anonymous(): void {}
+    anonymous(): void {
+    }
   },
   persist: {
     enabled: true,

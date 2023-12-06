@@ -23,7 +23,7 @@ const tableListSorted = computed(() => {
 </script>
 
 <template>
-  <div style="height: 100%">
+  <div style="height: 100%; overflow: auto">
     <template
       v-for="weight in Object.keys(tableListSorted).sort((a, b) => parseInt(b) - parseInt(a))"
       :key="weight"

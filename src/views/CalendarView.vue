@@ -10,7 +10,7 @@ axios.post('/api/timeline_data/').then((r) => {
 </script>
 
 <template>
-  <div style="height: fit-content">
+  <div style="height: 100%; overflow: auto">
     <v-card-text>
       <p>//TODO fix 图源权限爆了</p>
       <p>//TODO fix 大部分没有结束时间导致无法判断范围</p>
