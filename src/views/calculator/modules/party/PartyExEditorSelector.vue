@@ -1,4 +1,5 @@
-<script setup lang="ts"></script>
+<script setup lang='ts'>
+</script>
 
 <template>
   <v-card
@@ -11,8 +12,9 @@
       grid-template-rows: repeat(3, 32px);
     "
   >
-    <div style="background: #00f"></div>
-    <div style="background: red" v-for="i in 10">{{i}}</div>
+    <template v-for='i in 10'>
+      <img style='height: 100%; width: 100%' :src='`/assets/worldflipper/icon/ex1${i-1}.png`' alt='' :title='`${i-1}`'/>
+    </template>
   </v-card>
 </template>
 

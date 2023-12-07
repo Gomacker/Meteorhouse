@@ -158,13 +158,15 @@ const route = useRoute()
             color='blue'
             title='组盘器'
             value='partyeditor'
+            :active="route.matched[0]?.name === 'home'"
             @click="$router.push('/')"
           />
           <v-list-item
             prepend-icon='mdi-magnify'
             color='green'
-            title='茶盘器'
+            title='查盘器'
             value='partysearcher'
+            :active="route.matched[0]?.name === 'partySearcher'"
             @click="$router.push('/partySearcher')"
           />
           <v-list-item
@@ -172,6 +174,7 @@ const route = useRoute()
             color='red'
             title='工具箱（Beta）'
             value='toolbox'
+            :active="route.matched[0]?.name === 'toolbox'"
             @click="$router.push('/toolbox')"
           />
           <!--          <v-list-item-->
@@ -213,6 +216,7 @@ const route = useRoute()
             color='gray'
             title='关于'
             value='about'
+            :active="route.matched[0]?.name === 'about'"
             @click="$router.push('/about')"
           />
         </v-list>
