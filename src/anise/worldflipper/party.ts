@@ -549,6 +549,12 @@ export class PartyParamManaboard2 extends PartyParam {
   }
 }
 
+export interface ExAbility {
+  id: string
+  name: string
+  imageSrc: string
+}
+
 export class PartyParamEx extends PartyParam {
   readonly __type: string = 'ex'
 

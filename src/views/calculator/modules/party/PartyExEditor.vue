@@ -4,7 +4,8 @@ import { PartyParamManaboard2, PartyPosition } from '@/anise/worldflipper/party'
 import type { Character } from '@/anise/worldflipper/object'
 import { computed, ref } from 'vue'
 import { ele2color } from '@/stores/manager'
-import PartyExEditorSelector from '@/views/calculator/modules/party/PartyExEditorSelector.vue'
+import PartyExAEditorSelector from '@/views/calculator/modules/party/PartyExAEditorSelector.vue'
+import PartyExBEditorSelector from '@/views/calculator/modules/party/PartyExBEditorSelector.vue'
 
 const props = defineProps<{
   partyEditor: PartyEditor
@@ -70,7 +71,7 @@ const exB = ref()
                 v-bind='props'
               />
             </template>
-            <PartyExEditorSelector v-model='exA' />
+            <PartyExAEditorSelector v-model='exA' />
           </v-menu>
           <v-menu location="bottom center">
             <template v-slot:activator="{ props }">
@@ -80,7 +81,7 @@ const exB = ref()
                 v-bind='props'
               />
             </template>
-            <PartyExEditorSelector v-model='exB' />
+            <PartyExBEditorSelector v-model='exB' />
           </v-menu>
         </div>
       </div>

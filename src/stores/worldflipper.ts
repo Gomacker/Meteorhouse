@@ -73,3 +73,13 @@ export const useWorldflipperDataStore = defineStore('worldflipperData', {
     ]
   }
 })
+
+
+export const usePartyEditor = defineStore('worldflipperPartyEditor', {
+  state() {
+    return {
+
+    }
+  },
+  
+})
