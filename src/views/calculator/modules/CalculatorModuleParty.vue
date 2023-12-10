@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup lang="ts">
 import PartyCardEliya from '@/components/party/eliya/PartyCardEliya.vue'
 import { ele2color } from '@/stores/manager'
 import { Element } from '@/anise/worldflipper/object'
@@ -76,151 +76,154 @@ function make_position(unionIndex: number, positionIndex: number): PartyPosition
 </script>
 
 <template>
-  <div class='party-editor-container'>
-    <div style='display: flex; margin: 5px 0 1px'>
-      <v-switch v-model='show_name' density='compact' hide-details label='显示名称' />
+  <div class="party-editor-container">
+    <div style="display: flex; margin: 5px 0 1px">
+      <v-switch v-model="show_name" density="compact" hide-details label="显示名称" />
       <v-switch
-        v-model='show_awaken'
-        density='compact'
+        v-model="show_awaken"
+        density="compact"
         hide-details
-        label='显示觉醒'
-        style='margin-left: 24px'
+        label="显示觉醒"
+        style="margin-left: 24px"
       />
-      <v-btn color='error' @click='partyEditor.init()' style='margin-left: 24px'>清空</v-btn>
+      <v-btn color="error" @click="partyEditor.init()" style="margin-left: 24px">清空</v-btn>
     </div>
     <v-card
-      class='party-card elevation-4'
+      class="party-card elevation-4"
       :style="{ '--border-color': ele2color[sum_main_element(partyEditor.release.party)] }"
     >
       <PartyCardEliya
-        :party='partyEditor.release'
-        :party_editor='partyEditor'
-        :show_name='show_name'
-        :show_awaken='show_awaken'
+        :party="partyEditor.release"
+        :party_editor="partyEditor"
+        :show_name="show_name"
+        :show_awaken="show_awaken"
         eager
       />
     </v-card>
     <v-card
-      class='elevation-4'
-      style='padding: 8px 0; border-top-left-radius: 0; border-top-right-radius: 0; width: 480px'
+      class="elevation-4"
+      style="padding: 8px 0; border-top-left-radius: 0; border-top-right-radius: 0; width: 480px"
     >
-      <div style='display: grid; grid-template-columns: repeat(3, 160px)'>
+      <div style="display: grid; grid-template-columns: repeat(3, 160px)">
         <PartyStatus
-          :skill_weights='skill_weights[0]'
-          :party_status='party_status[0]'
-          style='display: grid; grid-gap: 8px'
+          :skill_weights="skill_weights[0]"
+          :party_status="party_status[0]"
+          style="display: grid; grid-gap: 8px"
         />
         <PartyStatus
-          :skill_weights='skill_weights[1]'
-          :party_status='party_status[1]'
-          style='display: grid; grid-gap: 8px'
+          :skill_weights="skill_weights[1]"
+          :party_status="party_status[1]"
+          style="display: grid; grid-gap: 8px"
         />
         <PartyStatus
-          :skill_weights='skill_weights[2]'
-          :party_status='party_status[2]'
-          style='display: grid; grid-gap: 8px'
+          :skill_weights="skill_weights[2]"
+          :party_status="party_status[2]"
+          style="display: grid; grid-gap: 8px"
         />
       </div>
     </v-card>
-    <v-card style='overflow: visible; width: 480px; margin-top: 36px' class='elevation-4'>
-      <div style='display: grid; padding: 4px; grid-template-columns: repeat(3, 158px)'>
+    <v-card style="overflow: visible; width: 480px; margin-top: 36px" class="elevation-4">
+      <div style="display: grid; padding: 4px; grid-template-columns: repeat(3, 158px)">
         <div>
           <PartyManaboard2Editor
-            class='manaboard2-editor-single'
-            :party-editor='partyEditor'
-            :position='make_position(1, 0)'
+            class="manaboard2-editor-single"
+            :party-editor="partyEditor"
+            :position="make_position(1, 0)"
           />
           <PartyManaboard2Editor
-            class='manaboard2-editor-single'
-            style='margin-top: 4px'
-            :party-editor='partyEditor'
-            :position='make_position(1, 1)'
+            class="manaboard2-editor-single"
+            style="margin-top: 4px"
+            :party-editor="partyEditor"
+            :position="make_position(1, 1)"
           />
         </div>
         <div>
           <PartyManaboard2Editor
-            class='manaboard2-editor-single'
-            :party-editor='partyEditor'
-            :position='make_position(2, 0)'
+            class="manaboard2-editor-single"
+            :party-editor="partyEditor"
+            :position="make_position(2, 0)"
           />
           <PartyManaboard2Editor
-            class='manaboard2-editor-single'
-            style='margin-top: 4px'
-            :party-editor='partyEditor'
-            :position='make_position(2, 1)'
+            class="manaboard2-editor-single"
+            style="margin-top: 4px"
+            :party-editor="partyEditor"
+            :position="make_position(2, 1)"
           />
         </div>
         <div>
           <PartyManaboard2Editor
-            class='manaboard2-editor-single'
-            :party-editor='partyEditor'
-            :position='make_position(3, 0)'
+            class="manaboard2-editor-single"
+            :party-editor="partyEditor"
+            :position="make_position(3, 0)"
           />
           <PartyManaboard2Editor
-            class='manaboard2-editor-single'
-            style='margin-top: 4px'
-            :party-editor='partyEditor'
-            :position='make_position(3, 1)'
-          />
-        </div>
-      </div>
-    </v-card>
-    <v-card style='overflow: visible; width: 480px; margin-top: 36px' class='elevation-4'>
-      <div style='display: grid; padding: 4px; grid-template-columns: repeat(3, 158px)'>
-        <div>
-          <PartyExEditor
-            class='manaboard2-editor-single'
-            :party-editor='partyEditor'
-            :position='make_position(1, 0)'
-          />
-          <PartyExEditor
-            class='manaboard2-editor-single'
-            style='margin-top: 4px'
-            :party-editor='partyEditor'
-            :position='make_position(1, 1)'
-          />
-        </div>
-        <div>
-          <PartyExEditor
-            class='manaboard2-editor-single'
-            :party-editor='partyEditor'
-            :position='make_position(2, 0)'
-          />
-          <PartyExEditor
-            class='manaboard2-editor-single'
-            style='margin-top: 4px'
-            :party-editor='partyEditor'
-            :position='make_position(2, 1)'
-          />
-        </div>
-        <div>
-          <PartyExEditor
-            class='manaboard2-editor-single'
-            :party-editor='partyEditor'
-            :position='make_position(3, 0)'
-          />
-          <PartyExEditor
-            class='manaboard2-editor-single'
-            style='margin-top: 4px'
-            :party-editor='partyEditor'
-            :position='make_position(3, 1)'
+            class="manaboard2-editor-single"
+            style="margin-top: 4px"
+            :party-editor="partyEditor"
+            :position="make_position(3, 1)"
           />
         </div>
       </div>
     </v-card>
-    <v-card v-if='false' color='warning' style='width: 480px; margin-top: 36px' class='elevation-4'>
+    <v-card style="overflow: visible; width: 480px; margin-top: 36px" class="elevation-4">
+      <div style="display: grid; padding: 4px; grid-template-columns: repeat(3, 158px)">
+        <div>
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            :party-editor="partyEditor"
+            :position="make_position(1, 0)"
+          />
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            style="margin-top: 4px"
+            :party-editor="partyEditor"
+            :position="make_position(1, 1)"
+          />
+        </div>
+        <div>
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            :party-editor="partyEditor"
+            :position="make_position(2, 0)"
+          />
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            style="margin-top: 4px"
+            :party-editor="partyEditor"
+            :position="make_position(2, 1)"
+          />
+        </div>
+        <div>
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            :party-editor="partyEditor"
+            :position="make_position(3, 0)"
+          />
+          <PartyExEditor
+            class="manaboard2-editor-single"
+            style="margin-top: 4px"
+            :party-editor="partyEditor"
+            :position="make_position(3, 1)"
+          />
+        </div>
+      </div>
+    </v-card>
+    <v-card v-if="false" color="warning" style="width: 480px; margin-top: 36px" class="elevation-4">
       <v-card-item>
         <v-textarea
-          style='margin-top: 8px'
-          label='Debug Object'
-          variant='outlined'
-          :model-value='JSON.stringify(partyEditor.release.dump())'
+          style="margin-top: 8px"
+          label="Debug Object"
+          variant="outlined"
+          :model-value="JSON.stringify(partyEditor.release.dump())"
           hide-details
         />
       </v-card-item>
     </v-card>
-    <div style='margin-top: 60vh; margin-bottom: 32px; color: grey'>
-      ©Copyright(2022-2023) Meteorhouse Library
+    <div style="margin-top: 60vh; margin-bottom: 32px; text-align: center">
+      <div style="color: grey">©Copyright(2022-2023) Meteorhouse Library</div>
+      <div style="margin-top: 12px">
+        <a href="https://beian.miit.gov.cn/" target="_blank">津ICP备2022008496号-1</a>
+      </div>
     </div>
   </div>
 </template>

@@ -16,7 +16,17 @@ import App from '@/App.vue'
 
 const vuetify = createVuetify({
   components,
-  directives
+  directives,
+  theme: {
+    defaultTheme: 'changePrimary',
+    themes: {
+      'changePrimary': {
+        colors: {
+          primary: 'rgb(90, 49, 255)'
+        }
+      }
+    }
+  }
 })
 
 const app = createApp(App)

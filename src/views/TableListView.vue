@@ -7,9 +7,6 @@ import worldflipperService from "@/services/worldflipperService";
 
 const tableList = ref<Array<TableProfile>>()
 
-// axios.post('/api/v2/worldflipper/table/list').then((r) => {
-//   tableList.value = (r.data['tables'] as Array<TableProfile>).sort((a, b) => b.weight - a.weight)
-// })
 worldflipperService.fetchTableList().then(value => tableList.value = value)
 
 const tableListSorted = computed(() => {
