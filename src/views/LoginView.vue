@@ -39,7 +39,11 @@ function login() {
   //     // ElMessage.error('失败(失败)')
   //   })
   const result = user.login(username_input.value, password_input.value)
-  result.then(value => alert('登录成功')).catch(reason => alert('登录失败'))
+  result.then(value => {
+    alert(`登录成功 ${value}`)
+    window.location.assign('/')
+    // router.push('/')
+  }).catch(reason => alert('登录失败'))
 }
 </script>
 <template>

@@ -34,11 +34,12 @@ export const useUserStore = defineStore('userStore', {
         console.log(response)
       })
     },
-    login(username: string, password: string): Promise<void> {
+    login(username: string, password: string): Promise<string> {
       // axios.post('/auth/login', { username, password }).then((response) => {
       return new Promise((resolve, reject) => {
         axios.post('/api/v1/login/', { username, password }).then((response) => {
-          response.status == 200 ? resolve() : reject()
+          resolve(username)
+          this.username = username
         }).catch(() => {
           reject()
         })
