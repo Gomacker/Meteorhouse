@@ -165,7 +165,7 @@ function make_position(unionIndex: number, positionIndex: number): PartyPosition
         </div>
       </div>
     </v-card>
-    <v-card style="overflow: visible; width: 480px; margin-top: 36px" class="elevation-4">
+    <v-card v-if='false' style="overflow: visible; width: 480px; margin-top: 36px" class="elevation-4">
       <div style="display: grid; padding: 4px; grid-template-columns: repeat(3, 158px)">
         <div>
           <PartyExEditor

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Manaboard2Values, PartyEditor } from '@/anise/worldflipper/party'
+import { type Manaboard2Values, type PartyEditor, PartyParamEx } from '@/anise/worldflipper/party'
 import { PartyParamManaboard2, PartyPosition } from '@/anise/worldflipper/party'
 import type { Character } from '@/anise/worldflipper/object'
 import { computed, ref } from 'vue'
@@ -21,18 +21,18 @@ const manaboardValues = computed(() => {
     ? (ppm2.get(props.position) as Manaboard2Values)
     : { ability4: undefined, ability5: undefined, ability6: undefined }
 })
-function setManaboard(abilityIndex: 4 | 5 | 6, level: number) {
-  let ppm2 = props.partyEditor.release.getParam('manaboard2')
-  if (!(ppm2 instanceof PartyParamManaboard2)) {
-    ppm2 = new PartyParamManaboard2()
-  }
-  const value = {
-    ...manaboardValues.value,
-    [`ability${abilityIndex}`]: level === -1 ? undefined : level
-  }
-  ;(ppm2 as PartyParamManaboard2).set(props.position, value)
-  props.partyEditor.release.setParam(ppm2)
-}
+
+// function setExA(level: number) {
+//   let paramEx: PartyParamEx =
+//     (props.partyEditor.release.getParam('ex') as PartyParamEx) || new PartyParamEx()
+//   paramEx.
+//   // const value = {
+//   //   ...manaboardValues.value,
+//   //   [`ability${abilityIndex}`]: level === -1 ? undefined : level
+//   // }
+//   // ;(paramEx as PartyParamManaboard2).set(props.position, value)
+//   props.partyEditor.release.setParam(paramEx)
+// }
 
 const exA = ref()
 const exB = ref()
@@ -65,23 +65,15 @@ const exB = ref()
         >
           <v-menu location="bottom center">
             <template v-slot:activator="{ props }">
-              <v-icon
-                size="32px"
-                icon="mdi-selection"
-                v-bind='props'
-              />
+              <v-icon size="32px" icon="mdi-selection" v-bind="props" />
             </template>
-            <PartyExAEditorSelector v-model='exA' />
+            <PartyExAEditorSelector v-model="exA" />
           </v-menu>
           <v-menu location="bottom center">
             <template v-slot:activator="{ props }">
-              <v-icon
-                size="32px"
-                icon="mdi-selection"
-                v-bind='props'
-              />
+              <v-icon size="32px" icon="mdi-selection" v-bind="props" />
             </template>
-            <PartyExBEditorSelector v-model='exB' />
+            <PartyExBEditorSelector v-model="exB" />
           </v-menu>
         </div>
       </div>

@@ -1,17 +1,5 @@
 <script setup lang='ts'>
-
-
-
-import type { ExAbility } from '@/anise/worldflipper/party'
-
-const exA: ExAbility[] = [
-  {
-    id: '',
-    name: '',
-    imageSrc: ''
-  }
-]
-
+import { exAAbilities } from '@/anise/worldflipper/party'
 </script>
 
 <template>
@@ -30,12 +18,13 @@ const exA: ExAbility[] = [
     >
       <v-icon v-ripple size="32px" icon="mdi-selection" />
     </div>
-    <template v-for="i in 10" :key="i - 1">
+    <template v-for="(exAbility, id_) in exAAbilities" :key="id_">
       <v-img
         v-ripple
         @dragstart.prevent
         style="height: 100%; width: 100%; border-radius: 2px"
-        :src="`/assets/worldflipper/icon/ex1${i - 1}.png`"
+        :src="exAbility.imageSrc"
+        :title='exAbility.name'
         alt=""
       />
     </template>

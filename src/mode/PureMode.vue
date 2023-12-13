@@ -13,26 +13,19 @@ console.log(`worldflipper loaded, Version: ${worldflipper.version}`)
 <template>
   <v-app style="--v-theme-background: 247, 246, 250, 0">
     <div style="display: flex; justify-content: center">
-      <div style="min-width: 1080px; width: 1080px; min-height: 2160px">
+      <div style="min-width: 1080px; width: 1080px">
         <v-app-bar
           style="
+        background: linear-gradient(
+          130deg,
+          rgba(141, 150, 255, 0.6) 0%,
+          rgba(255, 231, 231, 0.6) 100%
+        );
+        background-blend-mode: normal;
+        backdrop-filter: blur(5px);
             position: absolute;
             width: 1080px;
-            background: linear-gradient(
-                110deg,
-                transparent 220px,
-                yellow 220px,
-                yellow 240px,
-                transparent 240px,
-                transparent 250px,
-                yellow 250px,
-                yellow 260px,
-                transparent 260px
-              ),
-              linear-gradient(120deg, rgba(132, 250, 176, 0.6) 0%, rgba(143, 211, 244, 0.6) 100%);
-            background-blend-mode: overlay, normal;
-            backdrop-filter: blur(5px);
-          "
+            "
           :order="-1"
         >
           <div style="width: 36px" />

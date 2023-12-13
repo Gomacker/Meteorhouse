@@ -1,4 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { exBAbilities } from '@/anise/worldflipper/party'
+
+</script>
 
 <template>
   <v-card
@@ -16,22 +19,16 @@
     >
       <v-icon v-ripple size="32px" icon="mdi-selection" />
     </div>
-    <template v-for="i in 10" :key="i - 1">
+    <template v-for="(exAbility, id_) in exBAbilities" :key="id_">
       <v-img
         v-ripple
         @dragstart.prevent
         style="height: 100%; width: 100%; border-radius: 2px"
-        :src="`/assets/worldflipper/icon/ex2${i - 1}.png`"
+        :src="exAbility.imageSrc"
+        :title='exAbility.name'
         alt=""
       />
     </template>
-    <v-img
-      v-ripple
-      @dragstart.prevent
-      style="height: 100%; width: 100%; border-radius: 2px"
-      :src="`/assets/worldflipper/icon/ex2a.png`"
-      alt=""
-    />
   </v-card>
 </template>
 

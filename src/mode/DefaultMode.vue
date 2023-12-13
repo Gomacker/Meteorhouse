@@ -161,7 +161,7 @@ const pageIs = (pageName: string) => {
       <div style="display: flex; flex-direction: column; height: 100%">
         <v-list style="user-select:none;" density="compact" :nav="true">
           <v-list-item v-ripple style="user-select: none">
-            <v-avatar image="/favicon.ico" />
+            <v-avatar image="/static/favicon.ico" />
             世界弹射物语
           </v-list-item>
           <v-divider style="margin: 4px" />
