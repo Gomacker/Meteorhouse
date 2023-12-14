@@ -40,7 +40,7 @@ const table = computed(() => new Table(table_data.value))
 </script>
 
 <template>
-  <div>
+  <div style='height: 100%; overflow: scroll'>
     <v-toolbar density="compact"> 绑定ID: {{ route.params['table_id'] }} </v-toolbar>
     <div class="table-wrapper">
       <SummaryTable class="table-body" v-if="table_data" :table="table" />
@@ -54,7 +54,8 @@ const table = computed(() => new Table(table_data.value))
   min-width: fit-content;
   display: flex;
   justify-content: center;
-  overflow: auto;
+  //overflow: scroll;
+  //height: 100%;
 }
 @media (max-width: 768px) {
   .table-body {
