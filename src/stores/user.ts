@@ -39,7 +39,7 @@ export const useUserStore = defineStore('userStore', {
       return new Promise((resolve, reject) => {
         axios.post('/api/v1/login/', { username, password }).then((response) => {
           resolve(username)
-          this.username = username
+          // this.username = username
         }).catch(() => {
           reject()
         })
