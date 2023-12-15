@@ -26,6 +26,7 @@ const version = APP_VERSION
         <v-btn color="orange" @click="$router.push('/login')">后台登录</v-btn>
       </p>
       <p>Meteorhouse Version：<span style="color: coral">{{ version }}</span></p>
+      <p>Worldflipper Version：<span style="color: coral">{{ (worldflipper.version?.substring(0, 6)) }}</span></p>
       <p>
         Author：
         <a href="https://space.bilibili.com/11466987" target="_blank">
