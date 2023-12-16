@@ -8,35 +8,6 @@ const password_input = ref<string>('')
 const router = useRouter()
 const user = useUserStore()
 function login() {
-  // axios
-  //   .post(
-  //     '/api/v1/login/',
-  //     {
-  //       username: username_input.value,
-  //       password: password_input.value
-  //     },
-  //     {
-  //       headers: {
-  //         token: user.token
-  //       }
-  //     }
-  //   )
-  //   .then((r) => {
-  //     console.log(r.data)
-  //     if (r.data['result'] === 'success') {
-  //       // ElMessage.success('成功')
-  //       const user = useUserStore()
-  //       if (user.token) {
-  //         user.login(r.data['username'], user.token)
-  //       }
-  //       router.push('/')
-  //     } else {
-  //       // ElMessage.error('失败')
-  //     }
-  //   })
-  //   .catch(() => {
-  //     // ElMessage.error('失败(失败)')
-  //   })
   const result = user.login(username_input.value, password_input.value)
   result.then(value => {
     alert(`登录成功 ${value}`)
