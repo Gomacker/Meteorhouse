@@ -25,6 +25,11 @@ const props = defineProps({
   }
 })
 
+interface PartyReleaseCardStyle {
+  background: string
+  color: string
+}
+
 const id_copied = ref(false)
 const party_copied = ref(false)
 
@@ -176,6 +181,7 @@ const show_dialog = ref(false)
 .party-card {
   min-width: 498px;
   width: 498px;
+  border-radius: 8px;
 }
 .party-card-source-tag {
   background-color: rgb(253, 246, 236);

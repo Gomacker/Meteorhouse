@@ -115,8 +115,8 @@ onMounted(() => {
       style="
         background: transparent;
         height: 100%;
-        padding: 8px;
-        margin: 0 16px;
+        padding: 8px 0;
+        /*margin: 0 16px;*/
         position: relative;
       "
     >
