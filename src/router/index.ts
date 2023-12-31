@@ -25,6 +25,11 @@ const views: RouteRecordRaw[] = [
     component: () => import('@/views/PartySearcherView.vue')
   },
   {
+    path: '/cardCreator',
+    name: 'cardCreator',
+    component: () => import('@/views/CardCreatorView.vue')
+  },
+  {
     path: '/toolbox',
     name: 'toolbox',
     component: () => import('@/views/ToolboxView.vue')

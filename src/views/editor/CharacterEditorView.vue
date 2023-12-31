@@ -4,20 +4,29 @@ import { Character, Element, SpecialityType } from '@/anise/worldflipper/object'
 import CharacterWikiCardEditable from '@/components/worldflipper/character/CharacterWikiCardEditable.vue'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 
-const character = ref<Character>()
+const props = defineProps<{ character: Character }>()
+
+// const character = ref<Character>()
 const worldflipper = useWorldflipperDataStore()
 
-character.value = worldflipper.characters.get('1')
+// character.value = worldflipper.characters.get('1')
 </script>
 
 <template>
   <div>
     <CharacterWikiCardEditable v-if="character" :obj="character" />
-    <v-card>
-      <v-card-item>
-        {{ character }}
-      </v-card-item>
-    </v-card>
+    <div
+      style="
+        min-width: 560px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 120px;
+      "
+      v-else
+    >
+      Error: 未传入角色引用
+    </div>
   </div>
 </template>
 

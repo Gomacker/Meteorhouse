@@ -1,8 +1,8 @@
 <script setup lang='ts'>
 import { shallowRef } from 'vue'
 
-const cardRegex = /^\/card/
-const pureRegex = /^\/pure/
+const cardRegex = /^\/card\//
+const pureRegex = /^\/pure\//
 
 const Mode = shallowRef(null);
 

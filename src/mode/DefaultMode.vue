@@ -181,6 +181,14 @@ const pageIs = (pageName: string) => {
             :active="pageIs('partySearcher')"
             @click="$router.push('/partySearcher')"
           />
+          <v-list-item
+            prepend-icon="mdi-archive-plus"
+            color="green"
+            title="车卡器"
+            value="cardCreator"
+            :active="pageIs('cardCreator')"
+            @click="$router.push('/cardCreator')"
+          />
           <v-divider style="margin: 4px" />
           <v-list-item
             prepend-icon="mdi-toolbox"

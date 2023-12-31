@@ -123,7 +123,7 @@ export class Character extends GameObject implements CharacterData {
 
 
   get nature_max_level(): number {
-    return Math.floor(Character.LEVEL_CAP[String(this.rarity)][0])
+    return String(this.rarity) in Character.LEVEL_CAP ? Math.floor(Character.LEVEL_CAP[String(this.rarity)][0]) : 0
   }
 
   private get_cap_count(level: number): number {
