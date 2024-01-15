@@ -54,12 +54,10 @@ function copy_party(id_: string) {
 }
 
 const show_dialog = ref(false)
-const pr_new = new PartyReleaseV1(props.party_release)
 </script>
 
 <template>
   <div>
-    <PartyReleaseCardV2 v-model="pr_new"></PartyReleaseCardV2>
     <v-card v-ripple class="party-card elevation-6">
       <div style="padding: 12px 8px 8px; background: transparent">
         <div style="display: flex; justify-content: space-between">

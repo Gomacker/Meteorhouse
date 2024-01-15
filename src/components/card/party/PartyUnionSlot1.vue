@@ -14,6 +14,13 @@ const props = defineProps<{
 
 const exA = computed(() => props.params.ex && props.params.ex[props.unionIndex][1][0])
 const exB = computed(() => props.params.ex && props.params.ex[props.unionIndex][1][1])
+
+const showName = computed(() => {
+  if (props.character) {
+    if (props.partyStyle?.showCharacterName) return props.character.names[0]
+  }
+  return '辅助角色'
+})
 </script>
 
 <template>
@@ -40,6 +47,7 @@ const exB = computed(() => props.params.ex && props.params.ex[props.unionIndex][
       @dragstart.prevent
     />
     <v-img
+      :eager="partyStyle?.eagerLoading"
       :src="
         character
           ? character.res(
@@ -52,16 +60,16 @@ const exB = computed(() => props.params.ex && props.params.ex[props.unionIndex][
     <div
       v-if="
         params.manaboard2 &&
-        params.manaboard2[unionIndex][0].map((value) => value !== null).includes(true)
+        params.manaboard2[unionIndex][1].map((value) => value !== null).includes(true)
       "
       class="party-card-manaboard2-wrapper"
     >
-      <div>{{ params.manaboard2[unionIndex][0][0] || '-' }}</div>
-      <div>{{ params.manaboard2[unionIndex][0][1] || '-' }}</div>
-      <div>{{ params.manaboard2[unionIndex][0][2] || '-' }}</div>
+      <div>{{ params.manaboard2[unionIndex][1][0] || '-' }}</div>
+      <div>{{ params.manaboard2[unionIndex][1][1] || '-' }}</div>
+      <div>{{ params.manaboard2[unionIndex][1][2] || '-' }}</div>
     </div>
     <div style="text-align: center; font-size: 13px">
-      {{ partyStyle?.showCharacterName ? character.names[0] : '辅助角色' }}
+      {{ showName }}
     </div>
   </div>
 </template>

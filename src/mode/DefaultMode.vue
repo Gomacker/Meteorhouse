@@ -207,14 +207,14 @@ const pageIs = (pageName: string) => {
           <!--            :active="route.matched[0]?.name === 'lab'"-->
           <!--            @click="$router.push('/lab')"-->
           <!--          />-->
-          <v-list-item
-            prepend-icon="mdi-calendar"
-            color="purple"
-            title="Events"
-            value="calendar"
-            :active="pageIs('calendar')"
-            @click="$router.push('/calendar')"
-          />
+<!--          <v-list-item-->
+<!--            prepend-icon="mdi-calendar"-->
+<!--            color="purple"-->
+<!--            title="Events"-->
+<!--            value="calendar"-->
+<!--            :active="pageIs('calendar')"-->
+<!--            @click="$router.push('/calendar')"-->
+<!--          />-->
           <v-list-item
             prepend-icon="mdi-table"
             color="blue"

@@ -9,9 +9,11 @@ import './party.css'
 import PartyUnionSlot3 from "@/components/card/party/PartyUnionSlot3.vue"
 
 const partyRelease: ModelRef<PartyRelease> = defineModel<PartyRelease>({ required: true })
+defineProps<{
+  partyStyle?: PartyStyle
+}>()
 const worldflipper = useWorldflipperDataStore()
-console.log(partyRelease.value.getParty())
-console.log(partyRelease.value.getParams())
+
 const party = computed(() => partyRelease.value.getParty())
 const params = computed(() => partyRelease.value.getParams())
 const characters = computed(() => worldflipper.characters)
@@ -21,6 +23,7 @@ export interface PartyStyle {
   background: string
   showCharacterName: boolean
   showCharacterAwakened: boolean
+  eagerLoading: boolean
 }
 
 </script>
@@ -29,26 +32,30 @@ export interface PartyStyle {
   <div style="display: flex; z-index: 0">
     <div
       v-for="(union, unionIndex) in party.main"
-      style="width: 150px; margin: 5px; background: #58ffb7; height: 195px; user-select: none"
+      style="width: 150px; margin: 5px; height: 195px; user-select: none"
     >
       <PartyUnionSlot0
         :character="characters.get(String(union[0]))"
         :params="params"
+        :party-style="partyStyle"
         :union-index="unionIndex"
       />
       <PartyUnionSlot1
         :character="characters.get(String(union[1]))"
         :params="params"
+        :party-style="partyStyle"
         :union-index="unionIndex"
       />
       <PartyUnionSlot2
         :equipment="equipments.get(String(union[2]))"
         :params="params"
+        :party-style="partyStyle"
         :union-index="unionIndex"
       />
       <PartyUnionSlot3
         :equipment="equipments.get(String(union[3]))"
         :params="params"
+        :party-style="partyStyle"
         :union-index="unionIndex"
       />
     </div>

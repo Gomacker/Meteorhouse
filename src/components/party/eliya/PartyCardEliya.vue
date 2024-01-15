@@ -17,7 +17,6 @@ const props = defineProps<{
 }>()
 const show_replacements = ref(false)
 
-console.log(props)
 </script>
 <template>
   <div class="party" @mouseenter="show_replacements = true" @mouseleave="show_replacements = false">

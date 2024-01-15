@@ -3,7 +3,7 @@ import moment from 'moment/moment'
 import type { QuestEvent } from '@/components/worldflipper/event/QuestEventBanner.vue'
 import { ref } from 'vue'
 import d from './test_data.json'
-import QuestEventCard, { QuestEventSet } from '@/components/worldflipper/event/QuestEventCard.vue'
+import QuestEventCard, { type QuestEventSet } from '@/components/worldflipper/event/QuestEventCard.vue'
 
 function from_json(d: any): QuestEventSet {
   return {

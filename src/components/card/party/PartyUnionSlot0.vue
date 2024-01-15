@@ -11,15 +11,21 @@ const props = defineProps<{
   unionIndex: 0 | 1 | 2
   partyStyle?: PartyStyle
 }>()
+const exA = computed(() => props.params.ex && props.params.ex[props.unionIndex][1][0])
+const exB = computed(() => props.params.ex && props.params.ex[props.unionIndex][1][1])
 
-const exA = computed(() => props.params.ex && props.params.ex[props.unionIndex][0][0])
-const exB = computed(() => props.params.ex && props.params.ex[props.unionIndex][0][1])
+const showName = computed(() => {
+  if (props.character) {
+    if (props.partyStyle?.showCharacterName) return props.character.names[0]
+  }
+  return props.unionIndex === 0 ? '队长' : '主要角色'
+})
 </script>
 
 <template>
   <div
     class="union-slot union-main"
-    :class="[`element-${Element[character.element]?.toLowerCase()}`]"
+    :class="[character && `element-${Element[character.element]?.toLowerCase()}`]"
   >
     <img
       v-if="exA"
@@ -40,8 +46,13 @@ const exB = computed(() => props.params.ex && props.params.ex[props.unionIndex][
       @dragstart.prevent
     />
     <v-img
+      :eager="partyStyle?.eagerLoading"
       :src="
-        character.res(partyStyle?.showCharacterAwakened ? 'square212x/awakened' : 'square212x/base')
+        character
+          ? character.res(
+              partyStyle?.showCharacterAwakened ? 'square212x/awakened' : 'square212x/base'
+            )
+          : '/static/worldflipper/unit/blank.png'
       "
       @dragstart.prevent
     />
@@ -56,10 +67,8 @@ const exB = computed(() => props.params.ex && props.params.ex[props.unionIndex][
       <div>{{ params.manaboard2[unionIndex][0][1] || '-' }}</div>
       <div>{{ params.manaboard2[unionIndex][0][2] || '-' }}</div>
     </div>
-    <div style="text-align: center; font-size: 13px; user-select: text">
-      {{ partyStyle?.showCharacterName ? character.names[0] : (
-      unionIndex === 0 ? '队长' : '主要角色'
-    ) }}
+    <div style="text-align: center; font-size: 13px">
+      {{ showName }}
     </div>
   </div>
 </template>

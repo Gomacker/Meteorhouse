@@ -5,6 +5,8 @@ import axios from 'axios'
 import { useRoute } from 'vue-router'
 import { PartyRelease } from '@/anise/worldflipper/party'
 import worldflipperService from "@/services/worldflipperService";
+import PartyReleaseCardV2 from "@/components/card/PartyReleaseCardV2.vue"
+import { PartyReleaseV1 } from "@/anise/worldflipper/party2"
 
 const page_party_list = ref(new Map())
 
@@ -132,10 +134,10 @@ onMounted(() => {
       >
         <template v-if="page_party_list.size">
           <template v-for="party in page_party_list" :key="party[0]">
-            <PartyReleaseCard
-              :eager="eager"
+            <PartyReleaseCardV2
+              :party-style="{eagerLoading: eager}"
               style="margin: 4px"
-              :party_release="PartyRelease.load(party[1])"
+              :model-value="PartyReleaseV1.fromPartyRelease(party[1])"
             />
           </template>
         </template>

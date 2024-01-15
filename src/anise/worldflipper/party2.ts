@@ -2,7 +2,7 @@ import {
   PartyRelease as LegacyPartyRelease,
   type Party as LegacyParty,
   PartyParamManaboard2,
-  type Manaboard2Values,
+  type Manaboard2Values
 } from "./party"
 
 export interface Quest {
@@ -17,30 +17,30 @@ type Manaboard2Info = [Manaboard2Level, Manaboard2Level, Manaboard2Level]
 type UnionManaboard2Info = [Manaboard2Info, Manaboard2Info]
 type ExAType =
   | null
-  | "atk_self"
-  | "skilldamage_self"
-  | "directdamage_self"
-  | "abilitydagame_self"
-  | "atk_party"
-  | "skilldamage_party"
-  | "directdamage_party"
-  | "abilitydagame_party"
-  | "powerflipdamage"
-  | "hp_self"
+  | 'atk_self'
+  | 'skilldamage_self'
+  | 'directdamage_self'
+  | 'abilitydagame_self'
+  | 'atk_party'
+  | 'skilldamage_party'
+  | 'directdamage_party'
+  | 'abilitydagame_party'
+  | 'powerflipdamage'
+  | 'hp_self'
 
 type ExBType =
   | null
-  | "atk_buffextend_self"
-  | "skilldamage_buffextend_self"
-  | "directdamage_buffextend_self"
-  | "abilitydagame_buffextend_self"
-  | "powerflipdamage_buffextend"
-  | "piercing_buffextend"
-  | "flying_buffextend"
-  | "feverpoint_self"
-  | "fevertime_extend"
-  | "initial_skillgauge_self"
-  | "skillgagemax_self"
+  | 'atk_buffextend_self'
+  | 'skilldamage_buffextend_self'
+  | 'directdamage_buffextend_self'
+  | 'abilitydagame_buffextend_self'
+  | 'powerflipdamage_buffextend'
+  | 'piercing_buffextend'
+  | 'flying_buffextend'
+  | 'feverpoint_self'
+  | 'fevertime_extend'
+  | 'initial_skillgauge_self'
+  | 'skillgagemax_self'
 type ExInfo = [ExAType, ExBType]
 type UnionExInfo = [ExInfo, ExInfo]
 
@@ -65,6 +65,12 @@ export interface PartyRelease {
   getIsLiked(): Promise<boolean>
 
   getParams(): PartyParams
+
+  getCode(): Promise<string | undefined>
+
+  getId(): string | undefined
+
+  getUpdater(): Promise<string | undefined>
 }
 
 interface PartyReleaseV1Data {
@@ -91,13 +97,17 @@ export class PartyReleaseV1 implements PartyRelease {
     return new PartyReleaseV1(LegacyPartyRelease.load(props))
   }
 
+  getId(): string | undefined {
+    return this.partyRelease.id
+  }
+
   getParty(): Party {
     return {
       main: [
         this.partyRelease.party.union1.dump(),
         this.partyRelease.party.union2.dump(),
-        this.partyRelease.party.union3.dump(),
-      ],
+        this.partyRelease.party.union3.dump()
+      ]
     }
   }
 
@@ -105,35 +115,44 @@ export class PartyReleaseV1 implements PartyRelease {
     let result: PartyParams = {
       manaboard2: undefined,
       ex: [
-        [['skilldamage_party', 'initial_skillgauge_self'], [null, null]],
-        [['skilldamage_self', 'skillgagemax_self'], [null, null]],
-        [[null, null], [null, null]],
-      ],
+        [
+          [null, null],
+          [null, null]
+        ],
+        [
+          [null, null],
+          [null, null]
+        ],
+        [
+          [null, null],
+          [null, null]
+        ]
+      ]
     }
-    const mb2 = this.partyRelease.getParam("manaboard2")
+    const mb2 = this.partyRelease.getParam('manaboard2')
     const extractTool = (mb2v: Manaboard2Values | undefined): Manaboard2Info => {
       if (mb2v) {
         return [
           (mb2v.ability4 ?? null) as Manaboard2Level,
           (mb2v.ability5 ?? null) as Manaboard2Level,
-          (mb2v.ability6 ?? null) as Manaboard2Level,
+          (mb2v.ability6 ?? null) as Manaboard2Level
         ]
       } else return [null, null, null]
     }
     if (mb2 instanceof PartyParamManaboard2) {
       result.manaboard2 = [
         [
-          extractTool(mb2.get({ unionIndex: 0, positionIndex: 0 })),
-          extractTool(mb2.get({ unionIndex: 0, positionIndex: 1 })),
-        ],
-        [
           extractTool(mb2.get({ unionIndex: 1, positionIndex: 0 })),
-          extractTool(mb2.get({ unionIndex: 1, positionIndex: 1 })),
+          extractTool(mb2.get({ unionIndex: 1, positionIndex: 1 }))
         ],
         [
           extractTool(mb2.get({ unionIndex: 2, positionIndex: 0 })),
-          extractTool(mb2.get({ unionIndex: 2, positionIndex: 1 })),
+          extractTool(mb2.get({ unionIndex: 2, positionIndex: 1 }))
         ],
+        [
+          extractTool(mb2.get({ unionIndex: 3, positionIndex: 0 })),
+          extractTool(mb2.get({ unionIndex: 3, positionIndex: 1 }))
+        ]
       ]
     }
     return result
@@ -152,7 +171,15 @@ export class PartyReleaseV1 implements PartyRelease {
   }
 
   getTitle(): string {
-    return this.partyRelease.title || ""
+    return this.partyRelease.title || ''
+  }
+
+  async getCode(): Promise<string | undefined> {
+    return this.partyRelease.partyCode
+  }
+
+  async getUpdater(): Promise<string | undefined> {
+    return this.partyRelease.updater_id
   }
 }
 
@@ -197,7 +224,19 @@ export class PartyReleaseV2 implements PartyRelease {
   }
 
   getTitle(): string {
-    return ""
+    return ''
+  }
+
+  async getCode(): Promise<string | undefined> {
+    return undefined
+  }
+
+  getId(): string | undefined {
+    return undefined
+  }
+
+  async getUpdater(): Promise<string | undefined> {
+    return undefined
   }
 }
 
@@ -207,8 +246,8 @@ export class PartyFactory {
       main: [
         [null, null, null, null],
         [null, null, null, null],
-        [null, null, null, null],
-      ],
+        [null, null, null, null]
+      ]
     }
   }
 

@@ -7,7 +7,6 @@ import PartyReleaseCard from "@/components/card/PartyReleaseCard.vue";
 import { useDefer } from "@/utils";
 
 const pts = ref<Array<PartyRelease>>()
-const debug_ = ref()
 const defer = useDefer()
 async function getPartyRecords() {
   const response = await axios.post('/api/v2/worldflipper/party/records')

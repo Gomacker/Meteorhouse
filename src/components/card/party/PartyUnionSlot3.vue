@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { PartyParams } from '@/anise/worldflipper/party2'
-import { type Character, Element, type Equipment } from "@/anise/worldflipper/object"
-import { exAAbilities, exBAbilities } from '@/anise/worldflipper/party'
-import { computed } from 'vue'
+import type { Equipment } from "@/anise/worldflipper/object"
+import type { PartyStyle } from "@/components/card/party/PartyReleaseBody.vue"
 
 defineProps<{
   equipment?: Equipment
   params: PartyParams
   unionIndex: 0 | 1 | 2
+  partyStyle?: PartyStyle
 }>()
 
 </script>
@@ -17,6 +17,7 @@ defineProps<{
     class="union-slot union-core"
   >
     <v-img
+      :eager="partyStyle?.eagerLoading"
       :src="equipment ? equipment.res('soul') : '/static/worldflipper/unit/blank.png'"
       @dragstart.prevent
     />
