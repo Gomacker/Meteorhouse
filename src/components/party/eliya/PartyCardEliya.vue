@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import type { PartyRelease } from '@/anise/worldflipper/party'
 import UnionComponent from '@/components/party/eliya/UnionComponent.vue'
-import { PartyEditor } from "@/anise/worldflipper/party";
+import type { PartyEditor } from "@/anise/worldflipper/party";
 
 
 const props = defineProps<{

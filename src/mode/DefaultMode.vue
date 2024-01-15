@@ -346,7 +346,8 @@ const pageIs = (pageName: string) => {
   height: 512px;
   position: absolute;
   --loading-special-effect-color: white;
-  background: radial-gradient(rgba(255 255 255 / 0.4) 20%, transparent 20%),
+  background:
+    radial-gradient(rgba(255 255 255 / 0.4) 20%, transparent 20%),
     radial-gradient(rgba(255 255 255 / 0.4) 30%, transparent 30%),
     radial-gradient(var(--loading-special-effect-color) 50%, transparent 50%);
   scale: 0;
