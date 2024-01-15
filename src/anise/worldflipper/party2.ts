@@ -104,7 +104,11 @@ export class PartyReleaseV1 implements PartyRelease {
   getParams(): PartyParams {
     let result: PartyParams = {
       manaboard2: undefined,
-      ex: undefined,
+      ex: [
+        [['skilldamage_party', 'initial_skillgauge_self'], [null, null]],
+        [['skilldamage_self', 'skillgagemax_self'], [null, null]],
+        [[null, null], [null, null]],
+      ],
     }
     const mb2 = this.partyRelease.getParam("manaboard2")
     const extractTool = (mb2v: Manaboard2Values | undefined): Manaboard2Info => {
