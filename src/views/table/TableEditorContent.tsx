@@ -3,6 +3,7 @@ import table, { Table } from '@/components/table/table'
 import { VBtn } from 'vuetify/components'
 import { TableElementContainer, TableElementText } from '@/components/table/elements/BasicElements'
 
+
 export default defineComponent({
   props: {
     table: {

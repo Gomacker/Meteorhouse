@@ -19,8 +19,8 @@ interface WorldflipperDataVersion {
 }
 
 interface WorldflipperBasicData extends WorldflipperDataVersion {
-  character: { [key: string]: Character };
-  equipment: { [key: string]: Equipment };
+  character: { [key: string]: Character }
+  equipment: { [key: string]: Equipment }
 }
 
 interface PostUpdatePartyRequestData {

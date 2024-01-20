@@ -55,7 +55,7 @@ onMounted(() => {
         <div style="color: gray">updater : {{ updater }}</div>
         <div>
           <v-btn-group style="height: 28px" variant="flat" density="compact">
-            <v-btn :color="'#ffa9ff'" :disabled="true" style="color: #fff">
+            <v-btn :color="'#b531d9'" :disabled="true" style="color: #fff">
               ❤ {{ party.getLike() }}
             </v-btn>
             <v-btn variant="flat" color="warning" size="small">

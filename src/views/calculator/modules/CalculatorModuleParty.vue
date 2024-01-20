@@ -126,12 +126,12 @@ function make_position(unionIndex: number, positionIndex: number): PartyPosition
       <div style="display: grid; padding: 4px; grid-template-columns: repeat(3, 158px)">
         <div>
           <PartyManaboard2Editor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             :party-editor="partyEditor"
             :position="make_position(1, 0)"
           />
           <PartyManaboard2Editor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             style="margin-top: 4px"
             :party-editor="partyEditor"
             :position="make_position(1, 1)"
@@ -139,12 +139,12 @@ function make_position(unionIndex: number, positionIndex: number): PartyPosition
         </div>
         <div>
           <PartyManaboard2Editor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             :party-editor="partyEditor"
             :position="make_position(2, 0)"
           />
           <PartyManaboard2Editor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             style="margin-top: 4px"
             :party-editor="partyEditor"
             :position="make_position(2, 1)"
@@ -152,12 +152,12 @@ function make_position(unionIndex: number, positionIndex: number): PartyPosition
         </div>
         <div>
           <PartyManaboard2Editor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             :party-editor="partyEditor"
             :position="make_position(3, 0)"
           />
           <PartyManaboard2Editor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             style="margin-top: 4px"
             :party-editor="partyEditor"
             :position="make_position(3, 1)"
@@ -165,16 +165,16 @@ function make_position(unionIndex: number, positionIndex: number): PartyPosition
         </div>
       </div>
     </v-card>
-    <v-card v-if='false' style="overflow: visible; width: 480px; margin-top: 36px" class="elevation-4">
+    <v-card style="overflow: visible; width: 480px; margin-top: 36px" class="elevation-4">
       <div style="display: grid; padding: 4px; grid-template-columns: repeat(3, 158px)">
         <div>
           <PartyExEditor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             :party-editor="partyEditor"
             :position="make_position(1, 0)"
           />
           <PartyExEditor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             style="margin-top: 4px"
             :party-editor="partyEditor"
             :position="make_position(1, 1)"
@@ -182,12 +182,12 @@ function make_position(unionIndex: number, positionIndex: number): PartyPosition
         </div>
         <div>
           <PartyExEditor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             :party-editor="partyEditor"
             :position="make_position(2, 0)"
           />
           <PartyExEditor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             style="margin-top: 4px"
             :party-editor="partyEditor"
             :position="make_position(2, 1)"
@@ -195,12 +195,12 @@ function make_position(unionIndex: number, positionIndex: number): PartyPosition
         </div>
         <div>
           <PartyExEditor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             :party-editor="partyEditor"
             :position="make_position(3, 0)"
           />
           <PartyExEditor
-            class="manaboard2-editor-single"
+            class="calculator-editor-single"
             style="margin-top: 4px"
             :party-editor="partyEditor"
             :position="make_position(3, 1)"
@@ -243,7 +243,7 @@ function make_position(unionIndex: number, positionIndex: number): PartyPosition
   align-items: center;
 }
 
-.manaboard2-editor-single {
+.calculator-editor-single {
   height: 106px;
 }
 </style>

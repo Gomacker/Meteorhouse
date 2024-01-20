@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Manaboard2Values, PartyEditor } from '@/anise/worldflipper/party'
-import { PartyParamManaboard2, PartyPosition } from '@/anise/worldflipper/party'
+import { PartyParamManaboard2, type PartyPosition } from '@/anise/worldflipper/party'
 import type { Character } from '@/anise/worldflipper/object'
 import { computed } from 'vue'
 import { ele2color } from '@/stores/manager'

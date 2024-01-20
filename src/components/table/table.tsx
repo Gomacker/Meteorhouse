@@ -1,8 +1,8 @@
-import chroma from 'chroma-js'
-import type { JSX } from 'vue/jsx-runtime'
-import { VCard, VCardItem, VDivider, VSelect } from 'vuetify/components'
-import TableEditorWrapperMenu from '@/components/table/elements/TableEditorWrapperMenu.vue'
-import { h } from 'vue'
+import chroma from "chroma-js"
+import type { JSX } from "vue/jsx-runtime"
+import { VCard, VCardItem, VDivider, VSelect } from "vuetify/components"
+import TableEditorWrapperMenu from "@/components/table/elements/TableEditorWrapperMenu.vue"
+import { h } from "vue"
 
 export interface TableProfile {
   id: string
@@ -29,19 +29,19 @@ class TableProperty {
 
   constructor(data: any) {
     if (!data) data = {}
-    this.name = data['name'] || ''
-    this.image = data['image'] || ''
-    this.public = data['public'] || false
-    this.weight = data['weight'] || 0
-    this.title = data['title'] || ''
-    this._main_color = chroma(data['main_color'] || 'white')
-    this._sub_color = chroma(data['sub_color'] || 'white')
-    this.update_time = data['update_time'] || ''
-    this.little_about = data['little_about'] || ''
-    this.banner = data['banner'] || ''
-    this.background = data['background'] || ''
-    this.footer = data['footer'] || ''
-    this.hideBanner = data['hideBanner'] || false
+    this.name = data["name"] || ""
+    this.image = data["image"] || ""
+    this.public = data["public"] || false
+    this.weight = data["weight"] || 0
+    this.title = data["title"] || ""
+    this._main_color = chroma(data["main_color"] || "white")
+    this._sub_color = chroma(data["sub_color"] || "white")
+    this.update_time = data["update_time"] || ""
+    this.little_about = data["little_about"] || ""
+    this.banner = data["banner"] || ""
+    this.background = data["background"] || ""
+    this.footer = data["footer"] || ""
+    this.hideBanner = data["hideBanner"] || false
   }
 
   get main_color(): string {
@@ -82,17 +82,18 @@ class TableProperty {
       banner: this.banner,
       background: this.background,
       footer: this.footer,
-      hideBanner: this.hideBanner
+      hideBanner: this.hideBanner,
     }
   }
 }
 
 export abstract class TableElement {
   abstract readonly __type: string
+
   data(): object {
     return {
       type: this.__type,
-      data: this._data()
+      data: this._data(),
     }
   }
 
@@ -101,7 +102,9 @@ export abstract class TableElement {
     delete obj.__type
     return obj
   }
+
   abstract html(): JSX.Element
+
   abstract editor(): JSX.Element
 
   editorWrapped(
@@ -111,15 +114,15 @@ export abstract class TableElement {
     moveNext: () => void,
     insertPre: () => void,
     insertNext: () => void,
-    background: string = '#fff'
+    background: string = "#fff",
   ): JSX.Element {
     return (
       <VCard
         style={{
-          width: this.isFull ? '100%' : '50%',
-          margin: '4px 0',
-          transition: 'all 0.4s ease',
-          background: background
+          width: this.isFull ? "100%" : "50%",
+          margin: "4px 0",
+          transition: "all 0.4s ease",
+          background: background,
         }}
       >
         <VCardItem>
@@ -140,22 +143,23 @@ export abstract class TableElement {
               movePre: movePre,
               moveNext: moveNext,
               insertPre: insertPre,
-              insertNext: insertNext
+              insertNext: insertNext,
             })}
           </div>
-          <VDivider style={{ margin: '4px' }} />
+          <VDivider style={{ margin: "4px" }} />
           <div>{this.editor()}</div>
         </VCardItem>
       </VCard>
     )
   }
+
   get isFull(): boolean {
     return false
   }
 }
 
 class TableElementError extends TableElement {
-  readonly __type: string = 'Error'
+  readonly __type: string = "Error"
   private readonly __data: any
 
   constructor(data: any) {
@@ -168,12 +172,12 @@ class TableElementError extends TableElement {
   }
 
   html(): JSX.Element {
-    return <div style={{ color: 'blue' }}>未解析的组件：{JSON.stringify(this.data())}</div>
+    return <div style={{ color: "blue" }}>未解析的组件：{JSON.stringify(this.data())}</div>
   }
 
   editor(): JSX.Element {
     return (
-      <div style={{ color: 'blue' }}>
+      <div style={{ color: "blue" }}>
         这是一个未解析的组件，当保存时，它将被保存为Type Error：{JSON.stringify(this.data())}
       </div>
     )
@@ -185,7 +189,7 @@ class ElementManager {
 
   constructor() {
     this.elementMap = new Map()
-    this.register('Error', TableElementError)
+    this.register("Error", TableElementError)
   }
 
   register(id: string, E: new (data: any) => TableElement) {
@@ -193,16 +197,16 @@ class ElementManager {
   }
 
   load(data: any): TableElement {
-    import('@/components/table/elements/BasicElements')
-    import('@/components/table/elements/WorldflipperElements')
-    const type = data['__type'] || data['type']
+    import("@/components/table/elements/BasicElements")
+    import("@/components/table/elements/WorldflipperElements")
+    const type = data["__type"] || data["type"]
     const E = this.elementMap.get(type)
-    return E ? new E(data['data'] || {}) : new TableElementError(data['data'] || {})
+    return E ? new E(data["data"] || {}) : new TableElementError(data["data"] || {})
   }
 
   items() {
     return new Map(
-      Array.from(new Set(this.elementMap.values())).map((value) => [new value({}).__type, value])
+      Array.from(new Set(this.elementMap.values())).map((value) => [new value({}).__type, value]),
     )
   }
 }
@@ -213,18 +217,19 @@ export default elementManager
 export class Table {
   public property: TableProperty
   public content: Array<TableElement>
-  public id: string = ''
+  public id: string = ""
 
   constructor(data: any) {
-    this.property = new TableProperty(data['property'])
-    this.content = data['content']
-      ? Array.from(data['content']).map((value) => elementManager.load(value))
+    this.property = new TableProperty(data["property"])
+    this.content = data["content"]
+      ? Array.from(data["content"]).map((value) => elementManager.load(value))
       : []
   }
+
   public data() {
     return {
       property: this.property.data(),
-      content: this.content.map((value) => value.data())
+      content: this.content.map((value) => value.data()),
     }
   }
 
@@ -236,52 +241,56 @@ export class Table {
     if (this.content[index - 1])
       this.content[index - 1] = this.content.splice(index, 1, this.content[index - 1])[0]
   }
+
   moveNext(index: number) {
     if (this.content[index + 1])
       this.content[index + 1] = this.content.splice(index, 1, this.content[index + 1])[0]
   }
+
   insertPre(index: number, element: TableElement) {
     this.content.splice(index, 0, element)
   }
+
   insertNext(index: number, element: TableElement) {
     this.content.splice(index + 1, 0, element)
   }
+
   delete(index: number) {
     this.content.splice(index, 1)
   }
 }
 
 const replacements = [
-  [/火属性/g, '<img class="icon-desc" src="/static/worldflipper/icon/desc_fire.png" alt=""/>'],
-  [/水属性/g, '<img class="icon-desc" src="/static/worldflipper/icon/desc_water.png" alt=""/>'],
-  [/雷属性/g, '<img class="icon-desc" src="/static/worldflipper/icon/desc_thunder.png" alt=""/>'],
-  [/[风風]属性/g, '<img class="icon-desc" src="/static/worldflipper/icon/desc_wind.png" alt=""/>'],
-  [/光属性/g, '<img class="icon-desc" src="/static/worldflipper/icon/desc_light.png" alt=""/>'],
-  [/[暗闇]属性/g, '<img class="icon-desc" src="/static/worldflipper/icon/desc_dark.png" alt=""/>'],
+  [/火属性/g, "<img class=\"icon-desc\" src=\"/static/worldflipper/icon/desc_fire.png\" alt=\"\"/>"],
+  [/水属性/g, "<img class=\"icon-desc\" src=\"/static/worldflipper/icon/desc_water.png\" alt=\"\"/>"],
+  [/雷属性/g, "<img class=\"icon-desc\" src=\"/static/worldflipper/icon/desc_thunder.png\" alt=\"\"/>"],
+  [/[风風]属性/g, "<img class=\"icon-desc\" src=\"/static/worldflipper/icon/desc_wind.png\" alt=\"\"/>"],
+  [/光属性/g, "<img class=\"icon-desc\" src=\"/static/worldflipper/icon/desc_light.png\" alt=\"\"/>"],
+  [/[暗闇]属性/g, "<img class=\"icon-desc\" src=\"/static/worldflipper/icon/desc_dark.png\" alt=\"\"/>"],
   [
     /作为主要角色编成：/g,
-    '<img class="icon-desc" src="/static/worldflipper/icon/desc_main.png" alt=""/>'
+    "<img class=\"icon-desc\" src=\"/static/worldflipper/icon/desc_main.png\" alt=\"\"/>",
   ],
-  [/攻击力 \+/g, '<span style="color: rgb(255, 128, 0)">攻击力</span> +'],
-  [/攻击力提升\(/g, '<span style="color: rgb(255, 128, 0)">攻击力提升</span>('],
-  [/技能伤害 \+/g, '<span style="color: rgb(0, 128, 255)">技能伤害</span> +'],
-  [/技能伤害提升\(/g, '<span style="color: rgb(0, 128, 255)">技能伤害提升</span>('],
-  [/强化弹射伤害 \+/g, '<span style="color: rgb(0, 159, 79)">强化弹射伤害</span> +'],
-  [/强化弹射伤害提升\(/g, '<span style="color: rgb(0, 159, 79)">强化弹射伤害提升</span>('],
-  [/直接攻击伤害 \+/g, '<span style="color: rgb(169, 45, 255)">直接攻击伤害</span> +'],
-  [/直接攻击伤害提升\(/g, '<span style="color: rgb(169, 45, 255)">直接攻击伤害提升</span>('],
-  [/能力伤害 \+/g, '<span style="color: rgb(255, 0, 128)">能力伤害</span> +'],
-  [/能力伤害提升\(/g, '<span style="color: rgb(255, 0, 128)">能力伤害提升</span>(']
+  [/攻击力 \+/g, "<span style=\"color: rgb(255, 128, 0)\">攻击力</span> +"],
+  [/攻击力提升\(/g, "<span style=\"color: rgb(255, 128, 0)\">攻击力提升</span>("],
+  [/技能伤害 \+/g, "<span style=\"color: rgb(0, 128, 255)\">技能伤害</span> +"],
+  [/技能伤害提升\(/g, "<span style=\"color: rgb(0, 128, 255)\">技能伤害提升</span>("],
+  [/强化弹射伤害 \+/g, "<span style=\"color: rgb(0, 159, 79)\">强化弹射伤害</span> +"],
+  [/强化弹射伤害提升\(/g, "<span style=\"color: rgb(0, 159, 79)\">强化弹射伤害提升</span>("],
+  [/直接攻击伤害 \+/g, "<span style=\"color: rgb(169, 45, 255)\">直接攻击伤害</span> +"],
+  [/直接攻击伤害提升\(/g, "<span style=\"color: rgb(169, 45, 255)\">直接攻击伤害提升</span>("],
+  [/能力伤害 \+/g, "<span style=\"color: rgb(255, 0, 128)\">能力伤害</span> +"],
+  [/能力伤害提升\(/g, "<span style=\"color: rgb(255, 0, 128)\">能力伤害提升</span>("],
 ]
 
 export function format_content(content: string): string {
-  const ss = content.split('\n')
+  const ss = content.split("\n")
   for (const key in ss) {
     let s = ss[key]
     replacements.forEach(
-      ([pattern, replacement]) => (s = s.replace(pattern, replacement as string))
+      ([pattern, replacement]) => (s = s.replace(pattern, replacement as string)),
     )
     ss[key] = s
   }
-  return ss.map((value) => `<p>${value}</p>`).join('')
+  return ss.map((value) => `<p>${value}</p>`).join("")
 }
