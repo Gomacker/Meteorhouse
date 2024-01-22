@@ -62,7 +62,6 @@ export class TableElementWikiCard extends TableElement {
   private lite: boolean
   constructor(data: any) {
     super()
-    console.log(data)
     this.type = ['Armament', 'Equipment'].includes(data['type']) ? 'Equipment' : 'Character'
     this.id = String(data['id']) || '0'
     this.lite = data['lite'] || false
@@ -71,20 +70,30 @@ export class TableElementWikiCard extends TableElement {
   html(): JSX.Element {
     const worldflipper = useWorldflipperDataStore()
     if (this.type === 'Character') {
-      return h<typeof CharacterWikiCard>(CharacterWikiCard, {
-        obj: worldflipper.characters.get(this.id),
-        lite: this.lite,
-        style: {
-          margin: '10px',
-          borderRadius: '16px'
-        },
-        class: 'elevation-6'
-      })
+      return <CharacterWikiCard
+        obj={worldflipper.characters.get(this.id)}
+        lite={this.lite}
+        style="margin: 10px; border-radius: 16px"
+        class="elevation-6"
+      />
+      // return h<typeof CharacterWikiCard>(CharacterWikiCard, {
+      //   obj: worldflipper.characters.get(this.id),
+      //   lite: this.lite,
+      //   style: {
+      //     margin: '10px',
+      //     borderRadius: '16px'
+      //   },
+      //   class: 'elevation-6'
+      // })
     } else {
-      return h(EquipmentWikiCard, {
-        obj: worldflipper.equipments.get(this.id),
-        lite: this.lite
-      })
+      return <EquipmentWikiCard
+        obj={worldflipper.equipments.get(this.id)}
+        lite={this.lite}
+      />
+      // return h(EquipmentWikiCard, {
+      //   obj: worldflipper.equipments.get(this.id),
+      //   lite: this.lite
+      // })
     }
   }
 
@@ -173,7 +182,7 @@ export class TableElementObjectList extends TableElement {
   }
 
   editor(): JSX.Element {
-    return <div>{this.objectList}</div>
+    return h('div', [this.objectList])
   }
 }
 
