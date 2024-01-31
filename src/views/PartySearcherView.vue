@@ -1,73 +1,62 @@
 <script setup lang="ts">
-import PartyReleaseCard from '@/components/card/PartyReleaseCard.vue'
-import { onMounted, ref } from 'vue'
-import axios from 'axios'
+import { computed, onMounted, ref } from "vue"
 import { useRoute } from 'vue-router'
-import { PartyRelease } from '@/anise/worldflipper/party'
 import worldflipperService from "@/services/worldflipperService";
 import PartyReleaseCardV2 from "@/components/card/PartyReleaseCardV2.vue"
-import { PartyReleaseV1 } from "@/anise/worldflipper/party2"
+import type { PartyRelease } from "@/anise/worldflipper/party2"
 
-const page_party_list = ref(new Map())
+const partyPageList = ref<PartyRelease[]>([])
 
-const search_content = ref('')
-const search_content_applied = ref('')
-const party_count = ref(0)
-const current_page = ref(1)
-const loading = ref(true)
+const searchContent = ref('')
+const searchContentApplied = ref('')
+const maxPage = ref(0)
+const currentPage = ref(1)
+const isLoading = ref(true)
 
 defineProps<{ eager?: boolean }>()
 
-function get_data(page_index: number, search_content = '') {
-  const params = {
-    page_index: page_index,
-    search_text: search_content || '',
-    ppp: 12
-  }
-  page_party_list.value.clear()
-  loading.value = true
-  worldflipperService.fetchPartyPage(page_index, search_content)
-  axios
-    .post(
-      '/api/v1/party/page/',
-      {},
-      {
-        params: params
-      }
-    )
-    .then((r) => {
-      page_party_list.value = new Map(
-        Object.keys(r.data['parties']).map((key) => [key, r.data['parties'][key]]) as Array<
-          [string, PartyRelease]
-        >
-      )
-      party_count.value = r.data['party_count']
-      loading.value = false
-    })
-    .catch((r) => {
-      console.log(r)
-    })
+async function search(pageIndex: number, searchText = ''): Promise<PartyRelease[]> {
+  isLoading.value = true
+  // console.log('loading', pageIndex, searchText)
+  const result = await worldflipperService.fetchPartyPage(pageIndex, searchText)
+  // console.log('loaded', pageIndex, searchText)
+  maxPage.value = result.maxPage
+  isLoading.value = false
+  return result.parties
 }
-function search_party(search_content: string) {
-  search_content_applied.value = search_content
-  get_data(current_page.value, search_content_applied.value)
-  current_page.value = 1
+function searchParty(search_content: string) {
+  searchContentApplied.value = search_content
+  search(
+    currentPage.value,
+    searchContentApplied.value
+  ).then(
+    value => {
+      partyPageList.value = value
+    }
+  )
+  currentPage.value = 1
 }
 onMounted(() => {
   const route = useRoute()
   const query = route.query
-  console.log(query)
   if (query['q']) {
-    search_content.value = String(query.q)
-    search_content_applied.value = search_content.value
+    searchContent.value = String(query.q)
+    searchContentApplied.value = searchContent.value
   }
   if (query['page']) {
     const page = parseInt(String(query.page))
-    if (page) current_page.value = page
+    if (page) currentPage.value = page
   }
-  get_data(current_page.value, search_content_applied.value)
-  current_page.value = 1
+  search(currentPage.value, searchContentApplied.value).then(
+    value => {
+      partyPageList.value = value
+    }
+  )
+  currentPage.value = 1
 })
+
+// const pageMax = computed(() => Math.ceil(partyCount.value / 12))
+
 </script>
 
 <template>
@@ -79,7 +68,6 @@ onMounted(() => {
       align-items: center;
       justify-content: space-between;
       height: 100%;
-      /*padding: 16px 0;*/
       position: relative;
     "
   >
@@ -99,26 +87,25 @@ onMounted(() => {
         density="compact"
         hide-details
         prepend-icon="mdi-magnify"
-        v-model="search_content"
-        @keydown.enter="search_party(search_content)"
+        v-model="searchContent"
+        @keydown.enter="searchParty(searchContent)"
       />
       <v-btn
         :color="'rgba(163,56,220,0.75)'"
         style="margin-left: 16px"
         size="large"
-        @click="search_party(search_content)"
+        @click="searchParty(searchContent)"
       >
         搜索
       </v-btn>
     </div>
     <v-card
-      :loading="loading"
+      v-if="!isLoading"
       class="elevation-0 party-searcher-wrapper"
       style="
         background: transparent;
         height: 100%;
         padding: 8px 0;
-        /*margin: 0 16px;*/
         position: relative;
       "
     >
@@ -132,12 +119,12 @@ onMounted(() => {
           flex-wrap: wrap;
         "
       >
-        <template v-if="page_party_list.size">
-          <template v-for="party in page_party_list" :key="party[0]">
+        <template v-if="partyPageList.length">
+          <template v-for="party in partyPageList">
             <PartyReleaseCardV2
               :party-style="{eagerLoading: eager}"
               style="margin: 4px"
-              :model-value="PartyReleaseV1.fromPartyRelease(party[1])"
+              :model-value="party"
             />
           </template>
         </template>
@@ -149,9 +136,9 @@ onMounted(() => {
       class="party-searcher-pagination-wrapper"
     >
       <v-pagination
-        v-model="current_page"
-        :length="Math.ceil(party_count / 12)"
-        @update:model-value="get_data(current_page, search_content_applied)"
+        v-model="currentPage"
+        :length="maxPage"
+        @update:model-value="search(currentPage, searchContentApplied).then(value => partyPageList = value)"
         class="party-searcher-pagination"
       />
     </v-card>

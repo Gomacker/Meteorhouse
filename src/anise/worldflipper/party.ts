@@ -3,7 +3,11 @@ import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import type { WorldflipperObject } from '@/stores/worldflipper'
 import { reactive } from 'vue'
 
-const worldflipper = useWorldflipperDataStore()
+let worldflipper: any
+
+function getWorldflipper() {
+  return worldflipper || (worldflipper = useWorldflipperDataStore())
+}
 
 export class Union {
   constructor(
@@ -23,7 +27,7 @@ export class Union {
   }
 
   get main(): Character | undefined {
-    return worldflipper.characters.get(String(this._main))
+    return getWorldflipper().characters.get(String(this._main))
   }
 
   set main(character: Character | number | null | undefined) {
@@ -32,7 +36,7 @@ export class Union {
   }
 
   get unison(): Character | undefined {
-    return worldflipper.characters.get(String(this._unison))
+    return getWorldflipper().characters.get(String(this._unison))
   }
 
   set unison(character: Character | number | null | undefined) {
@@ -41,7 +45,7 @@ export class Union {
   }
 
   get equipment(): Equipment | undefined {
-    return worldflipper.equipments.get(String(this._equipment))
+    return getWorldflipper().equipments.get(String(this._equipment))
   }
 
   set equipment(equipment: Equipment | number | null | undefined) {
@@ -50,7 +54,7 @@ export class Union {
   }
 
   get core(): Equipment | undefined {
-    return worldflipper.equipments.get(String(this._core))
+    return getWorldflipper().equipments.get(String(this._core))
   }
 
   set core(equipment: Equipment | number | null | undefined) {

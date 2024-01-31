@@ -22,7 +22,7 @@ export const useWorldflipperDataStore = defineStore('worldflipperData', {
   },
   actions: {
     async init() {
-      return !(await this.check_update()) && await this.update()
+      return !!(!(await this.check_update()) && await this.update())
     },
     async check_update() {
       const rsp = await worldflipperService.fetchDataVersion()
@@ -72,14 +72,4 @@ export const useWorldflipperDataStore = defineStore('worldflipperData', {
       }
     ]
   }
-})
-
-
-export const usePartyEditor = defineStore('worldflipperPartyEditor', {
-  state() {
-    return {
-
-    }
-  },
-  
 })

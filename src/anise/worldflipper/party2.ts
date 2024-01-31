@@ -2,12 +2,12 @@ import {
   PartyRelease as LegacyPartyRelease,
   type Party as LegacyParty,
   PartyParamManaboard2,
-  type Manaboard2Values
+  type Manaboard2Values,
 } from "./party"
 
 export interface Quest {
   category: number
-  questId: number
+  quest_id: number
 }
 
 type ObjectId = number | null
@@ -17,30 +17,30 @@ type Manaboard2Info = [Manaboard2Level, Manaboard2Level, Manaboard2Level]
 type UnionManaboard2Info = [Manaboard2Info, Manaboard2Info]
 type ExAType =
   | null
-  | 'atk_self'
-  | 'skilldamage_self'
-  | 'directdamage_self'
-  | 'abilitydagame_self'
-  | 'atk_party'
-  | 'skilldamage_party'
-  | 'directdamage_party'
-  | 'abilitydagame_party'
-  | 'powerflipdamage'
-  | 'hp_self'
+  | "atk_self"
+  | "skilldamage_self"
+  | "directdamage_self"
+  | "abilitydagame_self"
+  | "atk_party"
+  | "skilldamage_party"
+  | "directdamage_party"
+  | "abilitydagame_party"
+  | "powerflipdamage"
+  | "hp_self"
 
 type ExBType =
   | null
-  | 'atk_buffextend_self'
-  | 'skilldamage_buffextend_self'
-  | 'directdamage_buffextend_self'
-  | 'abilitydagame_buffextend_self'
-  | 'powerflipdamage_buffextend'
-  | 'piercing_buffextend'
-  | 'flying_buffextend'
-  | 'feverpoint_self'
-  | 'fevertime_extend'
-  | 'initial_skillgauge_self'
-  | 'skillgagemax_self'
+  | "atk_buffextend_self"
+  | "skilldamage_buffextend_self"
+  | "directdamage_buffextend_self"
+  | "abilitydagame_buffextend_self"
+  | "powerflipdamage_buffextend"
+  | "piercing_buffextend"
+  | "flying_buffextend"
+  | "feverpoint_self"
+  | "fevertime_extend"
+  | "initial_skillgauge_self"
+  | "skillgagemax_self"
 type ExInfo = [ExAType, ExBType]
 type UnionExInfo = [ExInfo, ExInfo]
 
@@ -106,8 +106,8 @@ export class PartyReleaseV1 implements PartyRelease {
       main: [
         this.partyRelease.party.union1.dump(),
         this.partyRelease.party.union2.dump(),
-        this.partyRelease.party.union3.dump()
-      ]
+        this.partyRelease.party.union3.dump(),
+      ],
     }
   }
 
@@ -117,25 +117,25 @@ export class PartyReleaseV1 implements PartyRelease {
       ex: [
         [
           [null, null],
-          [null, null]
+          [null, null],
         ],
         [
           [null, null],
-          [null, null]
+          [null, null],
         ],
         [
           [null, null],
-          [null, null]
-        ]
-      ]
+          [null, null],
+        ],
+      ],
     }
-    const mb2 = this.partyRelease.getParam('manaboard2')
+    const mb2 = this.partyRelease.getParam("manaboard2")
     const extractTool = (mb2v: Manaboard2Values | undefined): Manaboard2Info => {
       if (mb2v) {
         return [
           (mb2v.ability4 ?? null) as Manaboard2Level,
           (mb2v.ability5 ?? null) as Manaboard2Level,
-          (mb2v.ability6 ?? null) as Manaboard2Level
+          (mb2v.ability6 ?? null) as Manaboard2Level,
         ]
       } else return [null, null, null]
     }
@@ -143,16 +143,16 @@ export class PartyReleaseV1 implements PartyRelease {
       result.manaboard2 = [
         [
           extractTool(mb2.get({ unionIndex: 1, positionIndex: 0 })),
-          extractTool(mb2.get({ unionIndex: 1, positionIndex: 1 }))
+          extractTool(mb2.get({ unionIndex: 1, positionIndex: 1 })),
         ],
         [
           extractTool(mb2.get({ unionIndex: 2, positionIndex: 0 })),
-          extractTool(mb2.get({ unionIndex: 2, positionIndex: 1 }))
+          extractTool(mb2.get({ unionIndex: 2, positionIndex: 1 })),
         ],
         [
           extractTool(mb2.get({ unionIndex: 3, positionIndex: 0 })),
-          extractTool(mb2.get({ unionIndex: 3, positionIndex: 1 }))
-        ]
+          extractTool(mb2.get({ unionIndex: 3, positionIndex: 1 })),
+        ],
       ]
     }
     return result
@@ -171,7 +171,7 @@ export class PartyReleaseV1 implements PartyRelease {
   }
 
   getTitle(): string {
-    return this.partyRelease.title || ''
+    return this.partyRelease.title || ""
   }
 
   async getCode(): Promise<string | undefined> {
@@ -183,24 +183,33 @@ export class PartyReleaseV1 implements PartyRelease {
   }
 }
 
-interface PartyReleaseV2Data {
+interface PartyProfile {
+  title?: string
+  version?: string
+  quests?: Quest[]
+  updater?: string
+  type?: string
+  worldflipper_reference?: string
+}
+
+export interface PartyReleaseV2Data {
   id: string
   party: Party
-  title: string
   params: PartyParams
+  profile: PartyProfile
 }
 
 export class PartyReleaseV2 implements PartyRelease {
   private readonly id: string
   private readonly party: Party
-  private readonly title: string
   private readonly params: PartyParams
+  private readonly profile: PartyProfile
 
   constructor(props: PartyReleaseV2Data) {
     this.id = props.id
     this.party = props.party
-    this.title = props.title
     this.params = props.params
+    this.profile = props.profile
   }
 
   async getIsLiked(): Promise<boolean> {
@@ -220,23 +229,23 @@ export class PartyReleaseV2 implements PartyRelease {
   }
 
   getQuests(): Quest[] {
-    return []
+    return this.profile?.quests || []
   }
 
   getTitle(): string {
-    return ''
+    return this.profile?.title || ''
   }
 
   async getCode(): Promise<string | undefined> {
-    return undefined
+    return this.profile?.worldflipper_reference || undefined
   }
 
   getId(): string | undefined {
-    return undefined
+    return this.id
   }
 
   async getUpdater(): Promise<string | undefined> {
-    return undefined
+    return this.profile?.updater || undefined
   }
 }
 
@@ -246,8 +255,8 @@ export class PartyFactory {
       main: [
         [null, null, null, null],
         [null, null, null, null],
-        [null, null, null, null]
-      ]
+        [null, null, null, null],
+      ],
     }
   }
 

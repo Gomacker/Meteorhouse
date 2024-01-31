@@ -4,7 +4,7 @@ import { shallowRef } from 'vue'
 const cardRegex = /^\/card\//
 const pureRegex = /^\/pure\//
 
-const Mode = shallowRef(null);
+const Mode = shallowRef<any>(null);
 
 (async () => {
   if (cardRegex.test(location.pathname)) {

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { ref } from "vue";
 import { useUserStore } from '@/stores/user'
-import axios from 'axios'
 import { useWorldflipperDataStore } from '@/stores/worldflipper'
 import { useDefer } from '@/utils'
 import { Element } from '@/anise/worldflipper/object'
@@ -15,25 +14,24 @@ const user = useUserStore()
 const worldflipper = useWorldflipperDataStore()
 const worldflipper_updated = ref(false)
 worldflipper.init().then((r) => {
-  worldflipper_updated.value = !!r
+  worldflipper_updated.value = r
+  console.log(`worldflipper loaded, Version: ${worldflipper.version}`)
 })
 
-console.log(`worldflipper loaded, Version: ${worldflipper.version}`)
-
-onMounted(() => {
-  if (!user.token) axios.post('/api/v1/token_get/').then((r) => (user.token = r.data['token']))
-  axios
-    .post('/api/v1/token_login/', null, {
-      headers: {
-        token: user.token
-      }
-    })
-    .then((r) => {
-      if (r.data['username'] && user.token) {
-        user.tokenLogin(user.token)
-      }
-    })
-})
+// onMounted(() => {
+//   if (!user.token) axios.post('/api/v1/token_get/').then((r) => (user.token = r.data['token']))
+//   axios
+//     .post('/api/v1/token_login/', null, {
+//       headers: {
+//         token: user.token
+//       }
+//     })
+//     .then((r) => {
+//       if (r.data['username'] && user.token) {
+//         user.tokenLogin(user.token)
+//       }
+//     })
+// })
 
 const defer = useDefer(60)
 
