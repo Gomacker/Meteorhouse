@@ -2,6 +2,11 @@
   "name": "meteorhouse",
   "version": "1.0.2",
   "private": true,
+  "author": {
+    "name": "Gomacker",
+    "email": "gomacker@outlook.com",
+    "url": "https://github.com/Gomacker"
+  },
   "scripts": {
     "build": "run-p type-check build-only",
     "test:unit": "vitest",
