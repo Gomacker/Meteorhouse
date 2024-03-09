@@ -18,21 +18,6 @@ worldflipper.init().then((r) => {
   console.log(`worldflipper loaded, Version: ${worldflipper.version}`)
 })
 
-// onMounted(() => {
-//   if (!user.token) axios.post('/api/v1/token_get/').then((r) => (user.token = r.data['token']))
-//   axios
-//     .post('/api/v1/token_login/', null, {
-//       headers: {
-//         token: user.token
-//       }
-//     })
-//     .then((r) => {
-//       if (r.data['username'] && user.token) {
-//         user.tokenLogin(user.token)
-//       }
-//     })
-// })
-
 const defer = useDefer(60)
 
 interface LoadingImage {
@@ -102,6 +87,8 @@ const route = useRoute()
 const pageIs = (pageName: string) => {
   return route.matched[0]?.name === pageName
 }
+
+const menu = ref<boolean>(false)
 </script>
 
 <template>
@@ -140,7 +127,7 @@ const pageIs = (pageName: string) => {
         <div style="margin-bottom: 36px; text-align: center">
           <div style="color: grey">©Copyright(2022-2023) Meteorhouse Library</div>
           <div style="margin-top: 12px">
-            <a href="https://beian.miit.gov.cn/" target="_blank">津ICP备2022008496号-1</a>
+            <menu href="https://beian.miit.gov.cn/" target="_blank">津ICP备2022008496号-1</menu>
           </div>
         </div>
       </div>
@@ -150,18 +137,33 @@ const pageIs = (pageName: string) => {
       color="green-lighten-4"
       location="top"
       style="top: 72px"
-      close-on-content-click=""
+      close-on-content-click
     >
       <v-icon icon="mdi-check-circle-outline" color="green" />
       已更新数据：worldflipper
     </v-snackbar>
-    <v-navigation-drawer width="200" v-model="sidebar_hidden" temporary="">
+    <v-navigation-drawer width="200" v-model="sidebar_hidden" temporary>
       <div style="display: flex; flex-direction: column; height: 100%">
-        <v-list style="user-select:none;" density="compact" :nav="true">
-          <v-list-item v-ripple style="user-select: none">
-            <v-avatar image="/favicon.ico" />
-            世界弹射物语
-          </v-list-item>
+        <v-list density="compact" :nav="true">
+          <v-menu style='user-select: none' location='end' v-model='menu'>
+            <template v-slot:activator='{props}'>
+              <v-list-item v-ripple v-bind='props' style="user-select: none">
+                <v-avatar image="/favicon.ico" />
+                世界弹射物语
+              </v-list-item>
+            </template>
+            <v-card>
+              <v-card-item>
+                <a href='http://example.com' target='_blank'>
+                  <v-list-item v-ripple>
+                    <v-avatar image="/favicon.ico" />
+                    雷索纳斯
+                    <v-icon icon='mdi-open-in-new'/>
+                  </v-list-item>
+                </a>
+              </v-card-item>
+            </v-card>
+          </v-menu>
           <v-divider style="margin: 4px" />
           <v-list-item
             prepend-icon="mdi-calculator"
@@ -271,7 +273,7 @@ const pageIs = (pageName: string) => {
     >
       <v-app-bar-nav-icon @click="sidebar_hidden = !sidebar_hidden" density="comfortable" />
       <v-toolbar-title>
-        <a
+        <menu
           @click="$router.push('/')"
           style="
             cursor: pointer;
@@ -281,7 +283,7 @@ const pageIs = (pageName: string) => {
           "
         >
           Meteorhouse Library
-        </a>
+        </menu>
       </v-toolbar-title>
     </v-app-bar>
     <v-main v-if="defer(1)">

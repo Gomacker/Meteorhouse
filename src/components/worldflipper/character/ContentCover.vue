@@ -23,7 +23,6 @@
 }
 .container {
   position: relative;
-  //width: 100%;
 }
 .container:hover > .cover {
   opacity: 0;

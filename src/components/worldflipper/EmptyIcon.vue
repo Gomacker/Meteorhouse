@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-const props = defineProps({
-  size: {
-    type: Number,
-    default: 240,
-    required: false
-  },
-  soul: Boolean
-})
-const frame_width = computed(() => (props.size * 14) / 240)
+const props = defineProps<{
+  size?: number
+  soul: boolean
+}>()
+
+const size = computed(() => props.size || 240)
+const frame_width = computed(() => (size.value * 14) / 240)
 </script>
 
 <template>
@@ -24,7 +22,7 @@ const frame_width = computed(() => (props.size * 14) / 240)
         <image
           :href="'/static/worldflipper/ui/armament_frame.png'"
           id="frame"
-          :height="size"
+          :height="sizeEE"
           :width="size"
           y="0"
           x="0"
@@ -41,11 +39,3 @@ const frame_width = computed(() => (props.size * 14) / 240)
     </svg>
   </div>
 </template>
-
-<script lang="ts">
-export default {
-  name: 'EmptyPicOrigin'
-}
-</script>
-
-<style scoped></style>
